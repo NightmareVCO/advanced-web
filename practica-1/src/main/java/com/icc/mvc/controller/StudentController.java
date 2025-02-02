@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @ControllerAdvice
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/students")
 @RequiredArgsConstructor
 @Slf4j
