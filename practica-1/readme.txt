@@ -1,1 +1,0 @@
-Contenido de practica-1
