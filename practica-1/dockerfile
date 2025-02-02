@@ -15,7 +15,7 @@ FROM eclipse-temurin:21-alpine AS prod
 
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/mvc-0.0.1.jar app.jar
+COPY --from=builder /app/build/libs/mvc-1.0.0.jar app.jar
 
 EXPOSE 8080
 
@@ -27,7 +27,7 @@ FROM eclipse-temurin:21-alpine AS dev
 
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/mvc-0.0.1.jar app.jar
+COPY --from=builder /app/build/libs/mvc-1.0.0.jar app.jar
 
 EXPOSE 8080
 EXPOSE 5005
