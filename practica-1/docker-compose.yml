@@ -3,10 +3,27 @@ services:
     container_name: app-prod
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
       target: prod
     ports:
       - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+  app-client:
+    container_name: app-client
+    build:
+      context: ./client
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app-prod
     deploy:
       resources:
         limits:
@@ -32,3 +49,5 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+
+
