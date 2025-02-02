@@ -11,7 +11,7 @@ COPY src src
 RUN ./gradlew bootJar --no-daemon
 
 # Prod Mode
-FROM eclipse-temurin:21-alpine as prod
+FROM eclipse-temurin:21-alpine AS prod
 
 WORKDIR /app
 
@@ -23,7 +23,7 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # Debug Mode
-FROM eclipse-temurin:21-alpine as dev
+FROM eclipse-temurin:21-alpine AS dev
 
 WORKDIR /app
 
