@@ -1,3 +1,4 @@
+import { createStudent, updateStudent } from '@/lib/actions/student.action';
 import {
 	Button,
 	Modal,
@@ -10,7 +11,6 @@ import {
 import { Method, type StudentPackage } from '@type/types';
 import React, { useActionState } from 'react';
 import StudentForm from '../form/Form';
-import { createStudent, updateStudent } from '@/lib/actions/student.action';
 
 type StudentModalProps = {
 	studentPackage: StudentPackage;
@@ -27,7 +27,9 @@ export default function StudentModal({ studentPackage }: StudentModalProps) {
 	React.useEffect(() => {
 		if (
 			student !== undefined &&
-			(method === Method.Add || method === Method.Edit) &&
+			(method === Method.Add ||
+				method === Method.Edit ||
+				method === Method.View) &&
 			!isOpen
 		) {
 			onOpen();
@@ -55,7 +57,11 @@ export default function StudentModal({ studentPackage }: StudentModalProps) {
 						<>
 							<ModalHeader className="flex flex-col gap-1">
 								<h2 className="text-2xl font-bold">
-									{student ? 'Modify this student' : 'Add new student'}
+									{Method.View === method
+										? 'View this student'
+										: student
+											? 'Modify this student'
+											: 'Add new student'}
 								</h2>
 								<p className="text-sm text-default-500">
 									Please fill in the information below.
@@ -66,6 +72,7 @@ export default function StudentModal({ studentPackage }: StudentModalProps) {
 									student={student}
 									formAction={formAction}
 									errors={errors}
+									justWatch={Method.View === method}
 								/>
 							</ModalBody>
 							<ModalFooter>
@@ -84,7 +91,7 @@ export default function StudentModal({ studentPackage }: StudentModalProps) {
 									form="student-form"
 									type="submit"
 									isLoading={isPending}
-									isDisabled={isPending}
+									isDisabled={isPending || Method.View === method}
 									onPress={() => {
 										if (errors) return;
 

@@ -17,6 +17,7 @@ export enum Method {
 	Edit = 'edit',
 	Delete = 'delete',
 	Add = 'add',
+	View = 'view',
 }
 
 export type StudentPackage = {

@@ -1,13 +1,13 @@
 import { deleteStudent } from '@actions/student.action';
 import {
 	Button,
-	form,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
 	Tooltip,
+	form,
 	useDisclosure,
 } from '@heroui/react';
 import { Method, type StudentPackage } from '@type/types';

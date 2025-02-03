@@ -6,12 +6,14 @@ type FormProps = {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	errors: any;
 	formAction?: (payload: FormData) => void;
+	justWatch?: boolean;
 };
 
 export default function StudentForm({
 	student,
 	errors,
 	formAction,
+	justWatch,
 }: FormProps) {
 	return (
 		<Form
@@ -29,6 +31,7 @@ export default function StudentForm({
 				placeholder="Enter your first name"
 				isRequired
 				defaultValue={student?.firstName}
+				isDisabled={justWatch}
 			/>
 			<Input
 				label="Last Name"
@@ -37,6 +40,7 @@ export default function StudentForm({
 				placeholder="Enter your last name"
 				isRequired
 				defaultValue={student?.lastName}
+				isDisabled={justWatch}
 			/>
 			<Input
 				label="Matricula"
@@ -47,6 +51,7 @@ export default function StudentForm({
 				placeholder="Enter your matricula"
 				isRequired
 				defaultValue={student?.matricula}
+				isDisabled={justWatch}
 			/>
 			<Input
 				label="Email"
@@ -56,6 +61,7 @@ export default function StudentForm({
 				placeholder="Enter your email"
 				isRequired
 				defaultValue={student?.email}
+				isDisabled={justWatch}
 			/>
 			<Input
 				label="Phone"
@@ -67,6 +73,7 @@ export default function StudentForm({
 				placeholder="Enter your phone"
 				isRequired
 				defaultValue={student?.phone}
+				isDisabled={justWatch}
 			/>
 		</Form>
 	);
