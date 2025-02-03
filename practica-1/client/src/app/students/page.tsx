@@ -1,10 +1,14 @@
 import StudentManagement from '@components/section/StudentManagement';
 
+import { SERVER, TEST_SERVER } from '@constants/constants';
+
+const CURRENT_SERVER = SERVER || TEST_SERVER;
+
 export default async function Students() {
 	let students = [];
 
 	try {
-		const data = await fetch('http://app-prod:8080/api/v1/students', {
+		const data = await fetch(`http://${CURRENT_SERVER}/api/v1/students`, {
 			cache: 'no-store',
 		});
 		students = await data.json();
