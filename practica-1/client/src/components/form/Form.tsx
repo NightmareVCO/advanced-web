@@ -1,5 +1,6 @@
 import { Form, Input } from '@heroui/react';
 import type { Student } from '@type/types';
+import { useEffect } from 'react';
 
 type FormProps = {
 	student?: Student;
@@ -30,6 +31,8 @@ export default function StudentForm({
 				isClearable
 				placeholder="Enter your first name"
 				isRequired
+				pattern="^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ]+$"
+				errorMessage="First name must be a valid name (no numbers or special characters)"
 				defaultValue={student?.firstName}
 				isDisabled={justWatch}
 			/>
@@ -39,17 +42,22 @@ export default function StudentForm({
 				isClearable
 				placeholder="Enter your last name"
 				isRequired
+				pattern="^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ]+$"
+				errorMessage="Last name must be a valid name (no numbers or special characters)"
 				defaultValue={student?.lastName}
 				isDisabled={justWatch}
 			/>
 			<Input
-				label="Matricula"
+				label="ID"
 				name="matricula"
+				type="text"
 				maxLength={8}
 				minLength={8}
 				isClearable
-				placeholder="Enter your matricula"
+				placeholder="Enter your id"
 				isRequired
+				pattern="^10[1-9][0-9][0-9]{4}$"
+				errorMessage="ID must be 8 digits and be a valid ID such as 10141514"
 				defaultValue={student?.matricula}
 				isDisabled={justWatch}
 			/>
@@ -68,10 +76,12 @@ export default function StudentForm({
 				name="phone"
 				type="tel"
 				isClearable
-				maxLength={11}
-				minLength={10}
+				maxLength={10}
+				minLength={9}
+				pattern="^1?(809|829|849)[0-9]{7}$"
 				placeholder="Enter your phone"
 				isRequired
+				errorMessage="Phone number must be at least 9 digits and start with 809, 829 or 849"
 				defaultValue={student?.phone}
 				isDisabled={justWatch}
 			/>
