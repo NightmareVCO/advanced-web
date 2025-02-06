@@ -3,11 +3,15 @@ import type { MenuItem } from '../_config/config';
 
 type NavbarDesktopItemsProps = {
 	menuItems: MenuItem[];
+	pathName?: string;
 };
 
 export default function NavbarDesktopItems({
+	pathName,
 	menuItems,
 }: NavbarDesktopItemsProps) {
+	const isActive = (href: string) => href === pathName;
+
 	return (
 		<>
 			{menuItems.map((item, index) => (
@@ -16,8 +20,13 @@ export default function NavbarDesktopItems({
 						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 						index
 					}`}
+					isActive={item.href === pathName}
 				>
-					<Link className="text-white" href={item.href} size="lg">
+					<Link
+						color={isActive(item.href) ? 'primary' : 'foreground'}
+						href={item.href}
+						size="lg"
+					>
 						{item.name}
 					</Link>
 				</NavbarItem>

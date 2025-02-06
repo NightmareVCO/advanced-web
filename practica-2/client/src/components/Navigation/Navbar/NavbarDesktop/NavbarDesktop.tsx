@@ -1,11 +1,23 @@
-import { Button, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
+'use client';
+
+import {
+	Button,
+	Link,
+	NavbarBrand,
+	NavbarContent,
+	NavbarItem,
+} from '@heroui/react';
 import BrandLogoIcon from '@icons/BrandLogoIcon';
 import NavbarDesktopItems from './NavbarDesktopItems';
 
+import { Routes } from '@/lib/data/routes.data';
 import { Icon } from '@iconify/react';
+import { usePathname } from 'next/navigation';
 import { menuItems } from '../_config/config';
 
 export default function NavbarDesktop() {
+	const pathName = usePathname();
+
 	return (
 		<>
 			{/* Left Content */}
@@ -15,7 +27,7 @@ export default function NavbarDesktop() {
 
 			{/* Center Content */}
 			<NavbarContent justify="center">
-				<NavbarDesktopItems menuItems={menuItems} />
+				<NavbarDesktopItems menuItems={menuItems} pathName={pathName} />
 			</NavbarContent>
 
 			{/* Right Content */}
@@ -26,6 +38,8 @@ export default function NavbarDesktop() {
 						radius="full"
 						variant="ghost"
 						color="primary"
+						as={Link}
+						href={Routes.LogIn}
 					>
 						Login
 					</Button>
@@ -35,6 +49,8 @@ export default function NavbarDesktop() {
 						endContent={<Icon icon="solar:alt-arrow-right-linear" />}
 						radius="full"
 						variant="flat"
+						as={Link}
+						href={Routes.Mocks}
 					>
 						Get Started
 					</Button>

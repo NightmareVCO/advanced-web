@@ -21,10 +21,24 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 						'bg-default-200/50 dark:bg-default-100/50': isMenuOpen,
 					}),
 					wrapper: 'w-full justify-center',
-					item: 'hidden md:flex',
+					item: [
+						'hidden md:flex',
+						'flex',
+						'relative',
+						'h-full',
+						'items-center',
+						"data-[active=true]:after:content-['']",
+						'data-[active=true]:after:absolute',
+						'data-[active=true]:after:bottom-0',
+						'data-[active=true]:after:left-0',
+						'data-[active=true]:after:right-0',
+						'data-[active=true]:after:h-[2px]',
+						'data-[active=true]:after:rounded-[2px]',
+						'data-[active=true]:after:bg-primary',
+					],
 					...classNames,
 				}}
-				height="70px"
+				height="60px"
 				isMenuOpen={isMenuOpen}
 				onMenuOpenChange={setIsMenuOpen}
 			>
