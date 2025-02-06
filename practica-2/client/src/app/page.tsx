@@ -1,9 +1,11 @@
-import {Button} from '@heroui/react'
+"use client";
+
+import { Button } from "@heroui/react";
 
 export default function Page() {
-  return (
-      <div>
-        <Button>Click me</Button>
-      </div>
-  )
+	return (
+		<div>
+			<Button>Click me</Button>
+		</div>
+	);
 }
