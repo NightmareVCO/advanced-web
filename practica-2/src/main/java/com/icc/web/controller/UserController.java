@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.icc.web.dto.UserDTO;
 import com.icc.web.mapper.UserMapper;
 import com.icc.web.model.User;
-import com.icc.web.services.UserService;
+import com.icc.web.services.user.UserServices;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
-  private final UserService userService;
+  private final UserServices userService;
 
   @GetMapping("/")
   public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -51,8 +51,8 @@ public class UserController {
   }
 
   @PostMapping("/")
-  public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO studentDTO) {
-    User user = UserMapper.INSTANCE.dtoToStudent(studentDTO);
+  public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    User user = UserMapper.INSTANCE.dtoToUserDTO(userDTO);
     User savedUser = userService.saveUser(user);
     if (savedUser == null)
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

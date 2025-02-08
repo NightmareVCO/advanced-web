@@ -1,30 +1,31 @@
 package com.icc.web.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType; // nuevo import
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import com.icc.web.enums.Role; // nuevo import
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Set;
 
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "users")
 public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String fistName;
+  private String firstName;
   private String lastName;
   private String username;
   private String email;
   private String password;
+  private boolean active;
 
-  @Enumerated(EnumType.STRING)
-  private Role role;
+  @Singular
+  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  private Set<Role> roles;
+
 }

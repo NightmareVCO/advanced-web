@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class UserDTO {
-  String fistName;
+  String firstName;
   String lastName;
   String username;
   String email;

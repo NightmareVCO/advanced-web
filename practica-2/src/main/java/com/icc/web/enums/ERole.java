@@ -1,5 +1,5 @@
 package com.icc.web.enums;
 
-public enum Role {
+public enum ERole {
   USER, ADMIN
 }
