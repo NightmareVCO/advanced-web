@@ -25,10 +25,10 @@ public class LoginController {
     private final JWTService jwtService;
 
     @PostMapping()
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO ) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
         String userName = loginDTO.getUsername();
-        User user = userService.getUserByUsername(userName);
         String password = loginDTO.getPassword();
+        User user = userService.getUserByUsername(userName);
 
         if (user == null)
             throw new ResourceNotFoundException("Credeciales incorrectas");

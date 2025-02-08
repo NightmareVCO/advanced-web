@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @RequiredArgsConstructor
 @Service
 public class JWTService {
@@ -22,14 +21,18 @@ public class JWTService {
 
     @Value("${jwt.expiresIn}")
     private int expiresIn;
+
     private static final String ISSUER = "MOCKIFY-JWT";
+
     SecretKey key = Jwts.SIG.HS256.key().build();
 
     public AuthResponseDTO generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
         User user = userService.getUserByUsername(userName);
         String userId = String.valueOf(user.getId());
+
         claims.put("roles", String.join(",", user.getRoles().toString()));
+
         return createToken(claims, userName, userId);
     }
 
@@ -37,29 +40,31 @@ public class JWTService {
         LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(expiresIn);
         Date expirationDate = Date.from(localDateTime.toInstant(ZoneOffset.ofHours(-4)));
 
-        String jwt =  Jwts.builder()
-                .issuer(ISSUER)
-                .issuedAt(new Date())
-                .subject(userName)
-                .expiration(expirationDate)
+        String jwt = Jwts.builder()
                 .id(id)
                 .claims(claims)
-                .signWith(key).compact();
+                .issuer(ISSUER)
+                .subject(userName)
+                .signWith(key)
+                .issuedAt(new Date())
+                .expiration(expirationDate)
+                .compact();
 
-        return new AuthResponseDTO(jwt, "ADMIN",  expirationDate.getTime());
+        return new AuthResponseDTO(jwt, "ADMIN", expirationDate.getTime());
     }
 
-//    private Boolean isTokenExpired(String token) {
-//        return extractExpiration(token).before(new Date());
-//    }
-//
-//    public Boolean validateToken(String token, UserDetails userDetails) {
-//        final String username = extractUsername(token);
-//        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-//    }
-//
-//    public Boolean validateToken(String token){
-//        return !isTokenExpired(token);
-//    }
+    // private Boolean isTokenExpired(String token) {
+    // return extractExpiration(token).before(new Date());
+    // }
+    //
+    // public Boolean validateToken(String token, UserDetails userDetails) {
+    // final String username = extractUsername(token);
+    // return (username.equals(userDetails.getUsername()) &&
+    // !isTokenExpired(token));
+    // }
+    //
+    // public Boolean validateToken(String token){
+    // return !isTokenExpired(token);
+    // }
 
 }

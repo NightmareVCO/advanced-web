@@ -47,6 +47,7 @@ public class UserController {
     User user = userService.getUserById(id);
     if (user == null)
       throw new ResourceNotFoundException("Usuario no encontrado");
+
     UserDTO fetchedUser = UserMapper.INSTANCE.userToDto(user);
 
     return new ResponseEntity<>(fetchedUser, HttpStatus.OK);
@@ -58,6 +59,7 @@ public class UserController {
     User savedUser = userService.saveUser(user);
     if (savedUser == null)
       throw new InternalServerError("Error en el servidor");
+
     UserDTO createdUser = UserMapper.INSTANCE.userToDto(savedUser);
 
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
@@ -68,6 +70,7 @@ public class UserController {
     User user = userService.deleteUser(id);
     if (user == null)
       throw new ResourceNotFoundException("Usuario no encontrado");
+
     UserDTO deletedUser = UserMapper.INSTANCE.userToDto(user);
 
     return new ResponseEntity<>(deletedUser, HttpStatus.OK);
