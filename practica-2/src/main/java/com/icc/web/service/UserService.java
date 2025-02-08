@@ -1,4 +1,4 @@
-package com.icc.web.services.user;
+package com.icc.web.service;
 
 import com.icc.web.model.User;
 import com.icc.web.repository.UserRepository;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserServices{
+public class UserService {
     private final UserRepository userRepository;
 
-    public UserServices(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -32,5 +32,9 @@ public class UserServices{
             userRepository.deleteById(id);
 
         return user;
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

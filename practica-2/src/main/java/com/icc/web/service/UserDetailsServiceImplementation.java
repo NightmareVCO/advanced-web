@@ -1,4 +1,4 @@
-package com.icc.web.services.user;
+package com.icc.web.service;
 
 import com.icc.web.model.Role;
 import com.icc.web.model.User;
@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImplementation implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public UserDetailsServiceImplementation(UserRepository userRepository) {
         this.userRepository = userRepository;
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 

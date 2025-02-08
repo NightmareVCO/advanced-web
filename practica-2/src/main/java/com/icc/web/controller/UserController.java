@@ -2,6 +2,9 @@ package com.icc.web.controller;
 
 import java.util.List;
 
+import com.icc.web.exception.InternalServerError;
+import com.icc.web.exception.NoContentException;
+import com.icc.web.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,13 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.icc.web.dto.UserDTO;
 import com.icc.web.mapper.UserMapper;
 import com.icc.web.model.User;
-import com.icc.web.services.user.UserServices;
+import com.icc.web.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,14 +30,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
-  private final UserServices userService;
+  private final UserService userService;
 
   @GetMapping("/")
   public ResponseEntity<List<UserDTO>> getAllUsers() {
     List<User> users = userService.getAllUsers();
     List<UserDTO> responseUsers = UserMapper.INSTANCE.usersToDtos(users);
     if (responseUsers.isEmpty())
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      throw new NoContentException("No hay usuarios registrados");
 
     return new ResponseEntity<>(responseUsers, HttpStatus.OK);
   }
@@ -44,7 +46,7 @@ public class UserController {
   public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
     User user = userService.getUserById(id);
     if (user == null)
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      throw new ResourceNotFoundException("Usuario no encontrado");
     UserDTO fetchedUser = UserMapper.INSTANCE.userToDto(user);
 
     return new ResponseEntity<>(fetchedUser, HttpStatus.OK);
@@ -55,7 +57,7 @@ public class UserController {
     User user = UserMapper.INSTANCE.dtoToUserDTO(userDTO);
     User savedUser = userService.saveUser(user);
     if (savedUser == null)
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerError("Error en el servidor");
     UserDTO createdUser = UserMapper.INSTANCE.userToDto(savedUser);
 
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
@@ -65,7 +67,7 @@ public class UserController {
   public ResponseEntity<UserDTO> deleteUser(@PathVariable Long id) {
     User user = userService.deleteUser(id);
     if (user == null)
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      throw new ResourceNotFoundException("Usuario no encontrado");
     UserDTO deletedUser = UserMapper.INSTANCE.userToDto(user);
 
     return new ResponseEntity<>(deletedUser, HttpStatus.OK);

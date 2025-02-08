@@ -1,6 +1,6 @@
 package com.icc.web.config;
 
-import com.icc.web.services.user.UserDetailsServiceImpl;
+import com.icc.web.service.UserDetailsServiceImplementation;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -21,9 +21,9 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserDetailsServiceImplementation userDetailsServiceImpl;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl) {
+    public SecurityConfig(UserDetailsServiceImplementation userDetailsServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
