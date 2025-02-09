@@ -12,7 +12,7 @@ export default async function Students() {
 			cache: 'no-store',
 		});
 		students = await data.json();
-	} catch (error) {}
+	} catch (error) { }
 
 	return (
 		<main className="container mx-auto mt-[80px] flex max-w-[1024px] flex-col items-start px-8">

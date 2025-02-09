@@ -12,6 +12,8 @@ import NavbarDesktopItems from './NavbarDesktopItems';
 
 import { Routes } from '@/lib/data/routes.data';
 import { Icon } from '@iconify/react';
+import Routes from '@lib/data/routes.data';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { menuItems } from '../_config/config';
 
@@ -22,7 +24,9 @@ export default function NavbarDesktop() {
 		<>
 			{/* Left Content */}
 			<NavbarBrand>
-				<BrandLogoIcon />
+				<Link href={Routes.Home}>
+					<BrandLogoIcon />
+				</Link>
 			</NavbarBrand>
 
 			{/* Center Content */}
@@ -50,9 +54,9 @@ export default function NavbarDesktop() {
 						radius="full"
 						variant="flat"
 						as={Link}
-						href={Routes.Mocks}
+						href={Routes.NewProject}
 					>
-						Get Started
+						Create New Project
 					</Button>
 				</NavbarItem>
 			</NavbarContent>

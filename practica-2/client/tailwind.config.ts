@@ -21,7 +21,7 @@ export default {
 			},
 		},
 	},
-	darkMode: 'class',
+	darkMode: ['class', 'class'],
 	plugins: [
 		heroui({
 			themes: {

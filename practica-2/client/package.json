@@ -9,7 +9,11 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@codemirror/lang-javascript": "^6.2.2",
+		"@codemirror/lang-json": "^6.0.1",
 		"@heroui/react": "^2.6.14",
+		"@uiw/codemirror-theme-tokyo-night-storm": "^4.23.8",
+		"@uiw/react-codemirror": "^4.23.8",
 		"framer-motion": "^12.3.1",
 		"next": "15.1.6",
 		"react": "^19.0.0",

@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Onest } from 'next/font/google';
 import Providers from './providers';
 import './globals.css';
+import Background from '@components/Background/Background';
+import Footer from '@components/Navigation/Footer/Footer';
 import Navbar from '@components/Navigation/Navbar/Navbar';
 
 export const metadata: Metadata = {
@@ -18,11 +20,15 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="es" className="dark">
-			<body className={`antialiased ${onest.className}`}>
-				<div className="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
-					<Navbar />
-					<Providers>{children}</Providers>
-				</div>
+			<body className={` antialiased ${onest.className}`}>
+				<Providers>
+					<div className="flex flex-col min-h-screen">
+						<Background />
+						<Navbar />
+						<div className="flex-1">{children}</div>
+						<Footer />
+					</div>
+				</Providers>
 			</body>
 		</html>
 	);
