@@ -3,11 +3,13 @@
 import FadeInImage from '@components/FadeInImage/FadeInImage';
 import { Button, Image, Spacer } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import Routes from '@lib/data/routes.data';
+import Link from 'next/link';
 import React from 'react';
 
 export default function Page() {
 	return (
-		<div className="relative flex h-screen min-h-dvh w-full flex-col overflow-hidden overflow-y-auto">
+		<div className="relative flex min-h-dvh w-full flex-col overflow-hidden overflow-y-auto">
 			<main className="flex flex-col items-center rounded-2xl px-3 md:rounded-3xl md:px-0">
 				<section className="z-20 my-14 flex flex-col items-center justify-center gap-[18px] sm:gap-6">
 					<Button
@@ -38,6 +40,8 @@ export default function Page() {
 							size="lg"
 							className="h-10 w-[163px] bg-primary px-[16px] py-[10px] text-small font-medium leading-5"
 							radius="full"
+							as={Link}
+							href={Routes.Projects}
 						>
 							Get Started
 						</Button>
