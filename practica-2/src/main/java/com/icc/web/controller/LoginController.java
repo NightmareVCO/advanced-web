@@ -15,7 +15,6 @@ import com.icc.web.Utils;
 import com.icc.web.exception.ResourceNotFoundException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/v1/login")
@@ -24,19 +23,18 @@ public class LoginController {
     private final UserService userService;
     private final JWTService jwtService;
 
-    @PostMapping()
+    @PostMapping("/")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
         String userName = loginDTO.getUsername();
         String password = loginDTO.getPassword();
         User user = userService.getUserByUsername(userName);
 
         if (user == null)
-            throw new ResourceNotFoundException("Credeciales incorrectas");
-        if (!Utils.isPasswordCorrect(user.getPassword(), password))
-            throw new UnauthorizedException("Credenciales incorrectas");
+            throw new ResourceNotFoundException("Wrong Credentials");
+        if (!Utils.isPasswordCorrect(password, user.getPassword()))
+            throw new UnauthorizedException("Wrong Credentials");
 
         AuthResponseDTO token = jwtService.generateToken(userName);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
-
 }

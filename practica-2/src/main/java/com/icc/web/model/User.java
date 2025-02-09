@@ -25,7 +25,7 @@ public class User {
   private boolean active;
 
   @Singular
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+      CascadeType.REFRESH })
   private Set<Role> roles;
-
 }

@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Slf4j
@@ -37,7 +36,7 @@ public class UserController {
     List<User> users = userService.getAllUsers();
     List<UserDTO> responseUsers = UserMapper.INSTANCE.usersToDtos(users);
     if (responseUsers.isEmpty())
-      throw new NoContentException("No hay usuarios registrados");
+      throw new NoContentException("No Users Found");
 
     return new ResponseEntity<>(responseUsers, HttpStatus.OK);
   }
@@ -46,7 +45,7 @@ public class UserController {
   public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
     User user = userService.getUserById(id);
     if (user == null)
-      throw new ResourceNotFoundException("Usuario no encontrado");
+      throw new ResourceNotFoundException("User not found");
 
     UserDTO fetchedUser = UserMapper.INSTANCE.userToDto(user);
 
@@ -58,7 +57,7 @@ public class UserController {
     User user = UserMapper.INSTANCE.dtoToUserDTO(userDTO);
     User savedUser = userService.saveUser(user);
     if (savedUser == null)
-      throw new InternalServerError("Error en el servidor");
+      throw new InternalServerError("Internal Server Error");
 
     UserDTO createdUser = UserMapper.INSTANCE.userToDto(savedUser);
 
@@ -69,7 +68,7 @@ public class UserController {
   public ResponseEntity<UserDTO> deleteUser(@PathVariable Long id) {
     User user = userService.deleteUser(id);
     if (user == null)
-      throw new ResourceNotFoundException("Usuario no encontrado");
+      throw new ResourceNotFoundException("User not found");
 
     UserDTO deletedUser = UserMapper.INSTANCE.userToDto(user);
 
