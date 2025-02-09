@@ -3,6 +3,8 @@ import BrandLogoIcon from '@icons/BrandLogoIcon';
 import NavbarDesktopItems from './NavbarDesktopItems';
 
 import { Icon } from '@iconify/react';
+import Routes from '@lib/data/routes.data';
+import Link from 'next/link';
 import { menuItems } from '../_config/config';
 
 export default function NavbarDesktop() {
@@ -10,7 +12,9 @@ export default function NavbarDesktop() {
 		<>
 			{/* Left Content */}
 			<NavbarBrand>
-				<BrandLogoIcon />
+				<Link href={Routes.Home}>
+					<BrandLogoIcon />
+				</Link>
 			</NavbarBrand>
 
 			{/* Center Content */}
@@ -35,8 +39,10 @@ export default function NavbarDesktop() {
 						endContent={<Icon icon="solar:alt-arrow-right-linear" />}
 						radius="full"
 						variant="flat"
+						as={Link}
+						href={Routes.NewProject}
 					>
-						Get Started
+						Create New Project
 					</Button>
 				</NavbarItem>
 			</NavbarContent>
