@@ -10,10 +10,8 @@ import {
 import BrandLogoIcon from '@icons/BrandLogoIcon';
 import NavbarDesktopItems from './NavbarDesktopItems';
 
-import { Routes } from '@/lib/data/routes.data';
 import { Icon } from '@iconify/react';
 import Routes from '@lib/data/routes.data';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { menuItems } from '../_config/config';
 
