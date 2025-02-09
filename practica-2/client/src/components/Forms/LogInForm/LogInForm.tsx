@@ -1,8 +1,8 @@
 'use client';
 
-import { logIn } from '@lib/actions/logIn.action';
 import { Button, Checkbox, Form, Input } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import { logIn } from '@lib/actions/logIn.action';
 import React, { useActionState } from 'react';
 
 export default function LogInForm() {
@@ -59,7 +59,7 @@ export default function LogInForm() {
 			<div className="flex w-full items-center justify-between px-1 py-2">
 				<Checkbox name="remember">Remember me</Checkbox>
 			</div>
-			{errors.login && (
+			{errors?.login && (
 				<p className="text-red-500 text-sm text-center capitalize">
 					{errors.login}
 				</p>

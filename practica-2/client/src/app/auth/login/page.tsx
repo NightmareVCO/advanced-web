@@ -1,5 +1,6 @@
 import LogInForm from '@components/Forms/LogInForm/LogInForm';
 import Testimonials from '@components/Testimonials/Testimonials';
+import { Spacer } from '@heroui/react';
 
 export default function Component() {
 	return (
@@ -18,7 +19,11 @@ export default function Component() {
 				servidores. ¡Simple, potente y esencial!
 			</Testimonials>
 
-			<LogInForm />
+			<div className="bg-black/30 rounded-3xl p-4 w-full max-w-lg">
+				<h2 className="text-2xl text-center font-medium">Log In</h2>
+				<Spacer y={2} />
+				<LogInForm />
+			</div>
 		</div>
 	);
 }

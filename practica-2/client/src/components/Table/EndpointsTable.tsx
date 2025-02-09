@@ -16,10 +16,10 @@ import EditIcon from '@components/Icons/EditIcon';
 import EyeIcon from '@components/Icons/EyeIcon';
 import MethodColor from '@lib/data/method.color.data';
 
+import DeleteEndpointModal from '@components/Modal/DeleteModals/DeleteEndpointModal';
 import Routes from '@lib/data/routes.data';
 import { statusCodesRecord } from '@lib/data/statusCode.data';
 import type Endpoint from '@lib/entity/endpoint.entity';
-import DeleteEndpointModal from '@components/Modal/DeleteModals/DeleteEndpointModal';
 
 export const columns = [
 	{ name: 'Live', uid: 'live' },

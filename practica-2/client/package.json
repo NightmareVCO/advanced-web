@@ -15,6 +15,7 @@
 		"@uiw/codemirror-theme-tokyo-night-storm": "^4.23.8",
 		"@uiw/react-codemirror": "^4.23.8",
 		"framer-motion": "^12.3.1",
+		"jose": "^5.9.6",
 		"next": "15.1.6",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
