@@ -1,5 +1,5 @@
 import LogInForm from '@components/Forms/LogInForm/LogInForm';
-import Testimonials from '@components/Testimonials/Testimonials';
+// import Testimonials from '@components/Testimonials/Testimonials';
 
 export default function LoginPage() {
 	return (
@@ -12,11 +12,11 @@ export default function LoginPage() {
 				backgroundPosition: 'center',
 			}}
 		>
-			<Testimonials positions={['bottom', 'left']}>
+			{/* <Testimonials positions={['bottom', 'left']}>
 				¡Un cambio de juego! 🚀 Esta app hace que probar APIs sea rápido y sin
 				complicaciones. Simula respuestas al instante, sin depender de
 				servidores. ¡Simple, potente y esencial!
-			</Testimonials>
+			</Testimonials> */}
 
 			<div className="flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 py-12 mb-10 shadow-small">
 				<h2 className="pb-2 text-2xl font-medium text-center">Log In</h2>
