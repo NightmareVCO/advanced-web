@@ -5,6 +5,9 @@ import './globals.css';
 import Background from '@components/Background/Background';
 import Footer from '@components/Navigation/Footer/Footer';
 import Navbar from '@components/Navigation/Navbar/Navbar';
+import { decrypt } from '@lib/auth/session';
+import { cookies } from 'next/headers';
+import type { JWTPayload } from 'jose';
 
 export const metadata: Metadata = {
 	title: 'Mockify',
@@ -13,18 +16,31 @@ export const metadata: Metadata = {
 
 const onest = Onest({ subsets: ['latin'] });
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	let userIsAdmin = false;
+	let isAuthenticated = false;
+
+	const cookie = (await cookies()).get('session')?.value;
+	const session: JWTPayload | Error = await decrypt(cookie);
+
+	if (!(session instanceof Error)) {
+		if (typeof session.role === 'string') {
+			userIsAdmin = session.role.includes('ADMIN');
+		}
+		isAuthenticated = session.id !== undefined;
+	}
+
 	return (
 		<html lang="es" className="dark">
 			<body className={` antialiased ${onest.className}`}>
 				<Providers>
 					<div className="flex flex-col min-h-screen">
 						<Background />
-						<Navbar />
+						<Navbar admin={userIsAdmin} isAuthenticated={!!isAuthenticated} />
 						<div className="flex-1">{children}</div>
 						<Footer />
 					</div>

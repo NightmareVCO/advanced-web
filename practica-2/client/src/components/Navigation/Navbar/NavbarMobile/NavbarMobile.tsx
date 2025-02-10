@@ -9,7 +9,18 @@ import {
 import { mobileMenuItems } from '../_config/config';
 import NavbarMobileItems from './NavbarMobileItems';
 
-export default function NavbarMobile() {
+import { Icon } from '@iconify/react';
+import Routes from '@/lib/data/routes.data';
+
+type NavbarMobileProps = {
+	admin?: boolean;
+	isAuthenticated?: boolean;
+};
+
+export default function NavbarMobile({
+	admin,
+	isAuthenticated,
+}: NavbarMobileProps) {
 	return (
 		<NavbarMenu
 			className="top-[calc(var(--navbar-height)_-_1px)] max-h-fit bg-default-200/50 pb-6 pt-6 shadow-medium backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50"
@@ -24,18 +35,30 @@ export default function NavbarMobile() {
 			}}
 		>
 			<NavbarMenuItem>
-				<Button fullWidth as={Link} href="/#" variant="faded">
-					Sign In
+				<Button
+					className="bg-primary font-medium text-white"
+					color="secondary"
+					fullWidth
+					radius="full"
+					variant="flat"
+					as={Link}
+					href={Routes.LogIn}
+				>
+					Login
 				</Button>
 			</NavbarMenuItem>
 			<NavbarMenuItem className="mb-4">
 				<Button
 					fullWidth
+					className="bg-primary font-medium text-white"
+					color="secondary"
+					endContent={<Icon icon="solar:alt-arrow-right-linear" />}
+					radius="full"
+					variant="flat"
 					as={Link}
-					className="bg-foreground text-background"
-					href="/#"
+					href={Routes.NewProject}
 				>
-					Get Started
+					Create New Project
 				</Button>
 			</NavbarMenuItem>
 

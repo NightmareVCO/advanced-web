@@ -10,13 +10,26 @@ import {
 import BrandLogoIcon from '@icons/BrandLogoIcon';
 import NavbarDesktopItems from './NavbarDesktopItems';
 
+import { logout } from '@/lib/actions/logIn.action';
 import { Icon } from '@iconify/react';
 import Routes from '@lib/data/routes.data';
 import { usePathname } from 'next/navigation';
+import { useActionState } from 'react';
 import { menuItems } from '../_config/config';
 
-export default function NavbarDesktop() {
+type NavbarDesktopProps = {
+	admin?: boolean;
+	isAuthenticated?: boolean;
+};
+
+export default function NavbarDesktop({
+	admin,
+	isAuthenticated,
+}: NavbarDesktopProps) {
 	const pathName = usePathname();
+	const [_, action] = useActionState(logout, null);
+	const isLoginHidden = isAuthenticated ? 'hidden' : '';
+	const isLogoutHidden = isAuthenticated ? '' : 'hidden';
 
 	return (
 		<>
@@ -28,15 +41,19 @@ export default function NavbarDesktop() {
 			</NavbarBrand>
 
 			{/* Center Content */}
-			<NavbarContent justify="center">
-				<NavbarDesktopItems menuItems={menuItems} pathName={pathName} />
+			<NavbarContent justify="center" className="hidden md:flex">
+				<NavbarDesktopItems
+					menuItems={menuItems}
+					pathName={pathName}
+					admin={admin}
+				/>
 			</NavbarContent>
 
 			{/* Right Content */}
 			<NavbarContent className="hidden md:flex" justify="end">
 				<NavbarItem className="ml-2 !flex gap-2">
 					<Button
-						className="text-white"
+						className={`text-white ${isLoginHidden}`}
 						radius="full"
 						variant="ghost"
 						color="primary"
@@ -56,6 +73,17 @@ export default function NavbarDesktop() {
 					>
 						Create New Project
 					</Button>
+					<form action={action}>
+						<Button
+							className={`text-white ${isLogoutHidden}`}
+							radius="full"
+							variant="flat"
+							color="danger"
+							type="submit"
+						>
+							Log Out
+						</Button>
+					</form>
 				</NavbarItem>
 			</NavbarContent>
 		</>
