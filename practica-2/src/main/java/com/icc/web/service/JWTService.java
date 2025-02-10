@@ -15,6 +15,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,11 +32,11 @@ public class JWTService {
 
     public AuthResponseDTO generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
-        User user = userService.getUserByUsername(userName);
-        String userId = String.valueOf(user.getId());
+        Optional<User> user = userService.getUserByUsername(userName);
+        String userId = String.valueOf(user.get().getId());
 
         claims.put("username", userName);
-        claims.put("roles", String.join(",", user.getRoles().toString()));
+        claims.put("roles", String.join(",", user.get().getRoles().toString()));
         claims.put("userId", userId);
 
         return createToken(claims, userName, userId);
