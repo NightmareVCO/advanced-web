@@ -17,13 +17,13 @@ import com.icc.web.exception.ResourceNotFoundException;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/login")
+@RequestMapping("/api/v1/login/")
 public class LoginController {
 
     private final UserService userService;
     private final JWTService jwtService;
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
         String userName = loginDTO.getUsername();
         String password = loginDTO.getPassword();

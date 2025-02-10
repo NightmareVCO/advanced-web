@@ -19,9 +19,13 @@ public class Project {
     @Id
     private Long id;
     private String name;
-    private String owner;
     private String desc;
     private String tag;
+    private Boolean status;
+
+    @ManyToOne
+    private User owner;
+
 
     @ManyToMany
     private Set<User> team;

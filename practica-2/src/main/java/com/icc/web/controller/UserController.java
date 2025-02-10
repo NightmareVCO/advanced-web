@@ -25,13 +25,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/users/")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
   private final UserService userService;
 
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<List<UserDTO>> getAllUsers() {
     List<User> users = userService.getAllUsers();
     List<UserDTO> responseUsers = UserMapper.INSTANCE.usersToDtos(users);
@@ -41,7 +41,7 @@ public class UserController {
     return new ResponseEntity<>(responseUsers, HttpStatus.OK);
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("{id}")
   public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
     User user = userService.getUserById(id);
     if (user == null)
@@ -52,7 +52,7 @@ public class UserController {
     return new ResponseEntity<>(fetchedUser, HttpStatus.OK);
   }
 
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
     User user = UserMapper.INSTANCE.dtoToUserDTO(userDTO);
     User savedUser = userService.saveUser(user);
@@ -64,7 +64,7 @@ public class UserController {
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("{id}")
   public ResponseEntity<UserDTO> deleteUser(@PathVariable Long id) {
     User user = userService.deleteUser(id);
     if (user == null)

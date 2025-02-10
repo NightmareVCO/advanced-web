@@ -21,7 +21,7 @@ public class Endpoint {
     private String path;
     private String method;
     private boolean status;
-    private String delay;
+    private int delay;
     private boolean security;
     private LocalDateTime expirationDate;
     private String encoding;

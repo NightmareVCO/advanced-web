@@ -28,4 +28,9 @@ public class User {
   @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
       CascadeType.REFRESH })
   private Set<Role> roles;
+
+  @OneToMany(mappedBy = "owner")
+  private Set<Project> projects;
+
+
 }
