@@ -9,8 +9,8 @@ import {
 import { mobileMenuItems } from '../_config/config';
 import NavbarMobileItems from './NavbarMobileItems';
 
-import { Icon } from '@iconify/react';
 import Routes from '@/lib/data/routes.data';
+import { Icon } from '@iconify/react';
 
 type NavbarMobileProps = {
 	admin?: boolean;

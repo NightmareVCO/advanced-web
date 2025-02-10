@@ -6,8 +6,8 @@ import Background from '@components/Background/Background';
 import Footer from '@components/Navigation/Footer/Footer';
 import Navbar from '@components/Navigation/Navbar/Navbar';
 import { decrypt } from '@lib/auth/session';
-import { cookies } from 'next/headers';
 import type { JWTPayload } from 'jose';
+import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
 	title: 'Mockify',

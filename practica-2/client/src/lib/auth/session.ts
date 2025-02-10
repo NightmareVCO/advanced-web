@@ -23,7 +23,9 @@ export async function deleteSession() {
 	cookieStore.delete('session');
 }
 
-export async function decrypt(session: string | undefined = ''): Promise<JWTPayload | Error> {
+export async function decrypt(
+	session: string | undefined = '',
+): Promise<JWTPayload | Error> {
 	try {
 		const { payload } = await jwtVerify(session, encodedKey, {
 			algorithms: ['HS256'],

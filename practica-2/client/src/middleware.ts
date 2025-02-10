@@ -1,9 +1,9 @@
 import { decrypt } from '@lib/auth/session';
 import Routes from '@lib/data/routes.data';
-import type {  JWTPayload } from 'jose';
+import type { AuthPayload } from '@lib/entity/session.entity';
+import type { JWTPayload } from 'jose';
 import { cookies } from 'next/headers';
 import { type NextRequest, NextResponse } from 'next/server';
-import type { AuthPayload } from '@lib/entity/session.entity';
 
 const protectedRoutes = [
 	Routes.NewProject.toString(),
@@ -15,7 +15,7 @@ const publicRoutes = [Routes.Home.toString(), Routes.LogIn.toString()];
 export default async function middleware(req: NextRequest) {
 	// 2. Check if the current route is protected or public
 	let userIsAdmin = false;
-	
+
 	const path = req.nextUrl.pathname;
 	const isProtectedRoute = protectedRoutes.includes(path);
 	const isPublicRoute = publicRoutes.includes(path);
@@ -24,14 +24,14 @@ export default async function middleware(req: NextRequest) {
 	const cookie = (await cookies()).get('session')?.value;
 	const session: JWTPayload | Error = await decrypt(cookie);
 
-	let authSession: AuthPayload | null = null;  
+	let authSession: AuthPayload | null = null;
 	if (!(session instanceof Error) && (session as AuthPayload).userId) {
-			authSession = session as AuthPayload;
+		authSession = session as AuthPayload;
 	}
 
 	// Parse the admin role
-		if (authSession && typeof authSession.role === 'string') {
-			userIsAdmin = authSession.role.includes('ADMIN');
+	if (authSession && typeof authSession.role === 'string') {
+		userIsAdmin = authSession.role.includes('ADMIN');
 	}
 
 	// Redirect to /login if the user is not authenticated

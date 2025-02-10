@@ -1,6 +1,6 @@
-import type { JWTPayload } from "jose";
+import type { JWTPayload } from 'jose';
 
 export interface AuthPayload extends JWTPayload {
-    userId: string;
-    role?: string;
+	userId: string;
+	role?: string;
 }
