@@ -1,18 +1,28 @@
 package com.icc.web.dto;
 
-import com.icc.web.model.Endpoint;
+import jakarta.validation.constraints.NotBlank;
+import lombok.NonNull;
 import lombok.Value;
-import java.util.Set;
 
 @Value
 public class ProjectDTO {
     Long id;
-    String name;
-    String desc;
-    String tag;
-    Boolean status;
+    @NotBlank(message = "Name is mandatory")
+    @NonNull
+    private String name;
+
+    @NotBlank(message = "Description is mandatory")
+    @NonNull
+    private String desc;
+
+    @NotBlank(message = "Tag is mandatory")
+    @NonNull
+    private String tag;
+
+    @NonNull
     UserDTO owner;
-    Set<UserDTO> team;
-    Set<Endpoint> endpoints;
-    Boolean isPublic;
+
+    public static boolean validateNoNull(ProjectDTO projectDTO) {
+        return projectDTO.name == null || projectDTO.desc == null || projectDTO.tag == null || projectDTO.owner == null;
+    }
 }

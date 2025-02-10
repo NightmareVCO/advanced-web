@@ -15,6 +15,10 @@ public class EndpointService {
         this.endpointRepository = endpointRepository;
     }
 
+    public Optional<Endpoint> getEndpointByPathAndMethod(String path, String method) {
+        return endpointRepository.findByPathAndMethod(path, method);
+    }
+
     public List<Endpoint> getAllEndpoints() {
         return endpointRepository.findByStatus(true);
     }
@@ -23,9 +27,8 @@ public class EndpointService {
         return endpointRepository.findByIdAndStatus(id, true);
     }
 
-    public Endpoint saveEndpoint(Endpoint endpoint) {
-        endpoint.setStatus(true);
-        return endpointRepository.save(endpoint);
+    public Optional<Endpoint> saveEndpoint(Endpoint endpoint) {
+        return Optional.of(endpointRepository.save(endpoint));
     }
 
     public Endpoint updateEndpoint(Endpoint endpoint) {

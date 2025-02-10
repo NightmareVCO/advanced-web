@@ -8,8 +8,9 @@ import java.util.Optional;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findByStatus(boolean status);
+
     Optional<Project> findByIdAndStatus(Long id, boolean status);
 
-    List<Project> findByCreatedByUsername(String username);
+    List<Project> findByOwnerUsername(String username);
 
 }

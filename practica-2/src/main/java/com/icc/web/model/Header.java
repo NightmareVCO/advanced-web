@@ -8,13 +8,15 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Header {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "header_key")
     private String key;
+
+    @Column(name = "header_value")
     private String value;
 
     @ManyToOne

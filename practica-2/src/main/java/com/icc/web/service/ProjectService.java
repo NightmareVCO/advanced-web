@@ -23,19 +23,20 @@ public class ProjectService {
         return projectRepository.findByIdAndStatus(id, true);
     }
 
-    public Project saveProject(Project project) {
+    public Optional<Project> saveProject(Project project) {
         project.setStatus(true);
-        return projectRepository.save(project);
+        return Optional.of(projectRepository.save(project));
     }
 
-    public Project updateProject(Project project) {
-        return projectRepository.save(project);
+    public Optional<Project> updateProject(Project project) {
+        return Optional.of(projectRepository.save(project));
     }
 
     public void deleteProject(Long id) {
-        projectRepository.findById(id).ifPresent(project -> {
-            project.setStatus(false);
-            projectRepository.save(project);
-        });
+        Optional<Project> project = this.getProjectById(id);
+        if (project.isPresent()) {
+            project.get().setStatus(false);
+            projectRepository.save(project.get());
+        }
     }
 }

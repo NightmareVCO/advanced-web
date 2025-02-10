@@ -20,15 +20,19 @@ public class Endpoint {
     private String description;
     private String path;
     private String method;
-    private boolean status;
     private int delay;
-    private boolean security;
     private LocalDateTime expirationDate;
     private String encoding;
     private String responseType;
     private String responseStatus;
-    private String JWT;
+    private String jwt;
     private String body;
+
+    @Builder.Default
+    private boolean status = true;
+
+    @Builder.Default
+    private boolean security = false;
 
     @ManyToOne
     private Project project;
