@@ -1,13 +1,13 @@
 package com.icc.web.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.icc.web.exception.InternalServerError;
 import com.icc.web.exception.NoContentException;
 import com.icc.web.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,11 +43,11 @@ public class UserController {
 
   @GetMapping("{id}")
   public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-    User user = userService.getUserById(id);
-    if (user == null)
+    Optional<User> user = userService.getUserById(id);
+    if (user.isEmpty())
       throw new ResourceNotFoundException("User not found");
 
-    UserDTO fetchedUser = UserMapper.INSTANCE.userToDto(user);
+    UserDTO fetchedUser = UserMapper.INSTANCE.userToDto(user.get());
 
     return new ResponseEntity<>(fetchedUser, HttpStatus.OK);
   }
@@ -55,22 +55,22 @@ public class UserController {
   @PostMapping
   public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
     User user = UserMapper.INSTANCE.dtoToUserDTO(userDTO);
-    User savedUser = userService.saveUser(user);
-    if (savedUser == null)
+    Optional<User> savedUser = userService.saveUser(user);
+    if (savedUser.isEmpty())
       throw new InternalServerError("Internal Server Error");
 
-    UserDTO createdUser = UserMapper.INSTANCE.userToDto(savedUser);
+    UserDTO createdUser = UserMapper.INSTANCE.userToDto(savedUser.get());
 
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
   }
 
   @DeleteMapping("{id}")
   public ResponseEntity<UserDTO> deleteUser(@PathVariable Long id) {
-    User user = userService.deleteUser(id);
-    if (user == null)
+    Optional<User> user = userService.deleteUser(id);
+    if (user.isEmpty())
       throw new ResourceNotFoundException("User not found");
 
-    UserDTO deletedUser = UserMapper.INSTANCE.userToDto(user);
+    UserDTO deletedUser = UserMapper.INSTANCE.userToDto(user.get());
 
     return new ResponseEntity<>(deletedUser, HttpStatus.OK);
   }

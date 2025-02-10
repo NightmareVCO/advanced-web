@@ -19,7 +19,10 @@ public class User {
 
   private String firstName;
   private String lastName;
+
+  @Column(unique = true)
   private String username;
+
   private String email;
   private String password;
   private boolean active;
@@ -31,6 +34,5 @@ public class User {
 
   @OneToMany(mappedBy = "owner")
   private Set<Project> projects;
-
 
 }
