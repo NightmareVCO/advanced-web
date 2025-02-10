@@ -3,20 +3,31 @@ import { tokyoNightStorm } from '@uiw/codemirror-theme-tokyo-night-storm';
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useCallback, useState } from 'react';
 
-export default function CodeEditor() {
-	const [value, setValue] = useState<string>();
+type CodeEditorProps = {
+	minHeight: string;
+	minWidth: string;
+	width: string;
+	maxWidth: string;
+	code: string;
+	onChange: (value: string) => void;
+};
 
-	const onChange = useCallback((value: string) => {
-		setValue(value);
-	}, []);
+export default function CodeEditor({
+	minHeight,
+	minWidth,
+	width,
+	maxWidth,
+	code,
+	onChange,
+}: CodeEditorProps) {
 	return (
 		<CodeMirror
-			value={value}
+			value={code}
 			theme={tokyoNightStorm}
-			minHeight="20rem"
-			minWidth="40rem"
-			width="77rem"
-			maxWidth="77rem"
+			minHeight={minHeight}
+			minWidth={minWidth}
+			width={width}
+			maxWidth={maxWidth}
 			placeholder={`{
 	"key": "value"
 }

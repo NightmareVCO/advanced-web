@@ -25,7 +25,7 @@ import ContentType from '@lib/data/contentType.data';
 import Expiration from '@lib/data/expiration.data';
 import statusCodes from '@lib/data/statusCode.data';
 import type Endpoint from '@lib/entity/endpoint.entity';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 type EndpointFormProps = {
 	endpoint?: Endpoint;
@@ -55,6 +55,13 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 		setHeaders(headers.filter((_, index) => index !== indexToDelete));
 	};
 
+	const [code, setCode] = useState<string>();
+	const [currentEndpoint, setCurrentEndpoint] = useState<string>(prefix);
+
+	const onCodeChange = useCallback((value: string) => {
+		setCode(value);
+	}, []);
+
 	return (
 		<Form
 			id="login-form"
@@ -77,6 +84,10 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				defaultValue={endpoint?.path}
 				onChange={handleChange}
 			/>
+
+			<div className="md:hidden w-full">
+				<p className="text-xs text-start text-default-300">{currentEndpoint}</p>
+			</div>
 
 			<div className="flex flex-wrap gap-4 w-full">
 				<Tabs
@@ -159,10 +170,69 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 			<Spacer y={2} />
 			<FormDivider title="Enter the response and headers of your endpoint" />
 
-			<CodeEditor />
+			<div className="hidden xl:block">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="77rem"
+					maxWidth="77rem"
+				/>
+			</div>
+			<div className="hidden lg:block xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="60rem"
+					maxWidth="60rem"
+				/>
+			</div>
+			<div className="hidden md:block lg:hidden xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="50rem"
+					maxWidth="50rem"
+				/>
+			</div>
+			<div className="hidden sm:block md:hidden lg:hidden xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="40rem"
+					maxWidth="40rem"
+				/>
+			</div>
+			<div className="sm:hidden md:hidden lg:hidden xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="25rem"
+					maxWidth="25rem"
+				/>
+			</div>
+			{/* <div className="block xs:hidden sm:hidden md:hidden lg:hidden xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="30rem"
+					maxWidth="30rem"
+				/>
+			</div> */}
 			<Spacer y={2} />
 
-			<div className="flex w-full items-center justify-start">
+			<div className="flex w-full items-center justify-center lg:justify-start">
 				<Button
 					className="bg-primary font-medium text-white"
 					color="secondary"
@@ -184,7 +254,6 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				<>
 					<Spacer y={1} />
 					<Divider />
-
 					<Spacer y={1} />
 				</>
 			)}

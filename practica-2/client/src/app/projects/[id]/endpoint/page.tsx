@@ -26,7 +26,7 @@ export default async function CreateEndpointPage({
 					]}
 				/>
 			</Header>
-			<div className="bg-black/30 rounded-3xl p-4 w-full max-w-7xl">
+			<div className="bg-black/30 rounded-3xl p-4  w-full max-w-7xl">
 				<EndpointForm />
 			</div>
 		</main>
