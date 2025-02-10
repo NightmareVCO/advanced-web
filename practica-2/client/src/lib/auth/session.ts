@@ -1,5 +1,5 @@
 import 'server-only';
-import { jwtVerify } from 'jose';
+import { type JWTPayload, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
 const secretKey = 'zgI4sCmHU5ticRe9ecLJst0EYzIjewEVHJ3xPwQ/5Kg=';
@@ -18,13 +18,18 @@ export async function createSession(payload: any) {
 	});
 }
 
-export async function decrypt(session: string | undefined = '') {
+export async function deleteSession() {
+	const cookieStore = await cookies();
+	cookieStore.delete('session');
+}
+
+export async function decrypt(session: string | undefined = ''): Promise<JWTPayload | Error> {
 	try {
 		const { payload } = await jwtVerify(session, encodedKey, {
 			algorithms: ['HS256'],
 		});
 		return payload;
 	} catch (error) {
-		return error;
+		return new Error(`Invalid session ${error}`);
 	}
 }

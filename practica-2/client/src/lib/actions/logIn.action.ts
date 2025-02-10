@@ -1,8 +1,9 @@
 'use server';
 
-import { createSession } from '@lib/auth/session';
-import { redirect } from 'next/navigation';
+import { createSession, deleteSession } from '@lib/auth/session';
 import Routes from '@lib/data/routes.data';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export async function logIn(prevState: unknown, formData: FormData) {
 	try {
@@ -18,9 +19,9 @@ export async function logIn(prevState: unknown, formData: FormData) {
 		const result = await response.json();
 		await createSession(result?.token);
 
-    redirect(Routes.Projects);
+		redirect(Routes.Projects);
 
-    return result;
+		return result;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
 		return {
@@ -29,4 +30,9 @@ export async function logIn(prevState: unknown, formData: FormData) {
 			},
 		};
 	}
+}
+
+export async function logout() {
+	deleteSession();
+	redirect(Routes.Home);
 }
