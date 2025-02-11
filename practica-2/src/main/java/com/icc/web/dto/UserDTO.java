@@ -9,6 +9,8 @@ import lombok.Value;
 @Value
 public class UserDTO {
 
+  Long id;
+
   @NotBlank(message = "First name is mandatory")
   @NotNull
   String firstName;

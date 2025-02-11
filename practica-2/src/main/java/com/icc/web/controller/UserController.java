@@ -2,7 +2,9 @@ package com.icc.web.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.icc.web.exception.BadRequestException;
 import com.icc.web.exception.InternalServerError;
 import com.icc.web.exception.NoContentException;
 import com.icc.web.exception.ResourceNotFoundException;
@@ -13,16 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.icc.web.dto.UserDTO;
+import com.icc.web.dto.UserResponseDTO;
+import com.icc.web.enums.ERole;
 import com.icc.web.mapper.UserMapper;
+import com.icc.web.model.Role;
 import com.icc.web.model.User;
+import com.icc.web.service.JWTService;
 import com.icc.web.service.UserService;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/api/v1/users/")
@@ -30,47 +38,159 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Slf4j
 public class UserController {
   private final UserService userService;
+  private final JWTService jwtService;
 
   @GetMapping
-  public ResponseEntity<List<UserDTO>> getAllUsers() {
+  public ResponseEntity<List<UserResponseDTO>> getAllUsers(@RequestHeader("Authorization") String token) {
+
+    String jwt = token.substring(7);
+    Optional<Claims> claims = jwtService.getClaims(jwt);
+
+    if (claims.isEmpty()) {
+      throw new BadRequestException("Invalid token");
+    }
+
+    if (jwtService.isTokenExpired(jwt)) {
+      throw new BadRequestException("Token expired");
+    }
+
+    String loggedUsername = claims.get().get("username").toString();
+    Optional<User> loggedUser = userService.getUserByUsername(loggedUsername);
+    if (loggedUser.isEmpty()) {
+      throw new ResourceNotFoundException("User not found");
+    }
+
+    Set<Role> roles = loggedUser.get().getRoles();
+    boolean isAdminRole = roles.stream().anyMatch(role -> role.getName().equals(ERole.ADMIN));
+
+    if (!isAdminRole) {
+      throw new BadRequestException("Unauthorized");
+    }
+
     List<User> users = userService.getAllUsers();
-    List<UserDTO> responseUsers = UserMapper.INSTANCE.usersToDtos(users);
-    if (responseUsers.isEmpty())
+    List<UserResponseDTO> responseUsers = UserMapper.INSTANCE.usersToResponseDtos(users);
+    if (responseUsers.isEmpty()) {
       throw new NoContentException("No Users Found");
+    }
 
     return new ResponseEntity<>(responseUsers, HttpStatus.OK);
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-    Optional<User> user = userService.getUserById(id);
-    if (user.isEmpty())
-      throw new ResourceNotFoundException("User not found");
+  public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id,
+      @RequestHeader("Authorization") String token) {
 
-    UserDTO fetchedUser = UserMapper.INSTANCE.userToDto(user.get());
+    String jwt = token.substring(7);
+    Optional<Claims> claims = jwtService.getClaims(jwt);
+
+    if (claims.isEmpty()) {
+      throw new BadRequestException("Invalid token");
+    }
+
+    if (jwtService.isTokenExpired(jwt)) {
+      throw new BadRequestException("Token expired");
+    }
+
+    String loggedUsername = claims.get().get("username").toString();
+    Optional<User> loggedUser = userService.getUserByUsername(loggedUsername);
+    if (loggedUser.isEmpty()) {
+      throw new ResourceNotFoundException("User not found");
+    }
+
+    Set<Role> roles = loggedUser.get().getRoles();
+    boolean isAdminRole = roles.stream().anyMatch(role -> role.getName().equals(ERole.ADMIN));
+
+    if (!isAdminRole) {
+      throw new BadRequestException("Unauthorized");
+    }
+
+    Optional<User> user = userService.getUserById(id);
+    if (user.isEmpty()) {
+      throw new ResourceNotFoundException("User not found");
+    }
+
+    UserResponseDTO fetchedUser = UserMapper.INSTANCE.userToResponseDto(user.get());
+    if (fetchedUser == null) {
+      throw new InternalServerError("Internal Server Error");
+    }
 
     return new ResponseEntity<>(fetchedUser, HttpStatus.OK);
   }
 
   @PostMapping
-  public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+  public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserDTO userDTO,
+      @RequestHeader("Authorization") String token) {
+    String jwt = token.substring(7);
+    Optional<Claims> claims = jwtService.getClaims(jwt);
+
+    if (claims.isEmpty()) {
+      throw new BadRequestException("Invalid token");
+    }
+
+    if (jwtService.isTokenExpired(jwt)) {
+      throw new BadRequestException("Token expired");
+    }
+
+    String loggedUsername = claims.get().get("username").toString();
+    Optional<User> loggedUser = userService.getUserByUsername(loggedUsername);
+    if (loggedUser.isEmpty()) {
+      throw new ResourceNotFoundException("User not found");
+    }
+
+    Set<Role> roles = loggedUser.get().getRoles();
+    boolean isAdminRole = roles.stream().anyMatch(role -> role.getName().equals(ERole.ADMIN));
+
+    if (!isAdminRole) {
+      throw new BadRequestException("Unauthorized");
+    }
+
     User user = UserMapper.INSTANCE.dtoToUserDTO(userDTO);
     Optional<User> savedUser = userService.saveUser(user);
-    if (savedUser.isEmpty())
+    if (savedUser.isEmpty()) {
       throw new InternalServerError("Internal Server Error");
+    }
 
-    UserDTO createdUser = UserMapper.INSTANCE.userToDto(savedUser.get());
+    UserResponseDTO createdUser = UserMapper.INSTANCE.userToResponseDto(savedUser.get());
+    if (createdUser == null)
+      throw new InternalServerError("Internal Server Error");
 
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<UserDTO> deleteUser(@PathVariable Long id) {
+  public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable Long id,
+      @RequestHeader("Authorization") String token) {
+    String jwt = token.substring(7);
+    Optional<Claims> claims = jwtService.getClaims(jwt);
+
+    if (claims.isEmpty()) {
+      throw new BadRequestException("Invalid token");
+    }
+
+    if (jwtService.isTokenExpired(jwt)) {
+      throw new BadRequestException("Token expired");
+    }
+
+    String loggedUsername = claims.get().get("username").toString();
+    Optional<User> loggedUser = userService.getUserByUsername(loggedUsername);
+    if (loggedUser.isEmpty()) {
+      throw new ResourceNotFoundException("User not found");
+    }
+
+    Set<Role> roles = loggedUser.get().getRoles();
+    boolean isAdminRole = roles.stream().anyMatch(role -> role.getName().equals(ERole.ADMIN));
+
+    if (!isAdminRole) {
+      throw new BadRequestException("Unauthorized");
+    }
+
     Optional<User> user = userService.deleteUser(id);
     if (user.isEmpty())
       throw new ResourceNotFoundException("User not found");
 
-    UserDTO deletedUser = UserMapper.INSTANCE.userToDto(user.get());
+    UserResponseDTO deletedUser = UserMapper.INSTANCE.userToResponseDto(user.get());
+    if (deletedUser == null)
+      throw new InternalServerError("Internal Server Error");
 
     return new ResponseEntity<>(deletedUser, HttpStatus.OK);
   }
