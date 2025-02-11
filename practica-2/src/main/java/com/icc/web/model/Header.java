@@ -3,8 +3,9 @@ package com.icc.web.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

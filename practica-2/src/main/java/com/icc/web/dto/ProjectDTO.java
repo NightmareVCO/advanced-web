@@ -19,8 +19,10 @@ public class ProjectDTO {
     @NonNull
     private String tag;
 
+    private boolean openAccess;
+
     @NonNull
-    UserDTO owner;
+    UserResponseDTO owner;
 
     public static boolean validateNoNull(ProjectDTO projectDTO) {
         return projectDTO.name == null || projectDTO.desc == null || projectDTO.tag == null || projectDTO.owner == null;

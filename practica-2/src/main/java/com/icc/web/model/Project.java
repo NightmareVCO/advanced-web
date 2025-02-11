@@ -3,14 +3,17 @@ package com.icc.web.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -21,7 +24,7 @@ public class Project {
     private String name;
     private String desc;
     private String tag;
-    private boolean isPublic;
+    private boolean openAccess;
 
     @Builder.Default
     private Boolean status = true;
