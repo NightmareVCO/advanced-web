@@ -17,5 +17,5 @@ public class HeaderDTO {
     String value;
 
     @NonNull
-    EndpointDTO endpoint;
+    EndpointResponseDTO endpoint;
 }

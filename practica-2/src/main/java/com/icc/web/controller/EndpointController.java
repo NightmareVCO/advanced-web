@@ -1,6 +1,8 @@
 package com.icc.web.controller;
 
+import com.icc.web.dto.AuthResponseDTO;
 import com.icc.web.dto.EndpointDTO;
+import com.icc.web.dto.EndpointResponseDTO;
 import com.icc.web.dto.ProjectDTO;
 import com.icc.web.exception.BadRequestException;
 import com.icc.web.exception.ForbiddenException;
@@ -12,6 +14,8 @@ import com.icc.web.model.Project;
 import com.icc.web.repository.EndpointRepository;
 import com.icc.web.repository.ProjectRepository;
 import com.icc.web.service.EndpointService;
+import com.icc.web.service.JWTService;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +37,7 @@ public class EndpointController {
 
     private final EndpointService endpointService;
     private final ProjectRepository projectRepository;
+    private final JWTService jwtService;
 
     @RequestMapping(value = "**", method = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
             RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.OPTIONS })
@@ -45,6 +51,17 @@ public class EndpointController {
         }
 
         Endpoint endpointMock = endpoint.get();
+
+        if (endpointMock.getExpirationDate() != null
+                && endpointMock.getExpirationDate().isBefore(LocalDateTime.now())) {
+            endpointMock.setStatus(false);
+            Optional<Endpoint> expiredEndpoint = endpointService.saveEndpoint(endpointMock);
+            if (expiredEndpoint.isEmpty()) {
+                throw new InternalServerError("Internal Server Error");
+            }
+
+            throw new ForbiddenException("Endpoint have expired");
+        }
 
         if (endpointMock.getDelay() > 0) {
             Thread.sleep(endpointMock.getDelay() * 1000L);
@@ -62,13 +79,13 @@ public class EndpointController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EndpointDTO>> getAllEndpoints() {
+    public ResponseEntity<List<EndpointResponseDTO>> getAllEndpoints() {
         List<Endpoint> endpoints = endpointService.getAllEndpoints();
-        List<EndpointDTO> endpointDTOs = EndpointMapper.INSTANCE.endpointsToDtos(endpoints);
-        if (endpointDTOs.isEmpty())
+        List<EndpointResponseDTO> endpointsResponseDTOs = EndpointMapper.INSTANCE.endpointsToResponseDtos(endpoints);
+        if (endpointsResponseDTOs.isEmpty())
             throw new ResourceNotFoundException("No Endpoints Found");
 
-        return new ResponseEntity<>(endpointDTOs, HttpStatus.OK);
+        return new ResponseEntity<>(endpointsResponseDTOs, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
@@ -80,11 +97,17 @@ public class EndpointController {
         }
 
         EndpointDTO endpointDTO = EndpointMapper.INSTANCE.endpointToDto(endpointOptional.get());
+        if (endpointDTO == null) {
+            throw new InternalServerError("Internal Server Error");
+        }
+
         return new ResponseEntity<>(endpointDTO, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<EndpointDTO> createEndpoint(@RequestBody EndpointDTO endpointDTO) {
+        AuthResponseDTO jwt = null;
+
         if (EndpointDTO.validateNoNull(endpointDTO)) {
             throw new ForbiddenException("All fields are mandatory");
         }
@@ -94,19 +117,36 @@ public class EndpointController {
             throw new BadRequestException("Project not found");
         }
 
-        Endpoint endpoint = EndpointMapper.INSTANCE.dtoToEndpoint(endpointDTO);
-        endpoint.setProject(project.get());
-
-        if (endpointService.getEndpointByPathAndMethod(endpoint.getPath(), endpoint.getMethod()).isPresent()) {
+        if (endpointService.getEndpointByPathAndMethod(endpointDTO.getPath(), endpointDTO.getMethod()).isPresent()) {
             throw new BadRequestException("Endpoint with the same path and method already exists");
         }
+
+        Endpoint endpoint = EndpointMapper.INSTANCE.dtoToEndpoint(endpointDTO);
+        endpoint.setProject(project.get());
 
         Optional<Endpoint> savedEndpoint = endpointService.saveEndpoint(endpoint);
         if (savedEndpoint.isEmpty()) {
             throw new InternalServerError("Internal Server Error");
         }
 
+        if (endpoint.isSecurity()) {
+            jwt = jwtService.createTokenForEndpoint(endpoint.getProject().getId().toString(),
+                    endpoint.getId().toString(), endpoint.getExpirationDate());
+        }
+
+        if (jwt != null) {
+            endpoint.setJwt(jwt.getToken());
+        }
+
+        savedEndpoint = endpointService.saveEndpoint(endpoint);
+        if (savedEndpoint.isEmpty()) {
+            throw new InternalServerError("Internal Server Error");
+        }
+
         EndpointDTO createdEndpoint = EndpointMapper.INSTANCE.endpointToDto(savedEndpoint.get());
+        if (createdEndpoint == null) {
+            throw new InternalServerError("Internal Server Error");
+        }
 
         return new ResponseEntity<>(createdEndpoint, HttpStatus.CREATED);
     }

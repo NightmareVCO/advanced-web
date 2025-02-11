@@ -2,18 +2,18 @@ package com.icc.web.service;
 
 import com.icc.web.model.Endpoint;
 import com.icc.web.repository.EndpointRepository;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class EndpointService {
     private final EndpointRepository endpointRepository;
-
-    public EndpointService(EndpointRepository endpointRepository) {
-        this.endpointRepository = endpointRepository;
-    }
 
     public Optional<Endpoint> getEndpointByPathAndMethod(String path, String method) {
         return endpointRepository.findByPathAndMethod(path, method);
