@@ -96,7 +96,6 @@ export default function StudentModal({ studentPackage }: StudentModalProps) {
 										if (errors) return;
 
 										setTimeout(() => {
-											setStudent(undefined);
 											setMethod(Method.Add);
 											onClose();
 										}, 1000);

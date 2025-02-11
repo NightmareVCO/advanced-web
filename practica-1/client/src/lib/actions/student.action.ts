@@ -3,7 +3,7 @@
 import { SERVER, TEST_SERVER } from '@constants/constants';
 import { revalidatePath } from 'next/cache';
 
-const CURRENT_SERVER = SERVER || TEST_SERVER ;
+const CURRENT_SERVER = SERVER || TEST_SERVER;
 const ERROR_MESSAGE = 'Action not available';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>

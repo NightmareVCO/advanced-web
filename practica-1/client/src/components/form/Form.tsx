@@ -1,6 +1,5 @@
 import { Form, Input } from '@heroui/react';
 import type { Student } from '@type/types';
-import { useEffect } from 'react';
 
 type FormProps = {
 	student?: Student;
@@ -31,8 +30,7 @@ export default function StudentForm({
 				isClearable
 				placeholder="Enter your first name"
 				isRequired
-				pattern="^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ]+$"
-				errorMessage="First name must be a valid name (no numbers or special characters)"
+				errorMessage="First name must be a valid name"
 				defaultValue={student?.firstName}
 				isDisabled={justWatch}
 			/>
@@ -42,8 +40,7 @@ export default function StudentForm({
 				isClearable
 				placeholder="Enter your last name"
 				isRequired
-				pattern="^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ]+$"
-				errorMessage="Last name must be a valid name (no numbers or special characters)"
+				errorMessage="Last name must be a valid name"
 				defaultValue={student?.lastName}
 				isDisabled={justWatch}
 			/>
@@ -57,7 +54,7 @@ export default function StudentForm({
 				placeholder="Enter your id"
 				isRequired
 				pattern="^10[1-9][0-9][0-9]{4}$"
-				errorMessage="ID must be 8 digits and be a valid ID such as 10141514"
+				errorMessage="ID must be 8 digits and be a valid ID such as 10141514 or 10231514"
 				defaultValue={student?.matricula}
 				isDisabled={justWatch}
 			/>
