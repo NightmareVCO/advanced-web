@@ -4,6 +4,8 @@ import com.icc.web.dto.AuthResponseDTO;
 import com.icc.web.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,10 @@ public class JWTService {
     public AuthResponseDTO generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
         Optional<User> user = userService.getUserByUsername(userName);
+        if (user.isEmpty()) {
+            return null;
+        }
+
         String userId = String.valueOf(user.get().getId());
 
         claims.put("username", userName);
@@ -61,18 +67,64 @@ public class JWTService {
         return new AuthResponseDTO(jwt);
     }
 
-    // private Boolean isTokenExpired(String token) {
-    // return extractExpiration(token).before(new Date());
-    // }
-    //
-    // public Boolean validateToken(String token, UserDetails userDetails) {
-    // final String username = extractUsername(token);
-    // return (username.equals(userDetails.getUsername()) &&
-    // !isTokenExpired(token));
-    // }
-    //
-    // public Boolean validateToken(String token){
-    // return !isTokenExpired(token);
-    // }
+    public AuthResponseDTO createTokenForEndpoint(String projectId, String endpointId, LocalDateTime expirationDate) {
+        Date expiration = Date.from(expirationDate.toInstant(ZoneOffset.ofHours(-4)));
 
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+
+        String jwt = Jwts.builder()
+                .claim("projectId", projectId)
+                .claim("endpointId", endpointId)
+                .issuer(ISSUER)
+                .signWith(key)
+                .issuedAt(new Date())
+                .expiration(
+                        expiration)
+                .compact();
+
+        return new AuthResponseDTO(jwt);
+    }
+
+    public Optional<Claims> getClaims(String jwt) {
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        try {
+            return Optional.ofNullable(Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getPayload());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public boolean isJwtEndpointValid(String jwt, String projectId, String endpointId) {
+        try {
+            Optional<Claims> payload = this.getClaims(jwt);
+            if (payload.isEmpty()) {
+                return false;
+            }
+
+            String payloadProjectId = payload.get().get("projectId", String.class);
+            String payloadEndpointId = payload.get().get("endpointId", String.class);
+
+            if (!projectId.equals(payloadProjectId) || !endpointId.equals(payloadEndpointId)) {
+                return false;
+            }
+
+            if (this.isTokenExpired(jwt)) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean isTokenExpired(String jwt) {
+        Optional<Claims> claims = this.getClaims(jwt);
+        if (claims.isEmpty()) {
+            return true;
+        }
+
+        Date expirationDate = claims.get().getExpiration();
+        return expirationDate.before(new Date());
+    }
 }
