@@ -8,7 +8,6 @@ import com.icc.web.exception.ForbiddenException;
 import com.icc.web.exception.InternalServerError;
 import com.icc.web.exception.ResourceNotFoundException;
 import com.icc.web.mapper.ProjectMapper;
-import com.icc.web.mapper.UserMapper;
 import com.icc.web.model.Project;
 import com.icc.web.model.Role;
 import com.icc.web.model.User;
@@ -110,7 +109,7 @@ public class ProjectController {
         return new ResponseEntity<>(projectResponseDTO, HttpStatus.OK);
     }
 
-    @PostMapping("add/{userId}/to/{projectId}")
+    @PostMapping("add-user/{userId}/to-project/{projectId}")
     public ResponseEntity<ProjectDTO> addUserToTeam(@PathVariable Long userId, @PathVariable Long projectId,
             @RequestHeader("Authorization") String token) {
         Optional<Project> project = projectService.getProjectById(projectId);
@@ -132,6 +131,10 @@ public class ProjectController {
         String ownerUsername = project.get().getOwner().getUsername();
         if (!loggedUsername.equals(ownerUsername)) {
             throw new ForbiddenException("You are not the owner of the project");
+        }
+
+        if (claims.get().get("userId", String.class).equals(userId.toString())) {
+            throw new ForbiddenException("You can't add yourself to the team");
         }
 
         String username = claims.get().get("username", String.class);
@@ -159,7 +162,7 @@ public class ProjectController {
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("remove/{userId}/from/{projectId}")
+    @DeleteMapping("remove-user/{userId}/from-project/{projectId}")
     public ResponseEntity<ProjectDTO> removeUserFromTeam(@PathVariable Long userId, @PathVariable Long projectId,
             @RequestHeader("Authorization") String token) {
         Optional<Project> project = projectService.getProjectById(projectId);
@@ -182,6 +185,10 @@ public class ProjectController {
         String ownerUsername = project.get().getOwner().getUsername();
         if (!loggedUsername.equals(ownerUsername)) {
             throw new ForbiddenException("You are not the owner of the project");
+        }
+
+        if (claims.get().get("userId", String.class).equals(userId.toString())) {
+            throw new ForbiddenException("You cannot remove yourself from the team");
         }
 
         Optional<User> user = userService.getUserById(userId);

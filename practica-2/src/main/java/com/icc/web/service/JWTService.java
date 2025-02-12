@@ -1,11 +1,13 @@
 package com.icc.web.service;
 
 import com.icc.web.dto.AuthResponseDTO;
+import com.icc.web.model.Endpoint;
 import com.icc.web.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Service
 public class JWTService {
     private final UserService userService;
+    private final EndpointService endpointService;
 
     @Value("${jwt.expiresIn}")
     private int expiresIn;
@@ -94,9 +97,31 @@ public class JWTService {
         }
     }
 
+    public Optional<Claims> getClaimsOfEndpoint(String jwt, String endpointId) {
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        try {
+            return Optional.ofNullable(Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getPayload());
+        } catch (ExpiredJwtException e) {
+            if (this.isTokenExpired(jwt)) {
+                Optional<Endpoint> endpoint = endpointService.getEndpointById(Long.parseLong(endpointId));
+                if (endpoint.isEmpty()) {
+                    return Optional.empty();
+                }
+
+                endpoint.get().setStatus(false);
+                endpointService.saveEndpoint(endpoint.get());
+
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+        return Optional.empty();
+    }
+
     public boolean isJwtEndpointValid(String jwt, String projectId, String endpointId) {
         try {
-            Optional<Claims> payload = this.getClaims(jwt);
+            Optional<Claims> payload = this.getClaimsOfEndpoint(jwt, endpointId);
             if (payload.isEmpty()) {
                 return false;
             }
@@ -108,9 +133,6 @@ public class JWTService {
                 return false;
             }
 
-            if (this.isTokenExpired(jwt)) {
-                return false;
-            }
         } catch (Exception e) {
             return false;
         }

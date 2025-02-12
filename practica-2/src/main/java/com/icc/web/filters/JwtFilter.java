@@ -68,7 +68,7 @@ public class JwtFilter extends OncePerRequestFilter {
     String jwt = token.substring(7);
     if (!jwtService.isJwtEndpointValid(jwt, projectId, endpoint.get().getId().toString())) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getWriter().write("Unauthorized");
+      response.getWriter().write("This token is not valid for this endpoint or have expired");
       response.getWriter().flush();
       return;
     }
