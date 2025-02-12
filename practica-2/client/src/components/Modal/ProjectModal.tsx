@@ -8,9 +8,10 @@ import {
 	useDisclosure,
 } from '@heroui/react';
 
+import { createProject } from '@/lib/actions/project.action';
 import ProjectForm from '@components/Forms/ProjectForm/ProjectForm';
 import { Icon } from '@iconify/react';
-import { useEffect } from 'react';
+import { useActionState, useEffect } from 'react';
 
 type ProjectModalProps = {
 	isModalOpenFromParent: boolean;
@@ -29,6 +30,10 @@ export default function ProjectModal({
 			setIsModalOpenFromParent(false);
 		}
 	}, [isModalOpenFromParent, isOpen, onOpen, setIsModalOpenFromParent]);
+
+	const [{ errors }, action, pending] = useActionState(createProject, {
+		errors: {},
+	});
 
 	return (
 		<>
@@ -62,7 +67,11 @@ export default function ProjectModal({
 								Create New Project
 							</ModalHeader>
 							<ModalBody>
-								<ProjectForm />
+								<ProjectForm
+									errors={errors}
+									action={action}
+									pending={pending}
+								/>
 							</ModalBody>
 							<ModalFooter>
 								<Button
@@ -81,6 +90,8 @@ export default function ProjectModal({
 									className="bg-primary font-medium text-white"
 									color="secondary"
 									radius="full"
+									isLoading={pending}
+									isDisabled={pending}
 								>
 									Create
 								</Button>

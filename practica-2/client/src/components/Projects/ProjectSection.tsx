@@ -7,10 +7,14 @@ import Link from 'next/link';
 
 import ProjectForm from '@components/Forms/ProjectForm/ProjectForm';
 import EndpointTable from '@components/Table/EndpointsTable';
+import UsersTable from '@components/Table/UsersTable';
+import { updateProject } from '@lib/actions/project.action';
 import Method from '@lib/data/method.data';
 import type Endpoint from '@lib/entity/endpoint.entity';
 import type { Project } from '@lib/entity/project.entity';
-import UsersTable from '../Table/UsersTable';
+import { useActionState } from 'react';
+import AddUserToTeamForm from '@components/Forms/AddUserToTeamForm/AddUserToTeamForm';
+import UpdateProjectModal from '@components/Modal/UpdateProjectModal/UpdateProjectModal';
 
 const endpoints: Endpoint[] = [
 	{
@@ -80,6 +84,10 @@ type ProjectSectionProps = {
 };
 
 export default function ProjectSection({ project }: ProjectSectionProps) {
+	const [{ errors }, action, pending] = useActionState(updateProject, {
+		errors: {},
+	});
+
 	return (
 		<section className="flex flex-col gap-4">
 			<div className="sm:flex justify-end w-full hidden">
@@ -120,13 +128,27 @@ export default function ProjectSection({ project }: ProjectSectionProps) {
 				</Tab>
 				<Tab key="team" title="Team">
 					<Spacer y={4} />
+					<AddUserToTeamForm />
 					<UsersTable users={project?.team} noEdit isProject />
 					<Spacer y={4} />
 				</Tab>
 				<Tab key="settings" title="Settings">
 					<div className="bg-black/30 rounded-3xl p-4 w-full max-w-7xl">
 						<Spacer y={4} />
-						<ProjectForm project={project} />
+						<ProjectForm
+							project={project}
+							errors={errors}
+							action={action}
+							pending={pending}
+						/>
+						<div className="flex justify-center w-full">
+							<UpdateProjectModal pending={pending} project={project} />
+							{errors?.projectName && (
+								<span className="text-red-500 text-sm">
+									{errors.projectName}
+								</span>
+							)}
+						</div>
 						<Spacer y={4} />
 					</div>
 				</Tab>
