@@ -18,6 +18,7 @@ import React from 'react';
 import EditIcon from '@components/Icons/EditIcon';
 import DeleteUserModal from '@components/Modal/DeleteModals/DeleteUserModal';
 import UserModal from '@components/Modal/UserModal';
+import RemoveUserFromTeam from '../Modal/RemoveUserFromTeam/RemoveUserFromTeam';
 
 export const columns = [
 	{ name: 'User', uid: 'firstName' },
@@ -112,14 +113,25 @@ export default function UsersTable({
 									</span>
 								</Tooltip>
 							)}
-							<DeleteUserModal user={user} setSelectedUser={setSelectedUser} />
+							{isProject && (
+								<RemoveUserFromTeam
+									user={user}
+									setSelectedUser={setSelectedUser}
+								/>
+							)}
+							{!isProject && (
+								<DeleteUserModal
+									user={user}
+									setSelectedUser={setSelectedUser}
+								/>
+							)}
 						</div>
 					);
 				default:
 					return cellValue;
 			}
 		},
-		[onOpen, noEdit],
+		[onOpen, noEdit, isProject],
 	);
 
 	return (
@@ -149,7 +161,7 @@ export default function UsersTable({
 				</TableBody>
 			</Table>
 			<UserModal
-				user={selectedUser ? selectedUser : undefined}
+				user={selectedUser || undefined}
 				setUser={setSelectedUser}
 				isOpen={isOpen}
 				onOpen={onOpen}
