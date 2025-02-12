@@ -1,30 +1,28 @@
-import {
-	Button,
-	Checkbox,
-	Form,
-	Input,
-	Select,
-	SelectItem,
-} from '@heroui/react';
+import { Checkbox, Form, Input, Select, SelectItem } from '@heroui/react';
 
 import Endpoints from '@lib/data/endpoints.data';
 import type { Project } from '@lib/entity/project.entity';
 
 type ProjectFormProps = {
 	project?: Project;
+	errors: Record<string, string>;
+	action: (payload: FormData) => void;
+	pending: boolean;
 };
 
-export default function ProjectForm({ project }: ProjectFormProps) {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-	};
-
+export default function ProjectForm({
+	project,
+	errors,
+	action,
+	pending,
+}: ProjectFormProps) {
 	return (
 		<Form
 			id="project-form"
 			className="flex flex-col gap-3 items-center justify-center w-full p-4"
 			validationBehavior="native"
-			onSubmit={handleSubmit}
+			validationErrors={errors}
+			action={action}
 		>
 			<Input
 				isRequired
@@ -51,6 +49,7 @@ export default function ProjectForm({ project }: ProjectFormProps) {
 
 			{!project && (
 				<Select
+					name="projectType"
 					isRequired={!project}
 					label="Type of Project"
 					placeholder="Select the type of project"
@@ -67,7 +66,7 @@ export default function ProjectForm({ project }: ProjectFormProps) {
 			)}
 
 			<div className="flex w-full items-center justify-between px-1 py-2">
-				<Checkbox defaultSelected={project?.isPublic} name="remember">
+				<Checkbox defaultSelected={project?.isPublic} name="isPublic">
 					Make this project public
 				</Checkbox>
 			</div>

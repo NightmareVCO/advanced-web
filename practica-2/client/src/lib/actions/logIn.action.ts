@@ -1,13 +1,18 @@
 'use server';
 
-import { createSession } from '@lib/auth/session';
-import { redirect } from 'next/navigation';
+import { createSession, deleteSession } from '@lib/auth/session';
 import Routes from '@lib/data/routes.data';
+import { redirect } from 'next/navigation';
+
+import { SERVER_PATH } from '@lib/constants/server.constants';
+const THIS_PATH = 'login';
+
+const CURRENT_PATH = `${SERVER_PATH}/${THIS_PATH}/`;
 
 export async function logIn(prevState: unknown, formData: FormData) {
 	try {
 		const loginDTO = Object.fromEntries(formData.entries());
-		const response = await fetch('http://localhost:8080/api/v1/login/', {
+		const response = await fetch(CURRENT_PATH, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -18,9 +23,9 @@ export async function logIn(prevState: unknown, formData: FormData) {
 		const result = await response.json();
 		await createSession(result?.token);
 
-    redirect(Routes.Projects);
+		redirect(Routes.Projects);
 
-    return result;
+		return result;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
 		return {
@@ -29,4 +34,9 @@ export async function logIn(prevState: unknown, formData: FormData) {
 			},
 		};
 	}
+}
+
+export async function logout() {
+	deleteSession();
+	redirect(Routes.Home);
 }

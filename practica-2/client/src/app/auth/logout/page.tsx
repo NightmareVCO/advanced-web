@@ -1,3 +1,5 @@
-export default function LogOut() {
-	return <main>LogOut</main>;
+import { logout } from '@lib/actions/logIn.action';
+
+export default async function LogOut() {
+	await logout();
 }

@@ -18,6 +18,7 @@ import Method from '@lib/data/method.data';
 
 import { Icon } from '@iconify/react';
 
+import { createEndpoint } from '@/lib/actions/endpoint.action';
 import CodeEditor from '@components/CodeEditor/CodeEditor';
 import FormDivider from '@components/Forms/FormDivider/FormDivider';
 import ContentEncoding from '@lib/data/contentEncoding.data';
@@ -25,42 +26,55 @@ import ContentType from '@lib/data/contentType.data';
 import Expiration from '@lib/data/expiration.data';
 import statusCodes from '@lib/data/statusCode.data';
 import type Endpoint from '@lib/entity/endpoint.entity';
-import { useState } from 'react';
+import { useActionState, useCallback, useState } from 'react';
 
 type EndpointFormProps = {
 	endpoint?: Endpoint;
 };
 
 export default function EndpointForm({ endpoint }: EndpointFormProps) {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-	};
-
 	const prefix = 'http://localhost:3000/projects/1/api/';
 	const [value, setValue] = useState(prefix);
 	const [headers, setHeaders] = useState<number[]>([]);
-
+	const [code, setCode] = useState<string>('');
+	const [currentEndpoint, setCurrentEndpoint] = useState<string>(prefix);
 	const [security, setSecurity] = useState(false);
+	const [method, setMethod] = useState(Method.GET);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const inputValue = e.target.value;
+
 		if (!inputValue.startsWith(prefix)) {
 			setValue(prefix);
 			return;
 		}
-		setValue(inputValue);
+
+		const editablePart = inputValue.slice(prefix.length);
+		let sanitizedInput = editablePart.replace(/\/{2,}/g, '/');
+		sanitizedInput = sanitizedInput.replace(/[^a-zA-Z0-9/-]/g, '');
+
+		setValue(prefix + sanitizedInput);
 	};
 
 	const handleDeleteHeader = (indexToDelete: number) => {
 		setHeaders(headers.filter((_, index) => index !== indexToDelete));
 	};
 
+	const onCodeChange = useCallback((value: string) => {
+		setCode(value);
+	}, []);
+
+	const [{ errors }, action, pending] = useActionState(createEndpoint, {
+		errors: {},
+	});
+
 	return (
 		<Form
-			id="login-form"
+			id="create-endpoint-form"
+			action={action}
 			className="flex flex-col gap-3 items-center justify-center w-full max-w-7xl px-4 lg:px-8 mt-6"
 			validationBehavior="native"
-			onSubmit={handleSubmit}
+			validationErrors={errors}
 		>
 			<FormDivider title="Enter the path, method, and status of your endpoint" />
 
@@ -78,6 +92,10 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				onChange={handleChange}
 			/>
 
+			<div className="md:hidden w-full">
+				<p className="text-xs text-start text-default-300">{currentEndpoint}</p>
+			</div>
+
 			<div className="flex flex-wrap gap-4 w-full">
 				<Tabs
 					id="httpMethod"
@@ -86,6 +104,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 					aria-label="Methods tabs"
 					color="primary"
 					radius="full"
+					onSelectionChange={(method) => setMethod(method as Method)}
 				>
 					{Object.keys(Method).map((method: string) => (
 						<Tab
@@ -95,6 +114,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 						/>
 					))}
 				</Tabs>
+				<input type="hidden" name="method" value={method} />
 			</div>
 
 			<Autocomplete
@@ -112,7 +132,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 					<AutocompleteItem
 						key={statusCode.code}
 						value={statusCode.code}
-						textValue={statusCode.message}
+						textValue={statusCode.code.toString()}
 					>
 						{statusCode.message}
 					</AutocompleteItem>
@@ -159,10 +179,60 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 			<Spacer y={2} />
 			<FormDivider title="Enter the response and headers of your endpoint" />
 
-			<CodeEditor />
+			<div className="hidden xl:block">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="74rem"
+					maxWidth="74rem"
+				/>
+			</div>
+			<div className="hidden lg:block xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="60rem"
+					maxWidth="60rem"
+				/>
+			</div>
+			<div className="hidden md:block lg:hidden xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="50rem"
+					maxWidth="50rem"
+				/>
+			</div>
+			<div className="hidden sm:block md:hidden lg:hidden xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="40rem"
+					maxWidth="40rem"
+				/>
+			</div>
+			<div className="sm:hidden md:hidden lg:hidden xl:hidden">
+				<CodeEditor
+					code={code ?? ''}
+					onChange={onCodeChange}
+					minHeight="20rem"
+					minWidth="20rem"
+					width="25rem"
+					maxWidth="25rem"
+				/>
+			</div>
+			<input type="hidden" name="code" value={code} />
 			<Spacer y={2} />
 
-			<div className="flex w-full items-center justify-start">
+			<div className="flex w-full items-center justify-center lg:justify-start">
 				<Button
 					className="bg-primary font-medium text-white"
 					color="secondary"
@@ -184,7 +254,6 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				<>
 					<Spacer y={1} />
 					<Divider />
-
 					<Spacer y={1} />
 				</>
 			)}
@@ -330,14 +399,22 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 
 			<Spacer y={2} />
 			<Button
+				form="create-endpoint-form"
 				type="submit"
 				color="primary"
 				radius="full"
 				variant="solid"
 				size="lg"
+				isDisabled={pending}
+				isLoading={pending}
 			>
 				Create Endpoint
 			</Button>
+			{errors?.createEndpoint && (
+				<p className="text-red-500 text-sm text-center capitalize">
+					{errors.createEndpoint}
+				</p>
+			)}
 		</Form>
 	);
 }
