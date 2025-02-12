@@ -59,11 +59,6 @@ export default function LogInForm() {
 			<div className="flex w-full items-center justify-between px-1 py-2">
 				<Checkbox name="remember">Remember me</Checkbox>
 			</div>
-			{errors?.login && (
-				<p className="text-red-500 text-sm text-center capitalize">
-					{errors.login}
-				</p>
-			)}
 			<Button
 				className="bg-primary font-medium text-white w-1/2"
 				radius="full"
@@ -75,6 +70,11 @@ export default function LogInForm() {
 			>
 				Log In
 			</Button>
+			{errors?.login && (
+				<p className="text-red-500 text-sm text-center capitalize">
+					{errors.login}
+				</p>
+			)}
 		</Form>
 	);
 }
