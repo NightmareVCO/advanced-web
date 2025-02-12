@@ -17,7 +17,8 @@ export default async function middleware(req: NextRequest) {
 	let userIsAdmin = false;
 
 	const path = req.nextUrl.pathname;
-	const isProtectedRoute = protectedRoutes.includes(path);
+	// const isProtectedRoute = protectedRoutes.includes(path);
+	//const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route));
 	const isPublicRoute = publicRoutes.includes(path);
 
 	// 3. Decrypt the session from the cookie
@@ -35,9 +36,9 @@ export default async function middleware(req: NextRequest) {
 	}
 
 	// Redirect to /login if the user is not authenticated
-	if (isProtectedRoute && !authSession?.userId) {
-		return NextResponse.redirect(new URL(Routes.LogIn, req.nextUrl));
-	}
+	// if (isProtectedRoute && !authSession?.userId) {
+	// 	return NextResponse.redirect(new URL(Routes.LogIn, req.nextUrl));
+	// }
 
 	// Redirect to /projects if the user is authenticated and in /login
 	if (

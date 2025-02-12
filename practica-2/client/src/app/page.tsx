@@ -1,7 +1,6 @@
 'use client';
 
-import FadeInImage from '@components/FadeInImage/FadeInImage';
-import { Button, Image, Spacer } from '@heroui/react';
+import { Button, Image } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import Routes from '@lib/data/routes.data';
 import Link from 'next/link';

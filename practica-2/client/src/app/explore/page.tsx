@@ -1,9 +1,6 @@
 import ProjectCard from '@/components/Cards/ProjectsCard/ProjectCard';
-import BreadcrumbsBuilder from '@components/BreadcrumbsBuilder/BreadcrumbsBuilder';
 import Header from '@components/Header/Header';
-import ProjectSection from '@components/Projects/ProjectSection';
 import Role from '@lib/data/roles.data';
-import Routes from '@lib/data/routes.data';
 import type { Project } from '@lib/entity/project.entity';
 
 const projects: Project[] = [
