@@ -2,13 +2,17 @@
 
 import { createSession, deleteSession } from '@lib/auth/session';
 import Routes from '@lib/data/routes.data';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+
+import { SERVER_PATH } from '@lib/constants/server.constants';
+const THIS_PATH = 'login';
+
+const CURRENT_PATH = `${SERVER_PATH}/${THIS_PATH}/`;
 
 export async function logIn(prevState: unknown, formData: FormData) {
 	try {
 		const loginDTO = Object.fromEntries(formData.entries());
-		const response = await fetch('http://localhost:8080/api/v1/login/', {
+		const response = await fetch(CURRENT_PATH, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
