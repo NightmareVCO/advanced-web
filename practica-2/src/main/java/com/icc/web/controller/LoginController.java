@@ -7,6 +7,9 @@ import com.icc.web.model.User;
 import com.icc.web.service.JWTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,28 +18,27 @@ import com.icc.web.Utils;
 import com.icc.web.exception.ResourceNotFoundException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/login")
+@RequestMapping("/api/v1/login/")
 public class LoginController {
 
     private final UserService userService;
     private final JWTService jwtService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
         String userName = loginDTO.getUsername();
         String password = loginDTO.getPassword();
-        User user = userService.getUserByUsername(userName);
+        Optional<User> user = userService.getUserByUsername(userName);
 
-        if (user == null)
-            throw new ResourceNotFoundException("Credeciales incorrectas");
-        if (!Utils.isPasswordCorrect(user.getPassword(), password))
-            throw new UnauthorizedException("Credenciales incorrectas");
+        if (user.isEmpty())
+            throw new ResourceNotFoundException("Wrong Credentials");
+        if (!Utils.isPasswordCorrect(password, user.get().getPassword()))
+            throw new UnauthorizedException("Wrong Credentials");
 
         AuthResponseDTO token = jwtService.generateToken(userName);
+
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
-
 }

@@ -44,11 +44,31 @@ public class ControllerExceptionHandler {
   @ExceptionHandler(UnauthorizedException.class)
   @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
   public ErrorMessage unauthorizedException(UnauthorizedException ex, WebRequest request) {
-      return new ErrorMessage(
-          HttpStatus.UNAUTHORIZED.value(),
-          new Date(),
-          ex.getMessage(),
-          request.getDescription(false));
+    return new ErrorMessage(
+        HttpStatus.UNAUTHORIZED.value(),
+        new Date(),
+        ex.getMessage(),
+        request.getDescription(false));
+  }
+
+  @ExceptionHandler(BadRequestException.class)
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  public ErrorMessage badRequestException(BadRequestException ex, WebRequest request) {
+    return new ErrorMessage(
+        HttpStatus.BAD_REQUEST.value(),
+        new Date(),
+        ex.getMessage(),
+        request.getDescription(false));
+  }
+
+  @ExceptionHandler(ForbiddenException.class)
+  @ResponseStatus(value = HttpStatus.FORBIDDEN)
+  public ErrorMessage forbiddenException(ForbiddenException ex, WebRequest request) {
+    return new ErrorMessage(
+        HttpStatus.FORBIDDEN.value(),
+        new Date(),
+        ex.getMessage(),
+        request.getDescription(false));
   }
 
 }

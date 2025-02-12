@@ -45,7 +45,7 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("Usuario no encontrado");
+            throw new UsernameNotFoundException("UserNorFound");
         }
 
         Set<GrantedAuthority> roles = new HashSet<>();
@@ -62,7 +62,6 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
                 true,
                 true,
                 true,
-                grantedAuthorities
-        );
+                grantedAuthorities);
     }
 }

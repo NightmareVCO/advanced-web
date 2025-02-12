@@ -12,8 +12,8 @@ public class Utils {
                 .anyMatch(authority -> authority.getAuthority().equals("ADMIN"));
     }
 
-    public static boolean isPasswordCorrect(String encodedPassword, String password) {
-        return new BCryptPasswordEncoder().matches(encodedPassword, password);
+    public static boolean isPasswordCorrect(String rawPassword, String encodedPassword) {
+        return new BCryptPasswordEncoder().matches(rawPassword, encodedPassword);
     }
 
 }

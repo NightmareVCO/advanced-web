@@ -5,8 +5,9 @@ import lombok.*;
 
 import java.util.Set;
 
-@Data
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,13 +20,20 @@ public class User {
 
   private String firstName;
   private String lastName;
+
+  @Column(unique = true)
   private String username;
+
   private String email;
   private String password;
   private boolean active;
 
   @Singular
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+      CascadeType.REFRESH })
   private Set<Role> roles;
+
+  @OneToMany(mappedBy = "owner")
+  private Set<Project> projects;
 
 }

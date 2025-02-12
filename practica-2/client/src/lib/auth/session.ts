@@ -1,14 +1,30 @@
-import 'server-only'
-import { cookies } from 'next/headers'
- 
-export async function createSession(jwt: string, expiresAt: Date) {
-  const cookieStore = await cookies()
- 
-  cookieStore.set('session', jwt, {
-    httpOnly: true,
-    secure: true,
-    expires: expiresAt,
-    sameSite: 'lax',
-    path: '/',
-  })
+import 'server-only';
+import { jwtVerify } from 'jose';
+import { cookies } from 'next/headers';
+
+const secretKey = 'zgI4sCmHU5ticRe9ecLJst0EYzIjewEVHJ3xPwQ/5Kg=';
+const encodedKey = new TextEncoder().encode(secretKey);
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export async function createSession(payload: any) {
+	const cookieStore = await cookies();
+
+	cookieStore.set('session', payload, {
+		httpOnly: true,
+		secure: true,
+		expires: payload.expiresIn,
+		sameSite: 'lax',
+		path: '/',
+	});
+}
+
+export async function decrypt(session: string | undefined = '') {
+	try {
+		const { payload } = await jwtVerify(session, encodedKey, {
+			algorithms: ['HS256'],
+		});
+		return payload;
+	} catch (error) {
+		return error;
+	}
 }
