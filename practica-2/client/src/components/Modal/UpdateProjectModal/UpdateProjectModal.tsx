@@ -1,13 +1,13 @@
-import type { Project } from '@lib/entity/project.entity';
 import {
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
 	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
 	useDisclosure,
 } from '@heroui/react';
+import type { Project } from '@lib/entity/project.entity';
 
 type UpdateProjectModalProps = {
 	pending: boolean;

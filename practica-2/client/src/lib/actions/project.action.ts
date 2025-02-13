@@ -53,24 +53,24 @@ export async function updateProject(prevState: unknown, formData: FormData) {
 
 // TODO: change endpoint
 export async function addUserToTeam(prevState: unknown, formData: FormData) {
-  try {
-    const project = Object.fromEntries(formData.entries());
-    const response = await fetch(CURRENT_PATH, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(project),
-    });
+	try {
+		const project = Object.fromEntries(formData.entries());
+		const response = await fetch(CURRENT_PATH, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(project),
+		});
 
-    const result = await response.json();
-    return result;
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  } catch (error: any) {
-    return {
-      errors: {
-        username: error.message,
-      },
-    };
-  }
+		const result = await response.json();
+		return result;
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	} catch (error: any) {
+		return {
+			errors: {
+				username: error.message,
+			},
+		};
+	}
 }

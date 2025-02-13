@@ -5,7 +5,9 @@ import Routes from '@lib/data/routes.data';
 
 import Link from 'next/link';
 
+import AddUserToTeamForm from '@components/Forms/AddUserToTeamForm/AddUserToTeamForm';
 import ProjectForm from '@components/Forms/ProjectForm/ProjectForm';
+import UpdateProjectModal from '@components/Modal/UpdateProjectModal/UpdateProjectModal';
 import EndpointTable from '@components/Table/EndpointsTable';
 import UsersTable from '@components/Table/UsersTable';
 import { updateProject } from '@lib/actions/project.action';
@@ -13,8 +15,6 @@ import Method from '@lib/data/method.data';
 import type Endpoint from '@lib/entity/endpoint.entity';
 import type { Project } from '@lib/entity/project.entity';
 import { useActionState } from 'react';
-import AddUserToTeamForm from '@components/Forms/AddUserToTeamForm/AddUserToTeamForm';
-import UpdateProjectModal from '@components/Modal/UpdateProjectModal/UpdateProjectModal';
 
 const endpoints: Endpoint[] = [
 	{

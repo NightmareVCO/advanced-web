@@ -14,7 +14,6 @@ export default function ProjectForm({
 	project,
 	errors,
 	action,
-	pending,
 }: ProjectFormProps) {
 	return (
 		<Form

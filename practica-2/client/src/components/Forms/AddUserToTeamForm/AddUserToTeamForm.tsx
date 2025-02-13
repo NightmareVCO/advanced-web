@@ -1,7 +1,7 @@
-import { addUserToTeam } from '@lib/actions/project.action';
-import { Form, Input } from '@heroui/react';
-import { useActionState, useState } from 'react';
 import AddToUserToTeam from '@components/Modal/AddUserToTeamModal/AddUserToTeamModal';
+import { Form, Input } from '@heroui/react';
+import { addUserToTeam } from '@lib/actions/project.action';
+import { useActionState, useState } from 'react';
 
 export default function AddUserToTeamForm() {
 	const [{ errors }, action, pending] = useActionState(addUserToTeam, {

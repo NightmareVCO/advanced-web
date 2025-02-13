@@ -1,10 +1,10 @@
 import {
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
 	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
 	useDisclosure,
 } from '@heroui/react';
 import type User from '@lib/entity/user.entity';
