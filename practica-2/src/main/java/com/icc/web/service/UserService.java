@@ -26,14 +26,26 @@ public class UserService {
     }
 
     public Optional<User> getUserByUsername(String username) {
-        return Optional.of(userRepository.findByUsername(username));
+        return Optional.ofNullable(userRepository.findByUsername(username));
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return Optional.ofNullable(userRepository.findByEmail(email));
+    }
+
+    public boolean existsByUsername(String username) {
+        return this.getUserByUsername(username).isPresent();
+    }
+
+    public boolean existsByEmail(String email) {
+        return this.getUserByEmail(email).isPresent();
     }
 
     public Optional<User> saveUser(User user) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        return Optional.of(userRepository.save(user));
+        return Optional.ofNullable(userRepository.save(user));
     }
 
     public Optional<User> deleteUser(Long id) {
@@ -43,5 +55,4 @@ public class UserService {
 
         return user;
     }
-
 }

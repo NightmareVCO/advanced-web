@@ -1,5 +1,9 @@
 package com.icc.web.dto;
 
+import java.util.Set;
+
+import com.icc.web.model.Role;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -28,13 +32,16 @@ public class UserDTO {
   @Email
   String email;
 
-  @NotBlank(message = "Password is mandatory")
-  @NotNull
-  @Min(value = 8, message = "Password must be at least 8 characters long")
+  // @NotBlank(message = "Password is mandatory")
+  // @NotNull
+  // @Min(value = 8, message = "Password must be at least 8 characters long")
   String password;
 
+  @NotBlank(message = "Role is mandatory")
+  @NotNull
+  Set<Role> roles;
+
   public static boolean validateNoNull(UserDTO userDTO) {
-    return userDTO.firstName == null || userDTO.lastName == null || userDTO.username == null || userDTO.email == null
-        || userDTO.password == null;
+    return userDTO.firstName == null || userDTO.lastName == null || userDTO.username == null || userDTO.email == null;
   }
 }

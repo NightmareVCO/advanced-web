@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
