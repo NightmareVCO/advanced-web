@@ -1,22 +1,46 @@
 'use server';
 
 import { SERVER_PATH } from '@lib/constants/server.constants';
-const THIS_PATH = 'project';
+import Method from '@lib/data/method.data';
+import Routes from '@lib/data/routes.data';
+import { revalidatePath } from 'next/cache';
+const THIS_PATH = 'projects';
 
 const CURRENT_PATH = `${SERVER_PATH}/${THIS_PATH}/`;
+
+// {
+//   "name": "Proyecto De Vladimir Publico",
+//   "desc": "El proyecto de vladimir para probar la vainilla",
+//   "tag": "API REST",
+//   "owner": {
+//     "username": "admin"
+//   },
+//   "openAccess": true
+// }
 
 export async function createProject(prevState: unknown, formData: FormData) {
 	try {
 		const project = Object.fromEntries(formData.entries());
+		const projectDTO = {
+			name: project.name,
+			desc: project.desc,
+			tag: project.tag,
+			owner: {
+				username: project.owner,
+			},
+			openAccess: project.openAccess === 'true',
+		};
 		const response = await fetch(CURRENT_PATH, {
-			method: 'POST',
+			method: Method.POST,
 			headers: {
 				'Content-Type': 'application/json',
+				Authorization: `Bearer ${String(project.jwt)}`,
 			},
-			body: JSON.stringify(project),
+			body: JSON.stringify(projectDTO),
 		});
 
 		const result = await response.json();
+		revalidatePath(Routes.Projects);
 		return result;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
@@ -31,15 +55,30 @@ export async function createProject(prevState: unknown, formData: FormData) {
 export async function updateProject(prevState: unknown, formData: FormData) {
 	try {
 		const project = Object.fromEntries(formData.entries());
-		const response = await fetch(CURRENT_PATH, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
+		const projectDTO = {
+			name: project.name,
+			desc: project.desc,
+			tag: project.tag,
+			owner: {
+				username: project.owner,
 			},
-			body: JSON.stringify(project),
-		});
+			openAccess: project.openAccess === 'true',
+		};
+
+		const response = await fetch(
+			`${CURRENT_PATH}${String(project.projectId)}`,
+			{
+				method: Method.PATCH,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${String(project.jwt)}`,
+				},
+				body: JSON.stringify(projectDTO),
+			},
+		);
 
 		const result = await response.json();
+		revalidatePath(`${Routes.Projects}/${String(project.projectId)}`);
 		return result;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
@@ -51,26 +90,29 @@ export async function updateProject(prevState: unknown, formData: FormData) {
 	}
 }
 
-// TODO: change endpoint
 export async function addUserToTeam(prevState: unknown, formData: FormData) {
-  try {
-    const project = Object.fromEntries(formData.entries());
-    const response = await fetch(CURRENT_PATH, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(project),
-    });
+	try {
+		const userDTO = Object.fromEntries(formData.entries());
+		const response = await fetch(
+			`${CURRENT_PATH}add-user/${String(userDTO.username)}/to-project/${String(userDTO.projectId)}`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${String(userDTO.jwt)}`,
+				},
+			},
+		);
 
-    const result = await response.json();
-    return result;
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  } catch (error: any) {
-    return {
-      errors: {
-        username: error.message,
-      },
-    };
-  }
+		const result = await response.json();
+		revalidatePath(`${Routes.Projects}/${String(userDTO.projectId)}`);
+		return result;
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	} catch (error: any) {
+		return {
+			errors: {
+				username: error.message,
+			},
+		};
+	}
 }
