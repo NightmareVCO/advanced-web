@@ -1,7 +1,13 @@
 'use client';
 
 import {
+	Avatar,
 	Button,
+	Chip,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
 	Link,
 	NavbarBrand,
 	NavbarContent,
@@ -19,17 +25,17 @@ import { menuItems } from '../_config/config';
 
 type NavbarDesktopProps = {
 	admin?: boolean;
+	userName?: string;
 	isAuthenticated?: boolean;
 };
 
 export default function NavbarDesktop({
 	admin,
+	userName,
 	isAuthenticated,
 }: NavbarDesktopProps) {
 	const pathName = usePathname();
 	const [_, action] = useActionState(logout, null);
-	const isLoginHidden = isAuthenticated ? 'hidden' : '';
-	const isLogoutHidden = isAuthenticated ? '' : 'hidden';
 
 	return (
 		<>
@@ -52,16 +58,18 @@ export default function NavbarDesktop({
 			{/* Right Content */}
 			<NavbarContent className="hidden md:flex" justify="end">
 				<NavbarItem className="ml-2 !flex gap-2">
-					<Button
-						className={`text-white ${isLoginHidden}`}
-						radius="full"
-						variant="ghost"
-						color="primary"
-						as={Link}
-						href={Routes.LogIn}
-					>
-						Login
-					</Button>
+					{!isAuthenticated && (
+						<Button
+							className="text-white"
+							radius="full"
+							variant="ghost"
+							color="primary"
+							as={Link}
+							href={Routes.LogIn}
+						>
+							Login
+						</Button>
+					)}
 					<Button
 						className="bg-primary font-medium text-white"
 						color="secondary"
@@ -71,19 +79,67 @@ export default function NavbarDesktop({
 						as={Link}
 						href={Routes.NewProject}
 					>
-						Create New Project
+						New Project
 					</Button>
-					<form action={action}>
-						<Button
-							className={`text-white ${isLogoutHidden}`}
-							radius="full"
-							variant="flat"
-							color="danger"
-							type="submit"
-						>
-							Log Out
-						</Button>
-					</form>
+					{/* {isAuthenticated && (
+						<form action={action}>
+							<Button
+								className="text-white"
+								radius="full"
+								variant="flat"
+								color="danger"
+								type="submit"
+							>
+								Log Out
+							</Button>
+						</form>
+					)}
+					{isAuthenticated && (
+						<Chip color="primary" variant="dot">
+							{userName}
+						</Chip>
+					)} */}
+					{isAuthenticated && (
+						<Dropdown placement="bottom-end">
+							<DropdownTrigger>
+								<Avatar
+									isBordered
+									as="button"
+									className="bg-primary transition-transform"
+									color="secondary"
+									size="sm"
+								/>
+							</DropdownTrigger>
+							<DropdownMenu aria-label="Profile Actions" variant="flat">
+								<DropdownItem key="profile">
+									<p>
+										Username:{' '}
+										<span className="text-primary font-bold">{`${userName}`}</span>
+									</p>
+								</DropdownItem>
+								<DropdownItem key="es-lang">
+									<p>
+										Change to:{' '}
+										<span className="text-primary font-bold">ES</span>
+									</p>
+								</DropdownItem>
+								<DropdownItem key="en-lang">
+									<p>
+										Change to:{' '}
+										<span className="text-primary font-bold">EN</span>
+									</p>
+								</DropdownItem>
+								<DropdownItem
+									key="logout"
+									color="danger"
+									as={Link}
+									href={Routes.LogOut}
+								>
+									Log Out
+								</DropdownItem>
+							</DropdownMenu>
+						</Dropdown>
+					)}
 				</NavbarItem>
 			</NavbarContent>
 		</>

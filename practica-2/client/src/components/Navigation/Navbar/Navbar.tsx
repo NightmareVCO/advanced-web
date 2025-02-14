@@ -10,11 +10,12 @@ import NavbarMobile from './NavbarMobile/NavbarMobile';
 
 interface CustomNavbarProps extends NavbarProps {
 	admin?: boolean;
+	userName?: string;
 	isAuthenticated?: boolean;
 }
 
 export const Navbar = React.forwardRef<HTMLElement, CustomNavbarProps>(
-	({ classNames = {}, admin, isAuthenticated, ...props }, ref) => {
+	({ classNames = {}, admin, userName, isAuthenticated, ...props }, ref) => {
 		const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
 		return (
@@ -47,7 +48,11 @@ export const Navbar = React.forwardRef<HTMLElement, CustomNavbarProps>(
 				isMenuOpen={isMenuOpen}
 				onMenuOpenChange={setIsMenuOpen}
 			>
-				<NavbarDesktop admin={admin} isAuthenticated={isAuthenticated} />
+				<NavbarDesktop
+					admin={admin}
+					userName={userName}
+					isAuthenticated={isAuthenticated}
+				/>
 
 				<NavbarMenuToggle className="text-default-400 md:hidden" />
 
