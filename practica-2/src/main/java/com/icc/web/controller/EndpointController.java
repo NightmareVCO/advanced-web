@@ -8,10 +8,13 @@ import com.icc.web.exception.ForbiddenException;
 import com.icc.web.exception.InternalServerError;
 import com.icc.web.exception.ResourceNotFoundException;
 import com.icc.web.mapper.EndpointMapper;
+import com.icc.web.mapper.HeaderMapper;
 import com.icc.web.model.Endpoint;
+import com.icc.web.model.Header;
 import com.icc.web.model.Project;
 import com.icc.web.repository.ProjectRepository;
 import com.icc.web.service.EndpointService;
+import com.icc.web.service.HeaderService;
 import com.icc.web.service.JWTService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.HttpHeaders;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +32,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/endpoint/")
 @RequiredArgsConstructor
-
-// http://localhost:8080/api/v1/endpoint/projects/1/api/users
 public class EndpointController {
 
     private final EndpointService endpointService;
+    private final HeaderService headerService;
     private final ProjectRepository projectRepository;
     private final JWTService jwtService;
 
@@ -69,11 +71,15 @@ public class EndpointController {
         MediaType contentType = MediaType.parseMediaType(endpointMock.getResponseType());
         String body = endpointMock.getBody();
 
+        HttpHeaders headers = new HttpHeaders();
+        endpointMock.getHeaders().forEach(header -> headers.add(header.getKey(), header.getValue()));
+
         return ResponseEntity
                 .status(statusCode)
                 .contentType(contentType)
+                .headers(
+                        headers)
                 .body(body);
-
     }
 
     @GetMapping
@@ -87,14 +93,14 @@ public class EndpointController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<EndpointDTO> getEndpointById(@PathVariable Long id) {
+    public ResponseEntity<EndpointResponseDTO> getEndpointById(@PathVariable Long id) {
         Optional<Endpoint> endpointOptional = endpointService.getEndpointById(id);
 
         if (endpointOptional.isEmpty()) {
             throw new ResourceNotFoundException("Endpoint not found");
         }
 
-        EndpointDTO endpointDTO = EndpointMapper.INSTANCE.endpointToDto(endpointOptional.get());
+        EndpointResponseDTO endpointDTO = EndpointMapper.INSTANCE.endpointToResponseDto(endpointOptional.get());
         if (endpointDTO == null) {
             throw new InternalServerError("Internal Server Error");
         }
@@ -103,7 +109,7 @@ public class EndpointController {
     }
 
     @PostMapping
-    public ResponseEntity<EndpointDTO> createEndpoint(@RequestBody EndpointDTO endpointDTO) {
+    public ResponseEntity<EndpointResponseDTO> createEndpoint(@RequestBody EndpointDTO endpointDTO) {
         AuthResponseDTO jwt = null;
 
         if (EndpointDTO.validateNoNull(endpointDTO)) {
@@ -122,6 +128,10 @@ public class EndpointController {
         Endpoint endpoint = EndpointMapper.INSTANCE.dtoToEndpoint(endpointDTO);
         endpoint.setProject(project.get());
 
+        List<Header> headers = HeaderMapper.INSTANCE.dtosToHeaders(endpointDTO.getHeaders());
+        headers.forEach(header -> header.setEndpoint(endpoint));
+
+        endpoint.setHeaders(headers);
         Optional<Endpoint> savedEndpoint = endpointService.saveEndpoint(endpoint);
         if (savedEndpoint.isEmpty()) {
             throw new InternalServerError("Internal Server Error");
@@ -130,10 +140,9 @@ public class EndpointController {
         if (endpoint.isSecurity()) {
             jwt = jwtService.createTokenForEndpoint(endpoint.getProject().getId().toString(),
                     endpoint.getId().toString(), endpoint.getExpirationDate());
-        }
-
-        if (jwt != null) {
-            endpoint.setJwt(jwt.getToken());
+            if (jwt != null) {
+                endpoint.setJwt(jwt.getToken());
+            }
         }
 
         savedEndpoint = endpointService.saveEndpoint(endpoint);
@@ -141,7 +150,7 @@ public class EndpointController {
             throw new InternalServerError("Internal Server Error");
         }
 
-        EndpointDTO createdEndpoint = EndpointMapper.INSTANCE.endpointToDto(savedEndpoint.get());
+        EndpointResponseDTO createdEndpoint = EndpointMapper.INSTANCE.endpointToResponseDto(savedEndpoint.get());
         if (createdEndpoint == null) {
             throw new InternalServerError("Internal Server Error");
         }
@@ -149,27 +158,61 @@ public class EndpointController {
         return new ResponseEntity<>(createdEndpoint, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteEndpoint(@PathVariable Long id) {
-        endpointService.deleteEndpoint(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    // TODO: Validate with project owner
+    @PatchMapping("{id}")
+    public ResponseEntity<EndpointResponseDTO> updateEndpoint(@PathVariable Long id,
+            @RequestBody EndpointDTO endpointDTO) {
+        AuthResponseDTO jwt = null;
+
+        Optional<Endpoint> endpointOptional = endpointService.getEndpointById(id);
+        if (endpointOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Endpoint not found");
+        }
+
+        if (EndpointDTO.validateNoNull(endpointDTO)) {
+            throw new ForbiddenException("All fields are mandatory");
+        }
+        Endpoint existingEndpoint = endpointOptional.get();
+        List<Header> headers = HeaderMapper.INSTANCE.dtosToHeaders(endpointDTO.getHeaders());
+
+        Endpoint newEndpoint = EndpointMapper.INSTANCE.dtoToEndpoint(endpointDTO);
+        if (!headers.isEmpty()) {
+            headers.forEach(header -> header.setEndpoint(newEndpoint));
+            newEndpoint.setHeaders(headers);
+        }
+
+        if (newEndpoint.isSecurity()) {
+            jwt = jwtService.createTokenForEndpoint(existingEndpoint.getProject().getId().toString(),
+                    existingEndpoint.getId().toString(), newEndpoint.getExpirationDate());
+            if (jwt != null) {
+                newEndpoint.setJwt(jwt.getToken());
+            }
+        }
+
+        Optional<Endpoint> updatedEndpoint = endpointService.updateEndpoint(newEndpoint, id);
+        if (updatedEndpoint.isEmpty()) {
+            throw new InternalServerError("Internal Server Error");
+        }
+
+        EndpointResponseDTO updatedEndpointDTO = EndpointMapper.INSTANCE.endpointToResponseDto(updatedEndpoint.get());
+        if (updatedEndpointDTO == null) {
+            throw new InternalServerError("Internal Server Error");
+        }
+
+        return new ResponseEntity<>(updatedEndpointDTO, HttpStatus.OK);
     }
 
-    // @PatchMapping("{id}")
-    // public ResponseEntity<EndpointDTO> editEndpoint(@PathVariable Long id,
-    // @RequestBody EndpointDTO endpointDTO) {
-    // Optional<Endpoint> endpointOptional = endpointService.getEndpointById(id);
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteEndpoint(@PathVariable Long id) {
+        Optional<Endpoint> endpointOptional = endpointService.getEndpointById(id);
 
-    // if (endpointOptional.isEmpty()) {
-    // throw new ResourceNotFoundException("Endpoint not found");
-    // }
+        if (endpointOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Endpoint not found");
+        }
 
-    // Endpoint existingEndpoint = endpointOptional.get();
-    // Endpoint updatedEndpoint = endpointService.updateEndpoint(existingEndpoint);
-    // EndpointDTO updatedEndpointDTO =
-    // EndpointMapper.INSTANCE.endpointToDto(updatedEndpoint);
+        endpointService.deleteEndpoint(id);
 
-    // return new ResponseEntity<>(updatedEndpointDTO, HttpStatus.OK);
-    // }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }

@@ -2,6 +2,7 @@ package com.icc.web.dto;
 
 import lombok.Value;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Value
 public class EndpointResponseDTO {
@@ -20,4 +21,5 @@ public class EndpointResponseDTO {
   String jwt;
   String body;
   Long projectId;
+  List<HeaderResponseDTO> headers;
 }

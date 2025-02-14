@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,6 +39,6 @@ public class Endpoint {
     @ManyToOne
     private Project project;
 
-    @OneToMany(mappedBy = "endpoint", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Header> headers;
+    @OneToMany(mappedBy = "endpoint", cascade = CascadeType.ALL)
+    private List<Header> headers;
 }
