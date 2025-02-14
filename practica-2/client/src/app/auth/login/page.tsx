@@ -6,9 +6,9 @@ export default function LogInPage() {
 	return (
 		<div className="flex h-[calc(100dvh-60px)] flex-col w-full items-center justify-center overflow-hidden rounded-small p-2 sm:p-4 lg:p-8">
 			<Testimonials positions={['bottom', 'left']}>
-				¡Un cambio de juego! 🚀 Esta app hace que probar APIs sea rápido y sin
-				complicaciones. Simula respuestas al instante, sin depender de
-				servidores. ¡Simple, potente y esencial!
+				A game changer! 🚀 This app makes testing APIs fast and hassle-free.
+				hassle. Simulates responses instantly, without relying on servers.
+				servers. simple, powerful and essential!
 			</Testimonials>
 
 			<div className="bg-black/30 rounded-3xl p-10 w-full max-w-lg lg:mb-40">

@@ -19,8 +19,8 @@ import NavbarDesktopItems from './NavbarDesktopItems';
 import { logout } from '@/lib/actions/logIn.action';
 import { Icon } from '@iconify/react';
 import Routes from '@lib/data/routes.data';
-import { usePathname } from 'next/navigation';
-import { useActionState } from 'react';
+import {usePathname, useRouter} from 'next/navigation';
+import {useActionState, useEffect, useState} from 'react';
 import { menuItems } from '../_config/config';
 
 type NavbarDesktopProps = {
@@ -36,6 +36,30 @@ export default function NavbarDesktop({
 }: NavbarDesktopProps) {
 	const pathName = usePathname();
 	const [_, action] = useActionState(logout, null);
+	const isLoginHidden = isAuthenticated ? 'hidden' : '';
+	const isLogoutHidden = isAuthenticated ? '' : 'hidden';
+	const [locale, setLocale] = useState<string>('');
+	const router = useRouter();
+
+	useEffect(() => {
+		const cookieLocale = document.cookie.split('; ').find((row) => row.startsWith('MYNEXTAPP_LOCALE'))
+		?.split('=')[1];
+		if(cookieLocale){
+			setLocale(cookieLocale);
+		} else {
+			const browserLocale = navigator.language.slice(0, 2);
+			setLocale(browserLocale);
+			document.cookie = `MYNEXTAPP_LOCALE=${browserLocale};`;
+			router.refresh();
+		}
+	}, [router]);
+
+	const changeLocale = async (newLocale: string) => {
+		setLocale(newLocale);
+		document.cookie = `MYNEXTAPP_LOCALE=${newLocale};`;
+		const messages = (await import(`@/messages/${newLocale}.json`)).default;
+		router.refresh();
+	}
 
 	return (
 		<>
@@ -57,78 +81,64 @@ export default function NavbarDesktop({
 
 			{/* Right Content */}
 			<NavbarContent className="hidden md:flex" justify="end">
-				<NavbarItem className="ml-2 !flex gap-2">
-					{!isAuthenticated && (
+				<NavbarItem className="ml-2 !flex gap-4">
+					<Button
+						className={`text-white ${isLoginHidden}`}
+						radius="full"
+						variant="ghost"
+						color="primary"
+						as={Link}
+						href={Routes.LogIn}
+					>
+						Login
+					</Button>
+					{isAuthenticated && (
 						<Button
-							className="text-white"
+							className="bg-primary font-medium text-white"
+							color="secondary"
+							endContent={<Icon icon="solar:alt-arrow-right-linear" />}
 							radius="full"
-							variant="ghost"
-							color="primary"
+							variant="flat"
 							as={Link}
-							href={Routes.LogIn}
+							href={Routes.NewProject}
 						>
-							Login
+							Create New Project
 						</Button>
 					)}
-					<Button
-						className="bg-primary font-medium text-white"
-						color="secondary"
-						endContent={<Icon icon="solar:alt-arrow-right-linear" />}
-						radius="full"
-						variant="flat"
-						as={Link}
-						href={Routes.NewProject}
-					>
-						New Project
-					</Button>
-					{/* {isAuthenticated && (
-						<form action={action}>
-							<Button
-								className="text-white"
-								radius="full"
-								variant="flat"
-								color="danger"
-								type="submit"
-							>
-								Log Out
-							</Button>
-						</form>
-					)}
-					{isAuthenticated && (
-						<Chip color="primary" variant="dot">
-							{userName}
-						</Chip>
-					)} */}
-					{isAuthenticated && (
-						<Dropdown placement="bottom-end">
-							<DropdownTrigger>
-								<Avatar
-									isBordered
-									as="button"
-									className="bg-primary transition-transform"
-									color="secondary"
-									size="sm"
-								/>
-							</DropdownTrigger>
-							<DropdownMenu aria-label="Profile Actions" variant="flat">
+					<Dropdown placement="bottom-end">
+						<DropdownTrigger>
+							<Avatar
+								isBordered
+								as="button"
+								className="bg-primary transition-transform"
+								color="secondary"
+								size="sm"
+							/>
+						</DropdownTrigger>
+						<DropdownMenu aria-label="Profile Actions" variant="flat">
+							{isAuthenticated ? (
 								<DropdownItem key="profile">
 									<p>
-										Username:{' '}
-										<span className="text-primary font-bold">{`${userName}`}</span>
+										Username: <span className="text-primary font-bold">{'test'}</span>
 									</p>
 								</DropdownItem>
-								<DropdownItem key="es-lang">
+							) : null}
+
+							{locale !== 'es' ? (
+								<DropdownItem key="es-lang" onPress={() => changeLocale('es')}>
 									<p>
-										Change to:{' '}
-										<span className="text-primary font-bold">ES</span>
+										Change to: <span className="text-primary font-bold">ES</span>
 									</p>
 								</DropdownItem>
-								<DropdownItem key="en-lang">
+							) : null}
+							{locale !== 'en' ? (
+								<DropdownItem key="en-lang" onPress={() => changeLocale('en')}>
 									<p>
-										Change to:{' '}
-										<span className="text-primary font-bold">EN</span>
+										Change to: <span className="text-primary font-bold">EN</span>
 									</p>
 								</DropdownItem>
+							) : null}
+							{isAuthenticated ? (
 								<DropdownItem
 									key="logout"
 									color="danger"
@@ -137,9 +147,9 @@ export default function NavbarDesktop({
 								>
 									Log Out
 								</DropdownItem>
-							</DropdownMenu>
-						</Dropdown>
-					)}
+							) : null}
+						</DropdownMenu>
+					</Dropdown>
 				</NavbarItem>
 			</NavbarContent>
 		</>

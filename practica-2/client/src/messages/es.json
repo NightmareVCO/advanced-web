@@ -1,0 +1,168 @@
+{
+	"home": {
+		"onboarding": "Nueva experiencia de incorporación",
+		"title1": "La forma más fácil",
+		"title2": "de simular tus API's.",
+		"description": "Mockify es una herramienta de simulación de API para desarrolladores. Te ayuda a crear una API falsa en unos segundos para probar tu front-end.",
+		"getStarted": "Comenzar"
+	},
+	"addUserToTeamForm": {
+		"usernameLabel" : "Nombre de usuario",
+		"usernamePlaceholder": "Introduzca el nombre de usuario del miembro"
+	},
+	"endpointForm": {
+		"formDividerText1" : "Introduzca la ruta, el método y el estado de su endpoint",
+		"inputPathLabel" : "Ruta",
+		"inputPathPlaceholder": "Introduzca la ruta de su endpoint",
+		"inputMethodLabel" : "Método",
+		"autoCompleteLabel" : "Seleccione un método",
+		"autoCompletePlaceholder" : "Buscar un código de estado HTTP",
+		"formDividerText2" : "Introduzca el tipo de contenido y la codificación de su endpoint",
+		"selectContentTypeLabel" : "Tipo de contenido",
+		"selectContentTypePlaceholder" : "Seleccione un tipo de contenido",
+		"formDividerText3" : "Introduzca la respuesta y las cabeceras de su endpoint",
+		"addHeaderButton" : "Añadir cabecera",
+		"inputHeaderKeyPlaceholder1" : "Introduzca su #",
+		"inputHeaderKeyPlaceholder2" : "valor de llave",
+		"inputHeaderValuePlaceholder1" : "Introduzca su #",
+		"inputHeaderValuePlaceholder2" : "valor de cabecera",
+		"formDividerText4" : "Introduzca la seguridad, el retraso y la expiración de su punto final",
+		"checkboxJWT": "Utilizar JWT para validar la solicitud",
+		"inputDelayLabel" : "Retraso (en segundos)",
+		"inputPlaceholder" : "Introduzca el retraso de su endpoint",
+		"inputExpirationLabel" : "Fecha de expiración",
+		"inputExpirationPlaceholder" : "Seleccione la fecha de expiración de su endpoint",
+		"formDividerText5" : "Introduzca el nombre y la descripción de su punto final",
+		"inputNameLabel" : "Nombre",
+		"inputNamePlaceholder" : "Introduzca el nombre de su endpoint",
+		"inputDescriptionLabel" : "Descripción",
+		"inputDescriptionPlaceholder" : "Introduzca la descripción de su endpoint",
+		"buttonSave" : "Crear endpoint"
+	},
+	"loginForm": {
+		"usernameLabel" : "Nombre de usuario",
+		"usernamePlaceholder": "Introduzca su nombre de usuario",
+		"passwordLabel" : "Contraseña",
+		"passwordPlaceholder": "Introduzca su contraseña",
+		"checkboxRemember" : "Recuérdame",
+		"buttonLogin" : "Iniciar sesión"
+	},
+	"projectForm": {
+		"projectNameLabel": "Nombre del proyecto",
+		"projectNamePlaceholder": "Introduzca el nombre de su proyecto",
+		"projectDescriptionLabel": "Descripción del proyecto",
+		"projectDescriptionPlaceholder": "Introduzca la descripción de su proyecto",
+		"projectTypeLabel": "Tipo de proyecto",
+		"projectTypePlaceholder": "Seleccione el tipo de proyecto",
+		"checkboxPublic": "Hacer este proyecto público"
+	},
+	"userForm": {
+		"firstNameLabel": "Nombre",
+		"firstNamePlaceholder": "Introduzca el nombre del usuario",
+		"lastNameLabel": "Apellido",
+		"lastNamePlaceholder": "Introduzca el apellido del usuario",
+		"usernameLabel": "Nombre de usuario",
+		"usernamePlaceholder": "Introduzca el nombre de usuario",
+		"emailLabel": "Correo electrónico",
+		"emailPlaceholder": "Introduzca el correo electrónico del usuario",
+		"passwordLabel": "Contraseña",
+		"passwordPlaceholder": "Introduzca la contraseña del usuario",
+		"mainRoleLabel": "Rol principal",
+		"mainRolePlaceholder": "Seleccione el rol principal del usuario",
+		"togglePasswordVisibility": "Mostrar u ocultar la contraseña"
+	},
+	"addToUserToTeamModal": {
+		"buttonLabel": "Agregar al equipo",
+		"modalTitle": "Agregar este usuario al equipo",
+		"modalUserLabel": "Usuario: {username}",
+		"modalConfirmation": "¿Estás seguro de que quieres agregar a este usuario?",
+		"closeButton": "Cerrar",
+		"addButton": "Agregar"
+	},
+	"deleteEndpointModal": {
+		"modalTitle": "Eliminar Endpoint",
+		"modalConfirmation": "¿Estás seguro de que quieres eliminar este endpoint?",
+		"cancelButton": "Cancelar",
+		"deleteButton": "Eliminar"
+	},
+	"deleteUserModal": {
+		"modalTitle": "Eliminar Usuario",
+		"modalConfirmation": "¿Estás seguro de que quieres eliminar este usuario?",
+		"cancelButton": "Cancelar",
+		"deleteButton": "Eliminar"
+	},
+	"removeUserFromTeamModal": {
+		"modalTitle": "Eliminar usuario del equipo",
+		"modalConfirmation": "¿Estás seguro de que quieres eliminar a este usuario del equipo?",
+		"cancelButton": "Cancelar",
+		"removeButton": "Eliminar"
+	},
+	"updateProjectModal": {
+		"updateButton": "Actualizar",
+		"modalTitle": "Actualizar Proyecto",
+		"modalConfirmation": "¿Estás seguro de que quieres actualizar este proyecto?",
+		"closeButton": "Cerrar"
+	},
+	"projectModal": {
+		"newProjectButton": "Nuevo Proyecto",
+		"modalTitle": "Crear Nuevo Proyecto",
+		"closeButton": "Cerrar",
+		"createButton": "Crear"
+	},
+	"userModal": {
+		"editUser": "Editar Usuario",
+		"createUser": "Crear Nuevo Usuario",
+		"closeButton": "Cerrar",
+		"createButton": "Crear"
+	},
+	"footer": {
+		"rights1": "@ ",
+		"rights2": " Mockify. Todos los derechos reservados.",
+		"allSystemsOperational": "Todos los sistemas operativos"
+	},
+
+	"navbarDesktop": {
+		"login": "Iniciar sesión",
+		"createNewProject": "Crear nuevo proyecto",
+		"profile": "Perfil",
+		"username": "Nombre de usuario: ",
+		"changeTo": "Cambiar a: ",
+		"logout": "Cerrar sesión",
+		"es": "ES",
+		"en": "EN"
+	},
+	"navbarMobile": {
+		"login": "Iniciar sesión",
+		"createNewProject": "Crear nuevo proyecto"
+	},
+	"projectSection" : {
+		"createNewEndpoint": "Crear nuevo endpoint",
+		"endpoints": "Endpoints",
+		"team": "Equipo",
+		"settings": "Configuraciones"
+	},
+	"usersModalSection" : {
+		"newUser": "Nuevo Usuario"
+	},
+	"testimonialSection" : {
+		"testimonial" : "¡Un cambio de juego! 🚀 Esta app hace que probar APIs sea rápido y sin complicaciones. Simula respuestas al instante, sin depender de servidores. ¡Simple, potente y esencial!",
+		"h2Text" : "Iniciar Sesión"
+	},
+	"createEndpointPage": {
+		"title": "Nuevo endpoint del proyecto {id}",
+		"description": "Agrega tu nuevo endpoint aquí."
+	},
+	"projectPage": {
+		"title": "Proyecto {id}",
+		"description": "Gestiona tu proyecto aquí."
+	},
+	"projectsPage": {
+		"title": "Proyectos",
+		"description": "Gestiona tus proyectos aquí."
+	},
+	"usersPage": {
+		"title": "Usuarios",
+		"description": "Gestiona todos los usuarios aquí."
+	}
+
+}

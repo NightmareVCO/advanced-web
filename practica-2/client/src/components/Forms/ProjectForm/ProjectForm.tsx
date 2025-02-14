@@ -18,7 +18,6 @@ export default function ProjectForm({
 	project,
 	errors,
 	action,
-	pending,
 }: ProjectFormProps) {
 	const [openAccess, setOpenAccess] = useState(false);
 

@@ -8,16 +8,6 @@ const THIS_PATH = 'projects';
 
 const CURRENT_PATH = `${SERVER_PATH}/${THIS_PATH}/`;
 
-// {
-//   "name": "Proyecto De Vladimir Publico",
-//   "desc": "El proyecto de vladimir para probar la vainilla",
-//   "tag": "API REST",
-//   "owner": {
-//     "username": "admin"
-//   },
-//   "openAccess": true
-// }
-
 export async function createProject(prevState: unknown, formData: FormData) {
 	try {
 		const project = Object.fromEntries(formData.entries());

@@ -7,6 +7,8 @@ import Footer from '@components/Navigation/Footer/Footer';
 import Navbar from '@components/Navigation/Navbar/Navbar';
 import { decrypt } from '@lib/auth/session';
 import type { JWTPayload } from 'jose';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
@@ -21,6 +23,9 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const messages = await getMessages();
+	const locale = await getLocale();
+
 	let userIsAdmin = false;
 	let isAuthenticated = false;
 	let userName = '';
@@ -36,20 +41,18 @@ export default async function RootLayout({
 	}
 
 	return (
-		<html lang="es" className="dark">
+		<html lang={locale} className="dark">
 			<body className={` antialiased ${onest.className}`}>
-				<Providers>
-					<div className="flex flex-col min-h-screen">
-						<Background />
-						<Navbar
-							admin={userIsAdmin}
-							userName={userName}
-							isAuthenticated={!!isAuthenticated}
-						/>
-						<div className="flex-1">{children}</div>
-						<Footer />
-					</div>
-				</Providers>
+				<NextIntlClientProvider messages={messages}>
+					<Providers>
+						<div className="flex flex-col min-h-screen">
+							<Background />
+							<Navbar admin={userIsAdmin} isAuthenticated={!!isAuthenticated} />
+							<div className="flex-1">{children}</div>
+							<Footer />
+						</div>
+					</Providers>
+				</NextIntlClientProvider>
 			</body>
 		</html>
 	);
