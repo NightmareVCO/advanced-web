@@ -18,28 +18,72 @@ import Method from '@lib/data/method.data';
 
 import { Icon } from '@iconify/react';
 
-import { createEndpoint } from '@/lib/actions/endpoint.action';
+import { createEndpoint, updateEndpoint } from '@/lib/actions/endpoint.action';
 import CodeEditor from '@components/CodeEditor/CodeEditor';
 import FormDivider from '@components/Forms/FormDivider/FormDivider';
+import {
+	API_PATH,
+	PROJECTS_PATH,
+	SERVER_PATH,
+} from '@lib/constants/server.constants';
 import ContentEncoding from '@lib/data/contentEncoding.data';
 import ContentType from '@lib/data/contentType.data';
 import Expiration from '@lib/data/expiration.data';
 import statusCodes from '@lib/data/statusCode.data';
+import type { AuthPackage } from '@lib/entity/auth.entity';
 import type Endpoint from '@lib/entity/endpoint.entity';
-import { useActionState, useCallback, useState } from 'react';
+import {
+	startTransition,
+	useActionState,
+	useCallback,
+	useEffect,
+	useState,
+} from 'react';
 
 type EndpointFormProps = {
+	authPackage?: AuthPackage;
 	endpoint?: Endpoint;
+	projectId: string;
 };
 
-export default function EndpointForm({ endpoint }: EndpointFormProps) {
-	const prefix = 'http://localhost:3000/projects/1/api/';
-	const [value, setValue] = useState(prefix);
+export default function EndpointForm({
+	authPackage,
+	endpoint,
+	projectId,
+}: EndpointFormProps) {
+	const prefix = `${SERVER_PATH}/${PROJECTS_PATH}/${projectId}/${API_PATH}/`;
+	// Limpia la ruta de entrada
+	let rawPath = endpoint?.path ?? '';
+
+	if (rawPath.includes(SERVER_PATH)) {
+		// Elimina cualquier parte del servidor y api/v1
+		rawPath = rawPath.replace(SERVER_PATH, '');
+	}
+
+	// Elimina cualquier patrón de projects/ID/api/
+	const projectPattern = new RegExp(`${PROJECTS_PATH}/\\d+/${API_PATH}/`);
+	while (rawPath.match(projectPattern)) {
+		rawPath = rawPath.replace(projectPattern, '');
+	}
+
+	// Asegúrate de que no haya barras dobles y que comience sin barra
+	rawPath = rawPath.replace(/\/+/g, '/').replace(/^\//, '');
+
+	const initialValue = `${prefix}${rawPath}`;
+	const initialExtension =
+		endpoint?.responseType === ContentType.JSON
+			? 'json'
+			: endpoint?.responseType === ContentType.XML
+				? 'xml'
+				: 'html';
+
+	const [value, setValue] = useState(initialValue);
 	const [headers, setHeaders] = useState<number[]>([]);
-	const [code, setCode] = useState<string>('');
-	const [currentEndpoint, setCurrentEndpoint] = useState<string>(prefix);
+	const [code, setCode] = useState<string>(endpoint?.body ?? '');
+	const [currentEndpoint, setCurrentEndpoint] = useState<string>(initialValue);
 	const [security, setSecurity] = useState(false);
 	const [method, setMethod] = useState(Method.GET);
+	const [extension, setExtension] = useState<string>(initialExtension);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const inputValue = e.target.value;
@@ -64,19 +108,81 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 		setCode(value);
 	}, []);
 
-	const [{ errors }, action, pending] = useActionState(createEndpoint, {
-		errors: {},
+	const onContentTypeChange = useCallback(
+		(event: React.ChangeEvent<HTMLSelectElement>) => {
+			const value = event.target.value;
+			console.log(event.target);
+			console.log(value);
+			switch (value) {
+				case 'JSON':
+					setExtension('json');
+					break;
+				case 'XML':
+					setExtension('xml');
+					break;
+				case 'HTML':
+					setExtension('html');
+					break;
+				default:
+					setExtension('json');
+			}
+		},
+		[],
+	);
+
+	const actionToPerform = endpoint ? updateEndpoint : createEndpoint;
+
+	// @ts-ignore
+	const [{ errors }, action, pending] = useActionState(actionToPerform, {
+		errors: {
+			error: '',
+		},
 	});
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const form = e.currentTarget;
+
+		if (code === '') {
+			errors.error = 'Please enter a response body.';
+			return;
+		}
+
+		startTransition(() => {
+			if (form.checkValidity()) {
+				const formData = new FormData(form);
+				action(formData);
+			} else {
+				form.reportValidity();
+			}
+		});
+	};
+
+	useEffect(() => {
+		if (endpoint) {
+			setHeaders(endpoint.headers.map(() => Date.now()));
+		}
+	}, [endpoint]);
+
+	const contentTypeKey = Object.entries(ContentType).find(
+		([, val]) => val === endpoint?.responseType,
+	)?.[0];
+
+	const contentEncodingKey = Object.entries(ContentEncoding).find(
+		([, val]) => val === endpoint?.encoding,
+	)?.[0];
 
 	return (
 		<Form
 			id="create-endpoint-form"
-			action={action}
 			className="flex flex-col gap-3 items-center justify-center w-full max-w-7xl px-4 lg:px-8 mt-6"
 			validationBehavior="native"
 			validationErrors={errors}
+			onSubmit={handleSubmit}
 		>
 			<FormDivider title="Enter the path, method, and status of your endpoint" />
+			<input type="hidden" name="id" value={endpoint?.id} />
+			<input type="hidden" name="jwt" defaultValue={authPackage?.jwt} />
 
 			<Input
 				isRequired
@@ -88,7 +194,8 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				radius="full"
 				size="lg"
 				value={value}
-				defaultValue={endpoint?.path}
+				pattern={`${prefix}.+/`}
+				errorMessage="Please enter a path after the prefix with a name and end with a '/'."
 				onChange={handleChange}
 			/>
 
@@ -105,6 +212,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 					color="primary"
 					radius="full"
 					onSelectionChange={(method) => setMethod(method as Method)}
+					defaultSelectedKey={endpoint && Method[endpoint?.method]}
 				>
 					{Object.keys(Method).map((method: string) => (
 						<Tab
@@ -150,7 +258,8 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				label="Content Type"
 				size="lg"
 				placeholder="Select a content type"
-				defaultSelectedKeys={endpoint?.responseType}
+				defaultSelectedKeys={[contentTypeKey ?? '']}
+				onChange={onContentTypeChange}
 			>
 				{Object.keys(ContentType).map((contentType: string) => (
 					<SelectItem key={contentType} value={contentType}>
@@ -167,7 +276,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				label="Content Encoding"
 				size="lg"
 				placeholder="Select a content encoding"
-				defaultSelectedKeys={endpoint?.encoding}
+				defaultSelectedKeys={[contentEncodingKey ?? '']}
 			>
 				{Object.keys(ContentEncoding).map((contentEncoding: string) => (
 					<SelectItem key={contentEncoding} value={contentEncoding}>
@@ -182,6 +291,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 			<div className="hidden xl:block">
 				<CodeEditor
 					code={code ?? ''}
+					extension={extension}
 					onChange={onCodeChange}
 					minHeight="20rem"
 					minWidth="20rem"
@@ -192,6 +302,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 			<div className="hidden lg:block xl:hidden">
 				<CodeEditor
 					code={code ?? ''}
+					extension={extension}
 					onChange={onCodeChange}
 					minHeight="20rem"
 					minWidth="20rem"
@@ -202,6 +313,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 			<div className="hidden md:block lg:hidden xl:hidden">
 				<CodeEditor
 					code={code ?? ''}
+					extension={extension}
 					onChange={onCodeChange}
 					minHeight="20rem"
 					minWidth="20rem"
@@ -212,6 +324,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 			<div className="hidden sm:block md:hidden lg:hidden xl:hidden">
 				<CodeEditor
 					code={code ?? ''}
+					extension={extension}
 					onChange={onCodeChange}
 					minHeight="20rem"
 					minWidth="20rem"
@@ -222,6 +335,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 			<div className="sm:hidden md:hidden lg:hidden xl:hidden">
 				<CodeEditor
 					code={code ?? ''}
+					extension={extension}
 					onChange={onCodeChange}
 					minHeight="20rem"
 					minWidth="20rem"
@@ -274,6 +388,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 								variant="bordered"
 								radius="full"
 								size="lg"
+								defaultValue={endpoint?.headers[index]?.key}
 							/>
 
 							<Input
@@ -285,6 +400,7 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 								variant="bordered"
 								radius="full"
 								size="lg"
+								defaultValue={endpoint?.headers[index]?.value}
 							/>
 						</div>
 						<Button
@@ -313,27 +429,14 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 
 			<div className="flex w-full items-center justify-start">
 				<Checkbox
-					name="remember"
-					isSelected={security}
-					defaultChecked={endpoint?.security}
-					onChange={() => setSecurity(!security)}
+					name="securityCheck"
+					defaultSelected={endpoint?.security}
+					onValueChange={(isSelected) => setSecurity(isSelected)}
 				>
 					Use JWT to validate the request
 				</Checkbox>
 			</div>
-
-			{/* {security && (
-				<Input
-					isRequired={security}
-					label="JWT Token"
-					name="jwtToken"
-					placeholder="Enter your JWT token"
-					type="text"
-					variant="bordered"
-					radius="full"
-					size="lg"
-				/>
-			)} */}
+			<input type="hidden" name="security" value={security ? 'on' : 'off'} />
 
 			<Input
 				isRequired
@@ -397,6 +500,8 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				defaultValue={endpoint?.description}
 			/>
 
+			<input name="projectId" type="hidden" value={projectId} />
+
 			<Spacer y={2} />
 			<Button
 				form="create-endpoint-form"
@@ -408,11 +513,11 @@ export default function EndpointForm({ endpoint }: EndpointFormProps) {
 				isDisabled={pending}
 				isLoading={pending}
 			>
-				Create Endpoint
+				{endpoint ? 'Update Endpoint' : 'Create Endpoint'}
 			</Button>
-			{errors?.createEndpoint && (
-				<p className="text-red-500 text-sm text-center capitalize">
-					{errors.createEndpoint}
+			{errors?.error && (
+				<p className="text-red-400 text-sm text-center capitalize">
+					{errors.error}
 				</p>
 			)}
 		</Form>
