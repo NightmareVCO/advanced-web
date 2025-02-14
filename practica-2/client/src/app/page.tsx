@@ -49,7 +49,7 @@ export default function Page() {
 					</div>
 				</section>
 				<div className="z-20 mt-auto w-[calc(100%-calc(theme(spacing.4)*2))] max-w-6xl overflow-hidden rounded-tl-2xl rounded-tr-2xl border-1 border-b-0 border-[#FFFFFF1A] bg-background bg-opacity-0 p-4">
-					<Image src="/mockify.png" />
+					<Image src="/mockify.webp" />
 				</div>
 			</main>
 		</div>

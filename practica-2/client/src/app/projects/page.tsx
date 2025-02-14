@@ -13,6 +13,15 @@ export default async function ProjectsPage() {
 	}
 
 	const [projects, error] = await getUserProjects(jwt as string);
+	const sortedProjects = projects?.toSorted((a, b) => {
+		if (a.id < b.id) {
+			return -1;
+		}
+		if (a.id > b.id) {
+			return 1;
+		}
+		return 0;
+	});
 
 	return (
 		<main className="mt-6 flex w-full flex-col items-center">
@@ -21,7 +30,7 @@ export default async function ProjectsPage() {
 			</Header>
 			<section className="w-full max-w-7xl px-4 lg:px-8">
 				<div className="gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-					{Array.isArray(projects) &&
+					{Array.isArray(sortedProjects) &&
 						projects.map((project) => (
 							<ProjectCard project={project} key={project.id} />
 						))}

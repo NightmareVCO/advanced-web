@@ -294,14 +294,13 @@ public class ProjectController {
         existingProject.get().setName(projectDTO.getName());
         existingProject.get().setDesc(projectDTO.getDesc());
 
-        Project updatedProject = ProjectMapper.INSTANCE.dtoToProject(projectDTO);
         Optional<User> ownerFromDb = userService.getUserById(existingProject.get().getOwner().getId());
         if (ownerFromDb.isEmpty()) {
             throw new ResourceNotFoundException("Owner not found");
         }
-        updatedProject.setOwner(ownerFromDb.get());
+        existingProject.get().setOwner(ownerFromDb.get());
 
-        Optional<Project> savedProject = projectService.saveProject(updatedProject);
+        Optional<Project> savedProject = projectService.saveProject(existingProject.get());
         if (savedProject.isEmpty()) {
             throw new InternalServerError("Internal Server Error");
         }

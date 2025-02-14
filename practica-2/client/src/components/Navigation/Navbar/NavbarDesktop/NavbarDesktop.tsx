@@ -19,8 +19,8 @@ import NavbarDesktopItems from './NavbarDesktopItems';
 import { logout } from '@/lib/actions/logIn.action';
 import { Icon } from '@iconify/react';
 import Routes from '@lib/data/routes.data';
-import {usePathname, useRouter} from 'next/navigation';
-import {useActionState, useEffect, useState} from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useActionState, useEffect, useState } from 'react';
 import { menuItems } from '../_config/config';
 
 type NavbarDesktopProps = {
@@ -42,9 +42,11 @@ export default function NavbarDesktop({
 	const router = useRouter();
 
 	useEffect(() => {
-		const cookieLocale = document.cookie.split('; ').find((row) => row.startsWith('MYNEXTAPP_LOCALE'))
-		?.split('=')[1];
-		if(cookieLocale){
+		const cookieLocale = document.cookie
+			.split('; ')
+			.find((row) => row.startsWith('MYNEXTAPP_LOCALE'))
+			?.split('=')[1];
+		if (cookieLocale) {
 			setLocale(cookieLocale);
 		} else {
 			const browserLocale = navigator.language.slice(0, 2);
@@ -59,7 +61,7 @@ export default function NavbarDesktop({
 		document.cookie = `MYNEXTAPP_LOCALE=${newLocale};`;
 		const messages = (await import(`@/messages/${newLocale}.json`)).default;
 		router.refresh();
-	}
+	};
 
 	return (
 		<>
@@ -119,7 +121,8 @@ export default function NavbarDesktop({
 							{isAuthenticated ? (
 								<DropdownItem key="profile">
 									<p>
-										Username: <span className="text-primary font-bold">{'test'}</span>
+										User:{' '}
+										<span className="text-primary font-bold">{userName}</span>
 									</p>
 								</DropdownItem>
 							) : null}
@@ -127,14 +130,16 @@ export default function NavbarDesktop({
 							{locale !== 'es' ? (
 								<DropdownItem key="es-lang" onPress={() => changeLocale('es')}>
 									<p>
-										Change to: <span className="text-primary font-bold">ES</span>
+										Change to:{' '}
+										<span className="text-primary font-bold">ES</span>
 									</p>
 								</DropdownItem>
 							) : null}
 							{locale !== 'en' ? (
 								<DropdownItem key="en-lang" onPress={() => changeLocale('en')}>
 									<p>
-										Change to: <span className="text-primary font-bold">EN</span>
+										Change to:{' '}
+										<span className="text-primary font-bold">EN</span>
 									</p>
 								</DropdownItem>
 							) : null}

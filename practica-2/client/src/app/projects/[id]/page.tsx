@@ -25,7 +25,7 @@ export default async function ProjectPage({
 
 	return (
 		<main className="mt-6 flex w-full flex-col items-center">
-			<Header title={`Project ${id}`} description="Manage your project here.">
+			<Header title={`Project: ${project.name}`} description={project.desc}>
 				<BreadcrumbsBuilder
 					items={[
 						{ name: 'Projects', href: Routes.Projects },

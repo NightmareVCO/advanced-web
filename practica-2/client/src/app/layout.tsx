@@ -47,7 +47,11 @@ export default async function RootLayout({
 					<Providers>
 						<div className="flex flex-col min-h-screen">
 							<Background />
-							<Navbar admin={userIsAdmin} isAuthenticated={!!isAuthenticated} />
+							<Navbar
+								admin={userIsAdmin}
+								userName={userName}
+								isAuthenticated={!!isAuthenticated}
+							/>
 							<div className="flex-1">{children}</div>
 							<Footer />
 						</div>
