@@ -3,9 +3,15 @@
 import UserModal from '@components/Modal/UserModal';
 import { Button, useDisclosure } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import type User from '@lib/entity/user.entity';
+import type { AuthPackage } from '@lib/entity/auth.entity';
 
-export default function UserModalSection() {
+type UserModalSectionProps = {
+	authPackage: AuthPackage;
+};
+
+export default function UserModalSection({
+	authPackage,
+}: UserModalSectionProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	return (
@@ -26,7 +32,13 @@ export default function UserModalSection() {
 			>
 				New User
 			</Button>
-			<UserModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
+			<UserModal
+				actionToPerform="create"
+				isOpen={isOpen}
+				onOpen={onOpen}
+				onOpenChange={onOpenChange}
+				authPackage={authPackage}
+			/>
 		</>
 	);
 }
