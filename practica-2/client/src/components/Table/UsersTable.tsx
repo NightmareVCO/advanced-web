@@ -34,6 +34,7 @@ type UsersTableProps = {
 	users: User[];
 	noEdit?: boolean;
 	isProject?: boolean;
+	projectId?: string;
 };
 
 const statusColorMap = {
@@ -46,6 +47,7 @@ export default function UsersTable({
 	users,
 	noEdit,
 	isProject,
+	projectId,
 }: UsersTableProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
@@ -124,6 +126,8 @@ export default function UsersTable({
 							)}
 							{isProject && (
 								<RemoveUserFromTeam
+									projectId={projectId ?? ''}
+									authPackage={authPackage}
 									user={user}
 									setSelectedUser={setSelectedUser}
 								/>
@@ -141,7 +145,7 @@ export default function UsersTable({
 					return cellValue;
 			}
 		},
-		[onOpen, noEdit, isProject, authPackage],
+		[onOpen, noEdit, isProject, authPackage, projectId],
 	);
 
 	return (

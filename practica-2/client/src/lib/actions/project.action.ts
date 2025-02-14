@@ -106,3 +106,32 @@ export async function addUserToTeam(prevState: unknown, formData: FormData) {
 		};
 	}
 }
+
+export async function removeUserFromTeam(prevState: unknown, formData: FormData) {
+	try {
+		const userDTO = Object.fromEntries(formData.entries());
+		const response = await fetch(
+			`${CURRENT_PATH}remove-user/${String(userDTO.username)}/from-project/${String(userDTO.projectId)}`,
+			{
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${String(userDTO.jwt)}`,
+				},
+			},
+		);
+		console.log(userDTO);
+		console.log(response.body);
+
+		const result = await response.json();
+		revalidatePath(`${Routes.Projects}/${String(userDTO.projectId)}`);
+		return result;
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	} catch (error: any) {
+		return {
+			errors: {
+				username: error.message,
+			},
+		};
+	}
+}

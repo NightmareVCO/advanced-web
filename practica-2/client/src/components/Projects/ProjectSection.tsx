@@ -117,8 +117,9 @@ export default function ProjectSection({
 						<UsersTable
 							authPackage={authPackage}
 							users={project?.team}
-							noEdit
+							projectId={String(project.id)}
 							isProject
+							noEdit
 						/>
 						<Spacer y={4} />
 					</Tab>
