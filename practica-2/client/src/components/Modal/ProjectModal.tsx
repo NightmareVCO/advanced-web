@@ -9,16 +9,19 @@ import {
 } from '@heroui/react';
 
 import { createProject } from '@/lib/actions/project.action';
+import type { AuthPackage } from '@/lib/entity/auth.entity';
 import ProjectForm from '@components/Forms/ProjectForm/ProjectForm';
 import { Icon } from '@iconify/react';
 import { useActionState, useEffect } from 'react';
 
 type ProjectModalProps = {
+	authPackage: AuthPackage;
 	isModalOpenFromParent: boolean;
 	setIsModalOpenFromParent: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ProjectModal({
+	authPackage,
 	isModalOpenFromParent,
 	setIsModalOpenFromParent,
 }: ProjectModalProps) {
@@ -68,6 +71,7 @@ export default function ProjectModal({
 							</ModalHeader>
 							<ModalBody>
 								<ProjectForm
+									authPackage={authPackage}
 									errors={errors}
 									action={action}
 									pending={pending}
@@ -87,6 +91,7 @@ export default function ProjectModal({
 								</Button>
 								<Button
 									form="project-form"
+									type="submit"
 									className="bg-primary font-medium text-white"
 									color="secondary"
 									radius="full"

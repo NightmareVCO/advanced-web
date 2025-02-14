@@ -24,9 +24,12 @@ public class User {
   @Column(unique = true)
   private String username;
 
+  @Column(unique = true)
   private String email;
   private String password;
-  private boolean active;
+
+  @Builder.Default
+  private boolean active = true;
 
   @Singular
   @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,

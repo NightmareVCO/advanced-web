@@ -3,6 +3,7 @@
 import {
 	Avatar,
 	Button,
+	Chip,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
@@ -24,11 +25,13 @@ import { menuItems } from '../_config/config';
 
 type NavbarDesktopProps = {
 	admin?: boolean;
+	userName?: string;
 	isAuthenticated?: boolean;
 };
 
 export default function NavbarDesktop({
 	admin,
+	userName,
 	isAuthenticated,
 }: NavbarDesktopProps) {
 	const pathName = usePathname();
@@ -136,12 +139,13 @@ export default function NavbarDesktop({
 								</DropdownItem>
 							) : null}
 							{isAuthenticated ? (
-								<DropdownItem key="logout" color="danger">
-									<form action={action}>
-										<button color="danger" type="submit">
-											Log Out
-										</button>
-									</form>
+								<DropdownItem
+									key="logout"
+									color="danger"
+									as={Link}
+									href={Routes.LogOut}
+								>
+									Log Out
 								</DropdownItem>
 							) : null}
 						</DropdownMenu>

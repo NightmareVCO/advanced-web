@@ -7,34 +7,43 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
-	useDisclosure,
 } from '@heroui/react';
 
 import UserForm from '@components/Forms/UserForm/UserForm';
-import { Icon } from '@iconify/react';
+import { createUser, updateUser } from '@lib/actions/users.action';
+import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
-import { useEffect } from 'react';
+import { useActionState, useEffect } from 'react';
 
 type UserModalProps = {
+	authPackage: AuthPackage;
 	user?: User;
 	setUser?: React.Dispatch<React.SetStateAction<User | null>>;
 	isOpen: boolean;
 	onOpen: () => void;
 	onOpenChange: () => void;
+	actionToPerform: string;
 };
 
 export default function UserModal({
+	authPackage,
 	user,
 	setUser,
 	isOpen,
 	onOpen,
 	onOpenChange,
+	actionToPerform,
 }: UserModalProps) {
 	useEffect(() => {
 		if (user) {
 			onOpen();
 		}
 	}, [user, onOpen]);
+
+	const formAction = actionToPerform === 'create' ? createUser : updateUser;
+	const [{ errors }, action, pending] = useActionState(formAction, {
+		errors: {},
+	});
 
 	return (
 		<Modal
@@ -51,7 +60,13 @@ export default function UserModal({
 							{user ? 'Edit User' : 'Create New User'}
 						</ModalHeader>
 						<ModalBody>
-							<UserForm user={user} />
+							<UserForm
+								action={action}
+								errors={errors}
+								pending={pending}
+								user={user}
+								authPackage={authPackage}
+							/>
 						</ModalBody>
 						<ModalFooter>
 							<Button
@@ -66,12 +81,15 @@ export default function UserModal({
 								Close
 							</Button>
 							<Button
-								form="project-form"
+								form="user-form"
+								type="submit"
 								className="bg-primary font-medium text-white"
 								color="secondary"
 								radius="full"
+								isDisabled={pending}
+								isLoading={pending}
 							>
-								Create
+								Confirm
 							</Button>
 						</ModalFooter>
 					</>

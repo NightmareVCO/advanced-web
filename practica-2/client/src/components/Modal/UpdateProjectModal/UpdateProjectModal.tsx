@@ -42,7 +42,10 @@ export default function UpdateProjectModal({
 							</ModalHeader>
 							<ModalBody>
 								<p className="text-sm text-default-500">
-									{project.name} - {project.desc}
+									Previous name: {project.name}
+								</p>
+								<p className="text-sm text-default-500">
+									Previous description: {project.desc}
 								</p>
 								<p className="text-sm text-default-500">
 									Are you sure you want to update this project?

@@ -101,16 +101,24 @@ public class ProjectController {
             throw new ResourceNotFoundException("Project not found");
         }
 
+        String ownerUsername = project.get().getOwner().getUsername();
+        boolean isProjectPublic = project.get().isOpenAccess();
+        boolean isUserPartOfTeam = project.get().getTeam().stream().anyMatch(u -> u.getUsername().equals(username));
+        boolean isAdminRole = user.get().getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ADMIN));
+        if ((!username.equals(ownerUsername) && !isProjectPublic && !isUserPartOfTeam) && !isAdminRole) {
+            throw new ForbiddenException("You are not allowed to view this project");
+        }
+
         ProjectResponseDTO projectResponseDTO = ProjectMapper.INSTANCE.projectToResponseDto(project.get());
         if (projectResponseDTO == null) {
-            throw new ResourceNotFoundException("Project not found");
+            throw new InternalServerError("Internal Server Error");
         }
 
         return new ResponseEntity<>(projectResponseDTO, HttpStatus.OK);
     }
 
-    @PostMapping("add-user/{userId}/to-project/{projectId}")
-    public ResponseEntity<ProjectDTO> addUserToTeam(@PathVariable Long userId, @PathVariable Long projectId,
+    @PostMapping("add-user/{username}/to-project/{projectId}")
+    public ResponseEntity<ProjectDTO> addUserToTeam(@PathVariable String username, @PathVariable Long projectId,
             @RequestHeader("Authorization") String token) {
         Optional<Project> project = projectService.getProjectById(projectId);
         if (project.isEmpty()) {
@@ -133,19 +141,13 @@ public class ProjectController {
             throw new ForbiddenException("You are not the owner of the project");
         }
 
-        if (claims.get().get("userId", String.class).equals(userId.toString())) {
-            throw new ForbiddenException("You can't add yourself to the team");
-        }
-
-        String username = claims.get().get("username", String.class);
-        Optional<User> loggedUser = userService.getUserByUsername(username);
-        if (loggedUser.isEmpty()) {
-            throw new ResourceNotFoundException("User not found");
-        }
-
-        Optional<User> user = userService.getUserById(userId);
+        Optional<User> user = userService.getUserByUsername(username);
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("User not found");
+        }
+
+        if (claims.get().get("userId", String.class).equals(user.get().getId().toString())) {
+            throw new ForbiddenException("You can't add yourself to the team");
         }
 
         project.get().getTeam().add(user.get());
@@ -162,8 +164,8 @@ public class ProjectController {
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("remove-user/{userId}/from-project/{projectId}")
-    public ResponseEntity<ProjectDTO> removeUserFromTeam(@PathVariable Long userId, @PathVariable Long projectId,
+    @DeleteMapping("remove-user/{username}/from-project/{projectId}")
+    public ResponseEntity<ProjectDTO> removeUserFromTeam(@PathVariable String username, @PathVariable Long projectId,
             @RequestHeader("Authorization") String token) {
         Optional<Project> project = projectService.getProjectById(projectId);
         if (project.isEmpty()) {
@@ -187,13 +189,13 @@ public class ProjectController {
             throw new ForbiddenException("You are not the owner of the project");
         }
 
-        if (claims.get().get("userId", String.class).equals(userId.toString())) {
-            throw new ForbiddenException("You cannot remove yourself from the team");
-        }
-
-        Optional<User> user = userService.getUserById(userId);
+        Optional<User> user = userService.getUserByUsername(username);
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("User not found");
+        }
+
+        if (claims.get().get("userId", String.class).equals(user.get().toString())) {
+            throw new ForbiddenException("You cannot remove yourself from the team");
         }
 
         project.get().getTeam().remove(user.get());
@@ -260,7 +262,57 @@ public class ProjectController {
         return new ResponseEntity<>(createdProjectDTO, HttpStatus.CREATED);
     }
 
-    // implement the updateProject method :C
+    @PatchMapping("{id}")
+    public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long id, @RequestBody ProjectDTO projectDTO,
+            @RequestHeader("Authorization") String token) {
+        String jwt = token.substring(7);
+
+        Optional<Claims> claims = jwtService.getClaims(jwt);
+        if (claims.isEmpty()) {
+            throw new BadRequestException("Invalid token");
+        }
+
+        if (jwtService.isTokenExpired(jwt)) {
+            throw new BadRequestException("Token expired");
+        }
+
+        if (ProjectDTO.validateNoNull(projectDTO)) {
+            throw new ForbiddenException("All fields are mandatory");
+        }
+
+        Optional<Project> existingProject = projectService.getProjectById(id);
+        if (existingProject.isEmpty()) {
+            throw new ResourceNotFoundException("Project not found");
+        }
+
+        String loggedUsername = claims.get().get("username", String.class);
+        String ownerUsername = existingProject.get().getOwner().getUsername();
+        if (!loggedUsername.equals(ownerUsername)) {
+            throw new ForbiddenException("You are not the owner of the project");
+        }
+
+        existingProject.get().setName(projectDTO.getName());
+        existingProject.get().setDesc(projectDTO.getDesc());
+
+        Project updatedProject = ProjectMapper.INSTANCE.dtoToProject(projectDTO);
+        Optional<User> ownerFromDb = userService.getUserById(existingProject.get().getOwner().getId());
+        if (ownerFromDb.isEmpty()) {
+            throw new ResourceNotFoundException("Owner not found");
+        }
+        updatedProject.setOwner(ownerFromDb.get());
+
+        Optional<Project> savedProject = projectService.saveProject(updatedProject);
+        if (savedProject.isEmpty()) {
+            throw new InternalServerError("Internal Server Error");
+        }
+
+        ProjectResponseDTO updatedProjectDTO = ProjectMapper.INSTANCE.projectToResponseDto(savedProject.get());
+        if (updatedProjectDTO == null) {
+            throw new InternalServerError("Internal Server Error");
+        }
+
+        return new ResponseEntity<>(updatedProjectDTO, HttpStatus.OK);
+    }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {

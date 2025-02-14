@@ -1,40 +1,11 @@
 import BreadcrumbsBuilder from '@components/BreadcrumbsBuilder/BreadcrumbsBuilder';
 import Header from '@components/Header/Header';
 import ProjectSection from '@components/Projects/ProjectSection';
-
-import Role from '@lib/data/roles.data';
+import { getProject } from '@lib/data/fetch/projects.fetch';
 import Routes from '@lib/data/routes.data';
-
-const project = {
-	id: 1,
-	name: 'Project 1',
-	owner: 'Owner 1',
-	desc: 'This is a description of the project number 1',
-	tag: 'Rest API',
-	team: [
-		{
-			id: 1,
-			firstName: 'User 1',
-			lastName: 'Last Name',
-			username: 'user1',
-			email: 'User1@email.com',
-			role: Role.Admin,
-			password: 'password',
-			status: 'active',
-		},
-		{
-			id: 2,
-			firstName: 'User 2',
-			lastName: 'Last Name',
-			username: 'user2',
-			email: 'User2@email.com',
-			role: Role.User,
-			password: 'password',
-			status: 'active',
-		},
-	],
-	isPublic: true,
-};
+import { getAuthUser } from '@lib/utils/auth.utils';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function ProjectPage({
 	params,
@@ -42,6 +13,15 @@ export default async function ProjectPage({
 	params: Promise<{ id: string }>;
 }) {
 	const id = (await params).id;
+	const jwt = (await cookies()).get('session')?.value;
+	const [authPackage, authError] = await getAuthUser(jwt as string);
+	if (authError) {
+		return;
+	}
+	const [project, error] = await getProject({ token: jwt as string, id });
+	if (error?.message === 'Project not found') {
+		redirect(Routes.Projects);
+	}
 
 	return (
 		<main className="mt-6 flex w-full flex-col items-center">
@@ -54,8 +34,13 @@ export default async function ProjectPage({
 				/>
 			</Header>
 			<section className="w-full max-w-7xl px-4 lg:px-8">
-				<ProjectSection project={project} />
+				<ProjectSection project={project} authPackage={authPackage} />
 			</section>
+			{error && (
+				<p className="text-start text-red-400">
+					{`An error occurred while fetching the project ${error}`}
+				</p>
+			)}
 		</main>
 	);
 }

@@ -1,6 +1,7 @@
-import DeleteIcon from '@/components/Icons/DeleteIcon';
+import DeleteIcon from '@components/Icons/DeleteIcon';
 import {
 	Button,
+	Form,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -9,18 +10,30 @@ import {
 	Tooltip,
 	useDisclosure,
 } from '@heroui/react';
+import { deleteEndpoint } from '@lib/actions/endpoint.action';
+import type { AuthPackage } from '@lib/entity/auth.entity';
 import type Endpoint from '@lib/entity/endpoint.entity';
+import { useActionState } from 'react';
 
 type DeleteEndpointModalProps = {
+	authPackage: AuthPackage;
+	projectOwnerId: string;
 	endpoint: Endpoint;
 	setSelectedEndpoint: React.Dispatch<React.SetStateAction<Endpoint | null>>;
 };
 
 export default function DeleteEndpointModal({
+	authPackage,
+	projectOwnerId,
 	endpoint,
 	setSelectedEndpoint,
 }: DeleteEndpointModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const [{ errors }, action, pending] = useActionState(deleteEndpoint, {
+		errors: {
+			deleteEndpoint: '',
+		},
+	});
 
 	return (
 		<>
@@ -30,6 +43,7 @@ export default function DeleteEndpointModal({
 					variant="light"
 					isIconOnly
 					size="lg"
+					isDisabled={projectOwnerId !== authPackage.userId || !endpoint.status}
 					onPress={() => {
 						onOpen();
 					}}
@@ -53,12 +67,28 @@ export default function DeleteEndpointModal({
 								<h2 className="text-lg font-medium">Delete Endpoint</h2>
 							</ModalHeader>
 							<ModalBody>
-								<p className="text-default-400">
-									{endpoint.name} - {endpoint.path}
-								</p>
-								<p className="text-default-400">
-									Are you sure you want to delete this endpoint?
-								</p>
+								<Form
+									id="delete-endpoint-form"
+									validationBehavior="native"
+									validationErrors={errors}
+									action={action}
+								>
+									<input type="hidden" name="id" value={endpoint.id} />
+									<input
+										type="hidden"
+										name="jwt"
+										defaultValue={authPackage.jwt}
+									/>
+									<p className="text-default-400">
+										{endpoint.name} - {endpoint.path}
+									</p>
+									<p className="text-default-400">
+										Are you sure you want to delete this endpoint?
+									</p>
+									{errors.deleteEndpoint && (
+										<p className="text-danger">{errors.deleteEndpoint}</p>
+									)}
+								</Form>
 							</ModalBody>
 							<ModalFooter>
 								<Button
@@ -72,7 +102,14 @@ export default function DeleteEndpointModal({
 								>
 									Cancel
 								</Button>
-								<Button color="danger" radius="full" onPress={() => {}}>
+								<Button
+									form="delete-endpoint-form"
+									type="submit"
+									color="danger"
+									radius="full"
+									isDisabled={pending}
+									isLoading={pending}
+								>
 									Delete
 								</Button>
 							</ModalFooter>

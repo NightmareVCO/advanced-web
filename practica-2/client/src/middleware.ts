@@ -8,6 +8,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 const protectedRoutes = [
 	Routes.NewProject.toString(),
 	Routes.Projects.toString(),
+	Routes.Explore.toString(),
 	Routes.Users.toString(),
 ];
 const publicRoutes = [Routes.Home.toString(), Routes.LogIn.toString()];
@@ -18,7 +19,9 @@ export default async function middleware(req: NextRequest) {
 
 	const path = req.nextUrl.pathname;
 	// const isProtectedRoute = protectedRoutes.includes(path);
-	//const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route));
+	const isProtectedRoute = protectedRoutes.some((route) =>
+		path.startsWith(route),
+	);
 	const isPublicRoute = publicRoutes.includes(path);
 
 	// 3. Decrypt the session from the cookie
@@ -31,14 +34,14 @@ export default async function middleware(req: NextRequest) {
 	}
 
 	// Parse the admin role
-	if (authSession && typeof authSession.role === 'string') {
-		userIsAdmin = authSession.role.includes('ADMIN');
+	if (authSession && typeof authSession?.roles === 'string') {
+		userIsAdmin = authSession?.roles?.includes('ADMIN') ?? false;
 	}
 
 	// Redirect to /login if the user is not authenticated
-	// if (isProtectedRoute && !authSession?.userId) {
-	// 	return NextResponse.redirect(new URL(Routes.LogIn, req.nextUrl));
-	// }
+	if (isProtectedRoute && !authSession?.userId) {
+		return NextResponse.redirect(new URL(Routes.LogIn, req.nextUrl));
+	}
 
 	// Redirect to /projects if the user is authenticated and in /login
 	if (

@@ -28,15 +28,16 @@ export default async function RootLayout({
 
 	let userIsAdmin = false;
 	let isAuthenticated = false;
+	let userName = '';
 
-	const cookie = (await cookies()).get('session')?.value;
-	const session: JWTPayload | Error = await decrypt(cookie);
+	const jwt = (await cookies()).get('session')?.value;
+	const session: JWTPayload | Error = await decrypt(jwt);
 
 	if (!(session instanceof Error)) {
-		if (typeof session.role === 'string') {
-			userIsAdmin = session.role.includes('ADMIN');
-		}
-		isAuthenticated = session.id !== undefined;
+		if (typeof session.roles === 'string')
+			userIsAdmin = session.roles.includes('ADMIN');
+		isAuthenticated = session.userId !== undefined;
+		if (typeof session.username === 'string') userName = session.username;
 	}
 
 	return (

@@ -2,6 +2,7 @@ import {
 	Button,
 	Chip,
 	Link,
+	Snippet,
 	Table,
 	TableBody,
 	TableCell,
@@ -10,19 +11,22 @@ import {
 	TableRow,
 	Tooltip,
 } from '@heroui/react';
-import React, { useCallback, useState } from 'react';
+import type React from 'react';
+import { useCallback, useState } from 'react';
 
 import EditIcon from '@components/Icons/EditIcon';
-import EyeIcon from '@components/Icons/EyeIcon';
 import MethodColor from '@lib/data/method.color.data';
 
+import type { AuthPackage } from '@/lib/entity/auth.entity';
 import DeleteEndpointModal from '@components/Modal/DeleteModals/DeleteEndpointModal';
+import { Icon } from '@iconify/react';
+import { ENDPOINT_PATH, SERVER_PATH } from '@lib/constants/server.constants';
 import Routes from '@lib/data/routes.data';
 import { statusCodesRecord } from '@lib/data/statusCode.data';
 import type Endpoint from '@lib/entity/endpoint.entity';
 
 export const columns = [
-	{ name: 'Live', uid: 'live' },
+	{ name: 'Status', uid: 'live' },
 	{ name: 'Name', uid: 'name' },
 	{ name: 'Path', uid: 'path' },
 	{ name: 'Response Type', uid: 'responseType' },
@@ -32,10 +36,18 @@ export const columns = [
 ];
 
 type EndpointTableProps = {
+	projectId: string;
+	projectOwnerId: string;
 	endpoints: Endpoint[];
+	authPackage: AuthPackage;
 };
 
-export default function EndpointTable({ endpoints }: EndpointTableProps) {
+export default function EndpointTable({
+	projectId,
+	projectOwnerId,
+	endpoints,
+	authPackage,
+}: EndpointTableProps) {
 	const [selectedEndpoint, setSelectedEndpoint] = useState<Endpoint | null>(
 		null,
 	);
@@ -50,7 +62,12 @@ export default function EndpointTable({ endpoints }: EndpointTableProps) {
 						<Chip
 							color={endpoint.status ? 'success' : 'danger'}
 							variant="dot"
-						/>
+							classNames={{
+								base: 'w-full flex justify-center items-center',
+							}}
+						>
+							{endpoint.status ? 'Live' : 'Off'}
+						</Chip>
 					);
 				case columns[1].uid:
 					return (
@@ -90,31 +107,59 @@ export default function EndpointTable({ endpoints }: EndpointTableProps) {
 				case columns[6].uid:
 					return (
 						<div className="relative flex items-center justify-center gap-2">
-							<Tooltip content="Test">
-								<span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-									<EyeIcon />
-								</span>
-							</Tooltip>
+							{endpoint.status && endpoint.jwt && endpoint.security && (
+								<Snippet
+									symbol=" "
+									tooltipProps={{
+										content: 'Copy JWT',
+									}}
+									copyIcon={<Icon icon="lucide:shield-check" color="#e18c2e" />}
+									classNames={{
+										base: 'bg-transparent',
+									}}
+									disableCopy={!endpoint.status}
+									onCopy={() => {
+										navigator.clipboard.writeText(endpoint.jwt);
+									}}
+								/>
+							)}
+							<Snippet
+								symbol=" "
+								classNames={{
+									base: 'bg-transparent',
+								}}
+								disableCopy={!endpoint.status}
+								onCopy={() => {
+									navigator.clipboard.writeText(
+										`${SERVER_PATH}/${ENDPOINT_PATH}/${endpoint.path}`,
+									);
+								}}
+							/>
 							<Link
-								href={`${Routes.Projects}/${endpoint.projectId}${Routes.Endpoint}/${endpoint.id}`}
+								isDisabled={
+									projectOwnerId !== authPackage.userId || !endpoint.status
+								}
+								href={`${Routes.Projects}/${projectId}${Routes.Endpoint}/${endpoint.id}`}
 							>
 								<Tooltip content="Edit">
 									<span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-										<EditIcon />
+										<EditIcon className="text-white" />
 									</span>
 								</Tooltip>
 							</Link>
 							<DeleteEndpointModal
+								projectOwnerId={projectOwnerId}
+								authPackage={authPackage}
 								endpoint={endpoint}
 								setSelectedEndpoint={setSelectedEndpoint}
 							/>
 						</div>
 					);
 				default:
-					return cellValue;
+					return <>{cellValue}</>;
 			}
 		},
-		[],
+		[projectOwnerId, projectId, authPackage],
 	);
 
 	return (
@@ -136,7 +181,9 @@ export default function EndpointTable({ endpoints }: EndpointTableProps) {
 				{(endpoint) => (
 					<TableRow key={endpoint.id}>
 						{(columnKey) => (
-							<TableCell>{renderCell(endpoint, columnKey as string)}</TableCell>
+							<TableCell>
+								{renderCell(endpoint, columnKey as string) as React.ReactNode}
+							</TableCell>
 						)}
 					</TableRow>
 				)}

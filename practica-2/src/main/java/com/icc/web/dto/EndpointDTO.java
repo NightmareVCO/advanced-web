@@ -2,6 +2,7 @@ package com.icc.web.dto;
 
 import lombok.Value;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import io.micrometer.common.lang.NonNull;
@@ -62,7 +63,7 @@ public class EndpointDTO {
     @NonNull
     Long projectId;
 
-    Set<HeaderDTO> headers;
+    List<HeaderDTO> headers;
 
     public static boolean validateNoNull(EndpointDTO endpointDTO) {
         return endpointDTO.name == null || endpointDTO.description == null || endpointDTO.path == null

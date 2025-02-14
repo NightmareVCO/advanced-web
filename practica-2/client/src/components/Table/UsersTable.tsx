@@ -17,8 +17,9 @@ import React from 'react';
 
 import EditIcon from '@components/Icons/EditIcon';
 import DeleteUserModal from '@components/Modal/DeleteModals/DeleteUserModal';
+import RemoveUserFromTeam from '@components/Modal/RemoveUserFromTeam/RemoveUserFromTeam';
 import UserModal from '@components/Modal/UserModal';
-import RemoveUserFromTeam from '../Modal/RemoveUserFromTeam/RemoveUserFromTeam';
+import type { AuthPackage } from '@lib/entity/auth.entity';
 
 export const columns = [
 	{ name: 'User', uid: 'firstName' },
@@ -29,6 +30,7 @@ export const columns = [
 ];
 
 type UsersTableProps = {
+	authPackage: AuthPackage;
 	users: User[];
 	noEdit?: boolean;
 	isProject?: boolean;
@@ -40,6 +42,7 @@ const statusColorMap = {
 };
 
 export default function UsersTable({
+	authPackage,
 	users,
 	noEdit,
 	isProject,
@@ -71,25 +74,31 @@ export default function UsersTable({
 							<p className="text-bold text-sm capitalize ml-6">{cellValue}</p>
 						</div>
 					);
-				case columns[2].uid:
+				case columns[2].uid: {
+					const rolesArray = Array.from(user.roles);
 					return (
 						<div className="flex flex-col">
-							<p className="text-bold text-sm capitalize">{cellValue}</p>
+							<p className="text-bold text-sm capitalize">
+								{/* @ts-ignore */}
+								{rolesArray[0]?.name}
+							</p>
 						</div>
 					);
+				}
+
 				case columns[3].uid:
 					return (
 						<Chip
 							className="capitalize"
 							color={
-								statusColorMap[user.status as keyof typeof statusColorMap] as
+								statusColorMap[user.active ? 'active' : 'inactive'] as
 									| 'success'
 									| 'danger'
 							}
 							size="sm"
 							variant="flat"
 						>
-							{cellValue}
+							{user.active ? 'Active' : 'Inactive'}
 						</Chip>
 					);
 				case columns[4].uid:
@@ -121,6 +130,7 @@ export default function UsersTable({
 							)}
 							{!isProject && (
 								<DeleteUserModal
+									authPackage={authPackage}
 									user={user}
 									setSelectedUser={setSelectedUser}
 								/>
@@ -131,7 +141,7 @@ export default function UsersTable({
 					return cellValue;
 			}
 		},
-		[onOpen, noEdit, isProject],
+		[onOpen, noEdit, isProject, authPackage],
 	);
 
 	return (
@@ -161,6 +171,8 @@ export default function UsersTable({
 				</TableBody>
 			</Table>
 			<UserModal
+				actionToPerform="edit"
+				authPackage={authPackage}
 				user={selectedUser || undefined}
 				setUser={setSelectedUser}
 				isOpen={isOpen}
