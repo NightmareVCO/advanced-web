@@ -3,29 +3,42 @@ import { Form, Input, Select, SelectItem } from '@heroui/react';
 import { EyeFilledIcon } from '@components/Icons/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '@components/Icons/EyeSlashFilledIcon';
 import Role from '@lib/data/roles.data';
+import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
 import { useState } from 'react';
 
 type userFormProps = {
+	authPackage: AuthPackage;
 	user?: User;
+	errors: Record<string, string>;
+	action: (payload: FormData) => void;
+	pending: boolean;
 };
 
-export default function UserForm({ user }: userFormProps) {
+export default function UserForm({
+	user,
+	authPackage,
+	errors,
+	action,
+}: userFormProps) {
 	const [isVisible, setIsVisible] = useState(false);
-
 	const toggleVisibility = () => setIsVisible(!isVisible);
-
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-	};
 
 	return (
 		<Form
 			id="user-form"
 			className="flex flex-col gap-3 items-center justify-center w-full p-4"
 			validationBehavior="native"
-			onSubmit={handleSubmit}
+			validationErrors={errors}
+			action={action}
 		>
+			<input
+				type="hidden"
+				name="currentUser"
+				defaultValue={authPackage.username}
+			/>
+			<input type="hidden" name="id" value={user?.id} />
+			<input type="hidden" name="jwt" defaultValue={authPackage.jwt} />
 			<Input
 				isRequired
 				label="First Name"
@@ -59,8 +72,10 @@ export default function UserForm({ user }: userFormProps) {
 				variant="bordered"
 				size="lg"
 				radius="full"
+				isDisabled={String(user?.id) === authPackage.userId || !!user}
 				defaultValue={user?.username}
 			/>
+			{user && <input type="hidden" name="username" value={user?.username} />}
 
 			<Input
 				isRequired
@@ -71,8 +86,10 @@ export default function UserForm({ user }: userFormProps) {
 				variant="bordered"
 				size="lg"
 				radius="full"
+				isDisabled={String(user?.id) === authPackage.userId || !!user}
 				defaultValue={user?.email}
 			/>
+			{user && <input type="hidden" name="email" value={user?.email} />}
 
 			{!user && (
 				<Input
@@ -100,15 +117,19 @@ export default function UserForm({ user }: userFormProps) {
 					}
 				/>
 			)}
+			{user && <input type="hidden" name="password" value={user?.password} />}
 
 			<Select
 				isRequired
 				label="Main Role"
 				placeholder="Select the user's main role"
+				name="role"
 				variant="bordered"
 				size="lg"
 				radius="full"
-				defaultSelectedKeys={user ? [user.role] : []}
+				isDisabled={String(user?.id) === authPackage.userId}
+				// @ts-ignore
+				defaultSelectedKeys={user ? [Role.User] : []}
 			>
 				{Object.keys(Role).map((role) => (
 					<SelectItem key={role}>{role}</SelectItem>

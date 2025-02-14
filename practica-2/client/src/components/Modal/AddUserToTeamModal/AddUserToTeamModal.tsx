@@ -1,10 +1,10 @@
 import {
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
 	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
 	useDisclosure,
 } from '@heroui/react';
 import type User from '@lib/entity/user.entity';
@@ -14,7 +14,7 @@ type AddToUserToTeam = {
 	username: string;
 };
 
-export default function AddToUserToTeam({
+export default function AddToUserToTeamModal({
 	pending,
 	username,
 }: AddToUserToTeam) {
@@ -56,7 +56,7 @@ export default function AddToUserToTeam({
 									Close
 								</Button>
 								<Button
-									form="project-form"
+									form="add-user-to-team"
 									type="submit"
 									className="bg-primary font-medium text-white"
 									color="secondary"

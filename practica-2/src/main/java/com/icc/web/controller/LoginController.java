@@ -31,9 +31,9 @@ public class LoginController {
         String userName = loginDTO.getUsername();
         String password = loginDTO.getPassword();
         Optional<User> user = userService.getUserByUsername(userName);
-
         if (user.isEmpty())
             throw new ResourceNotFoundException("Wrong Credentials");
+
         if (!Utils.isPasswordCorrect(password, user.get().getPassword()))
             throw new UnauthorizedException("Wrong Credentials");
 

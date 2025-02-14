@@ -3,15 +3,29 @@
 import { Button, Checkbox, Form, Input } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { logIn } from '@lib/actions/logIn.action';
-import React, { useActionState } from 'react';
+import React, { startTransition, useActionState } from 'react';
 
 export default function LogInForm() {
 	const [isVisible, setIsVisible] = React.useState(false);
 	const toggleVisibility = () => setIsVisible(!isVisible);
 
 	const [{ errors }, action, pending] = useActionState(logIn, {
-		errors: {},
+		errors: { login: '' },
 	});
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const form = e.currentTarget;
+
+		startTransition(() => {
+			if (form.checkValidity()) {
+				const formData = new FormData(form);
+				action(formData);
+			} else {
+				form.reportValidity();
+			}
+		});
+	};
 
 	return (
 		<Form
@@ -19,7 +33,7 @@ export default function LogInForm() {
 			className="flex flex-col gap-3 items-center"
 			validationBehavior="native"
 			validationErrors={errors}
-			action={action}
+			onSubmit={handleSubmit}
 		>
 			<Input
 				isRequired
@@ -56,9 +70,9 @@ export default function LogInForm() {
 				size="lg"
 				radius="full"
 			/>
-			<div className="flex w-full items-center justify-between px-1 py-2">
+			{/* <div className="flex w-full items-center justify-between px-1 py-2">
 				<Checkbox name="remember">Remember me</Checkbox>
-			</div>
+			</div> */}
 			<Button
 				className="bg-primary font-medium text-white w-1/2"
 				radius="full"
@@ -71,8 +85,8 @@ export default function LogInForm() {
 				Log In
 			</Button>
 			{errors?.login && (
-				<p className="text-red-500 text-sm text-center capitalize">
-					{errors.login}
+				<p className="text-default-400 text-sm text-center capitalize">
+					{errors?.login}
 				</p>
 			)}
 		</Form>

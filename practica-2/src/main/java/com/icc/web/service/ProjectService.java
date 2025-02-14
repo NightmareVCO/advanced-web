@@ -57,11 +57,11 @@ public class ProjectService {
 
     public Optional<Project> saveProject(Project project) {
         project.setStatus(true);
-        return Optional.of(projectRepository.save(project));
+        return Optional.ofNullable(projectRepository.save(project));
     }
 
     public Optional<Project> updateProject(Project project) {
-        return Optional.of(projectRepository.save(project));
+        return Optional.ofNullable(projectRepository.save(project));
     }
 
     public void deleteProject(Long id) {

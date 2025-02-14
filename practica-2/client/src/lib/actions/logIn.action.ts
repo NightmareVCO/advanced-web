@@ -2,9 +2,9 @@
 
 import { createSession, deleteSession } from '@lib/auth/session';
 import Routes from '@lib/data/routes.data';
-import { redirect } from 'next/navigation';
 
 import { SERVER_PATH } from '@lib/constants/server.constants';
+import { redirect } from 'next/navigation';
 const THIS_PATH = 'login';
 
 const CURRENT_PATH = `${SERVER_PATH}/${THIS_PATH}/`;
@@ -21,19 +21,30 @@ export async function logIn(prevState: unknown, formData: FormData) {
 		});
 
 		const result = await response.json();
+		if (result.message === 'Wrong Credentials') {
+			throw new Error('Wrong Credentials');
+		}
+
 		await createSession(result?.token);
 
-		redirect(Routes.Projects);
-
-		return result;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
+		if (error.message.includes('NEXT_REDIRECT')) {
+			return {
+				errors: {
+					login: 'LogIn Successful',
+				},
+			};
+		}
+
 		return {
 			errors: {
 				login: error.message,
 			},
 		};
 	}
+
+	redirect(Routes.Projects);
 }
 
 export async function logout() {

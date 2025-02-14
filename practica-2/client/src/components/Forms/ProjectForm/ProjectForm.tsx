@@ -1,9 +1,12 @@
 import { Checkbox, Form, Input, Select, SelectItem } from '@heroui/react';
+import type { AuthPackage } from '@lib/entity/auth.entity';
 
 import Endpoints from '@lib/data/endpoints.data';
 import type { Project } from '@lib/entity/project.entity';
+import { useEffect, useState } from 'react';
 
 type ProjectFormProps = {
+	authPackage: AuthPackage;
 	project?: Project;
 	errors: Record<string, string>;
 	action: (payload: FormData) => void;
@@ -11,11 +14,20 @@ type ProjectFormProps = {
 };
 
 export default function ProjectForm({
+	authPackage,
 	project,
 	errors,
 	action,
 	pending,
 }: ProjectFormProps) {
+	const [openAccess, setOpenAccess] = useState(false);
+
+	useEffect(() => {
+		if (project) {
+			setOpenAccess(project.openAccess);
+		}
+	}, [project]);
+
 	return (
 		<Form
 			id="project-form"
@@ -24,10 +36,13 @@ export default function ProjectForm({
 			validationErrors={errors}
 			action={action}
 		>
+			<input type="hidden" name="projectId" defaultValue={project?.id} />
+			<input type="hidden" name="owner" defaultValue={authPackage.username} />
+			<input type="hidden" name="jwt" defaultValue={authPackage.jwt} />
 			<Input
 				isRequired
 				label="Project Name"
-				name="projectName"
+				name="name"
 				placeholder="Enter your project name"
 				type="text"
 				variant="bordered"
@@ -38,7 +53,7 @@ export default function ProjectForm({
 			<Input
 				isRequired
 				label="Project Description"
-				name="projectDescription"
+				name="desc"
 				placeholder="Enter your project description"
 				type="text"
 				variant="bordered"
@@ -47,9 +62,9 @@ export default function ProjectForm({
 				defaultValue={project?.desc}
 			/>
 
-			{!project && (
+			{!project ? (
 				<Select
-					name="projectType"
+					name="tag"
 					isRequired={!project}
 					label="Type of Project"
 					placeholder="Select the type of project"
@@ -63,12 +78,18 @@ export default function ProjectForm({
 							<SelectItem key={endpoint}>{endpoint}</SelectItem>
 						))}
 				</Select>
+			) : (
+				<input type="hidden" name="tag" defaultValue={project.tag} />
 			)}
 
 			<div className="flex w-full items-center justify-between px-1 py-2">
-				<Checkbox defaultSelected={project?.isPublic} name="isPublic">
+				<Checkbox
+					defaultSelected={project?.openAccess}
+					onValueChange={setOpenAccess}
+				>
 					Make this project public
 				</Checkbox>
+				<input type="hidden" value={String(openAccess)} name="openAccess" />
 			</div>
 		</Form>
 	);

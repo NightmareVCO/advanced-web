@@ -7,8 +7,8 @@ export type User = {
 	username: string;
 	email: string;
 	password: string;
-	status: string;
-	role: Role;
+	active: boolean;
+	roles: Set<Role>;
 };
 
 export default User;

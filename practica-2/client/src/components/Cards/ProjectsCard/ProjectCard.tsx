@@ -16,6 +16,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import { Icon } from '@iconify/react';
+const THIS_PATH = 'projects';
 
 export type ProjectCardProps = {
 	project: Project;
@@ -23,7 +24,7 @@ export type ProjectCardProps = {
 };
 
 export default function ProjectCard({
-	project: { name, owner, desc, tag, isPublic },
+	project: { id, name, owner, desc, tag, openAccess },
 	...props
 }: ProjectCardProps) {
 	return (
@@ -41,18 +42,18 @@ export default function ProjectCard({
 								variant="flat"
 								size="sm"
 								startContent={
-									isPublic ? (
+									openAccess ? (
 										<Icon icon="lucide:globe" width={13} />
 									) : (
 										<Icon icon="lucide:shield" width={13} />
 									)
 								}
-								color={isPublic ? 'success' : 'warning'}
+								color={openAccess ? 'success' : 'warning'}
 							>
-								{isPublic ? 'Public' : 'Private'}
+								{openAccess ? 'Public' : 'Private'}
 							</Chip>
 						</div>
-						<p className="text-small text-default-500">{owner}</p>
+						<p className="text-small text-default-500">{owner.username}</p>
 					</div>
 					<Avatar className="bg-content2" icon={<LogoIcon />} />
 				</div>
@@ -63,7 +64,7 @@ export default function ProjectCard({
 					size="sm"
 					variant="faded"
 					as={Link}
-					href="http://localhost:3000/projects/1/"
+					href={`/${THIS_PATH}/${id}`}
 				>
 					Open
 				</Button>

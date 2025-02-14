@@ -1,6 +1,7 @@
 package com.icc.web.mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,6 +18,10 @@ public interface EndpointMapper {
     EndpointDTO endpointToDto(Endpoint endpoint);
 
     Endpoint dtoToEndpoint(EndpointDTO endpointDTO);
+
+    EndpointResponseDTO endpointToResponseDto(Endpoint endpoint);
+
+    Endpoint responseDtoToEndpoint(EndpointResponseDTO endpointResponseDTO);
 
     List<EndpointDTO> endpointsToDtos(List<Endpoint> endpoints);
 
