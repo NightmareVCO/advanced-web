@@ -7,45 +7,44 @@
 		"getStarted": "Comenzar"
 	},
 	"addUserToTeamForm": {
-		"usernameLabel" : "Nombre de usuario",
+		"usernameLabel": "Nombre de usuario",
 		"usernamePlaceholder": "Introduzca el nombre de usuario del miembro"
 	},
 	"endpointForm": {
-		"formDividerText1" : "Introduzca la ruta, el método y el estado de su endpoint",
-		"inputPathLabel" : "Ruta",
+		"formDividerText1": "Introduzca la ruta, el método y el estado de su endpoint",
+		"inputPathLabel": "Ruta",
 		"inputPathPlaceholder": "Introduzca la ruta de su endpoint",
-		"inputMethodLabel" : "Método",
-		"autoCompleteLabel" : "Seleccione un método",
-		"autoCompletePlaceholder" : "Buscar un código de estado HTTP",
-		"formDividerText2" : "Introduzca el tipo de contenido y la codificación de su endpoint",
-		"selectContentTypeLabel" : "Tipo de contenido",
-		"selectContentTypePlaceholder" : "Seleccione un tipo de contenido",
-		"formDividerText3" : "Introduzca la respuesta y las cabeceras de su endpoint",
-		"addHeaderButton" : "Añadir cabecera",
-		"inputHeaderKeyPlaceholder1" : "Introduzca su #",
-		"inputHeaderKeyPlaceholder2" : "valor de llave",
-		"inputHeaderValuePlaceholder1" : "Introduzca su #",
-		"inputHeaderValuePlaceholder2" : "valor de cabecera",
-		"formDividerText4" : "Introduzca la seguridad, el retraso y la expiración de su punto final",
+		"inputMethodLabel": "Método",
+		"autoCompleteLabel": "Seleccione un método",
+		"autoCompletePlaceholder": "Buscar un código de estado HTTP",
+		"formDividerText2": "Introduzca el tipo de contenido y la codificación de su endpoint",
+		"selectContentTypeLabel": "Tipo de contenido",
+		"selectContentTypePlaceholder": "Seleccione un tipo de contenido",
+		"formDividerText3": "Introduzca la respuesta y las cabeceras de su endpoint",
+		"addHeaderButton": "Añadir cabecera",
+		"inputHeaderKeyPlaceholder1": "Introduzca su #",
+		"inputHeaderKeyPlaceholder2": "Valor de llave",
+		"inputHeaderValuePlaceholder1": "Introduzca su #",
+		"inputHeaderValuePlaceholder2": "valor de cabecera",
+		"formDividerText4": "Introduzca la seguridad, el retraso y la expiración de su punto final",
 		"checkboxJWT": "Utilizar JWT para validar la solicitud",
-		"inputDelayLabel" : "Retraso (en segundos)",
-		"inputPlaceholder" : "Introduzca el retraso de su endpoint",
-		"inputExpirationLabel" : "Fecha de expiración",
-		"inputExpirationPlaceholder" : "Seleccione la fecha de expiración de su endpoint",
-		"formDividerText5" : "Introduzca el nombre y la descripción de su punto final",
-		"inputNameLabel" : "Nombre",
-		"inputNamePlaceholder" : "Introduzca el nombre de su endpoint",
-		"inputDescriptionLabel" : "Descripción",
-		"inputDescriptionPlaceholder" : "Introduzca la descripción de su endpoint",
-		"buttonSave" : "Crear endpoint"
+		"inputDelayLabel": "Retraso (en segundos)",
+		"inputPlaceholder": "Introduzca el retraso de su endpoint",
+		"inputExpirationLabel": "Fecha de expiración",
+		"inputExpirationPlaceholder": "Seleccione la fecha de expiración de su endpoint",
+		"formDividerText5": "Introduzca el nombre y la descripción de su punto final",
+		"inputNameLabel": "Nombre",
+		"inputNamePlaceholder": "Introduzca el nombre de su endpoint",
+		"inputDescriptionLabel": "Descripción",
+		"inputDescriptionPlaceholder": "Introduzca la descripción de su endpoint",
+		"buttonSave": "Crear endpoint"
 	},
 	"loginForm": {
-		"usernameLabel" : "Nombre de usuario",
+		"usernameLabel": "Nombre de usuario",
 		"usernamePlaceholder": "Introduzca su nombre de usuario",
-		"passwordLabel" : "Contraseña",
+		"passwordLabel": "Contraseña",
 		"passwordPlaceholder": "Introduzca su contraseña",
-		"checkboxRemember" : "Recuérdame",
-		"buttonLogin" : "Iniciar sesión"
+		"buttonLogin": "Iniciar sesión"
 	},
 	"projectForm": {
 		"projectNameLabel": "Nombre del proyecto",
@@ -135,18 +134,18 @@
 		"login": "Iniciar sesión",
 		"createNewProject": "Crear nuevo proyecto"
 	},
-	"projectSection" : {
+	"projectSection": {
 		"createNewEndpoint": "Crear nuevo endpoint",
 		"endpoints": "Endpoints",
 		"team": "Equipo",
 		"settings": "Configuraciones"
 	},
-	"usersModalSection" : {
+	"usersModalSection": {
 		"newUser": "Nuevo Usuario"
 	},
-	"testimonialSection" : {
-		"testimonial" : "¡Un cambio de juego! 🚀 Esta app hace que probar APIs sea rápido y sin complicaciones. Simula respuestas al instante, sin depender de servidores. ¡Simple, potente y esencial!",
-		"h2Text" : "Iniciar Sesión"
+	"testimonialSection": {
+		"testimonial": "¡Un cambio de juego! 🚀 Esta app hace que probar APIs sea rápido y sin complicaciones. Simula respuestas al instante, sin depender de servidores. ¡Simple, potente y esencial!",
+		"h2Text": "Iniciar Sesión"
 	},
 	"createEndpointPage": {
 		"title": "Nuevo endpoint del proyecto {id}",
@@ -164,5 +163,4 @@
 		"title": "Usuarios",
 		"description": "Gestiona todos los usuarios aquí."
 	}
-
 }
