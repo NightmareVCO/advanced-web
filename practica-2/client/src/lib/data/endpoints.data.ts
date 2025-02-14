@@ -1,7 +1,5 @@
 export enum Endpoints {
-	Rest = 0,
-	Soap = 1,
-	GraphQL = 2,
+	REST = 0,
 }
 
 export default Endpoints;
