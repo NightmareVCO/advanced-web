@@ -1,13 +1,13 @@
-import type { Project } from '@lib/entity/project.entity';
 import {
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
 	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
 	useDisclosure,
 } from '@heroui/react';
+import type { Project } from '@lib/entity/project.entity';
 
 type UpdateProjectModalProps = {
 	pending: boolean;
@@ -42,7 +42,10 @@ export default function UpdateProjectModal({
 							</ModalHeader>
 							<ModalBody>
 								<p className="text-sm text-default-500">
-									{project.name} - {project.desc}
+									Previous name: {project.name}
+								</p>
+								<p className="text-sm text-default-500">
+									Previous description: {project.desc}
 								</p>
 								<p className="text-sm text-default-500">
 									Are you sure you want to update this project?
