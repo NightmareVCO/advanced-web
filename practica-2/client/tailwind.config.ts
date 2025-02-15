@@ -9,18 +9,17 @@ export default {
 		'./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
 	],
 	theme: {
-		extend: {
-			backgroundImage: {
-				'hero-section-title':
-					'linear-gradient(91deg, #FFF 32.88%, rgba(158,148,203, 0.40) 99.12%)',
-			},
-			flex: {
-				'2': '2 2 0%',
-				'3': '3 3 0%',
-				'4': '4 4 0%',
-			},
-		},
-	},
+    	extend: {
+    		backgroundImage: {
+    			'hero-section-title': 'linear-gradient(91deg, #FFF 32.88%, rgba(158,148,203, 0.40) 99.12%)'
+    		},
+    		flex: {
+    			'2': '2 2 0%',
+    			'3': '3 3 0%',
+    			'4': '4 4 0%'
+    		},
+    	}
+    },
 	darkMode: ['class', 'class'],
 	plugins: [
 		heroui({
@@ -40,6 +39,7 @@ export default {
 				},
 			},
 		}),
-	],
+        require("tailwindcss-animate")
+    ],
 	safelist: ['bottom-10', 'right-10', 'left-10', 'top-10'],
 } satisfies Config;

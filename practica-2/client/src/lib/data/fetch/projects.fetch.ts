@@ -21,6 +21,9 @@ export const getUserProjects = async (
 			cache: 'no-cache',
 		});
 		const projects = await response.json();
+		if (projects?.message === 'No projects found') {
+			return [[], null];
+		}
 		return [projects, null];
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {

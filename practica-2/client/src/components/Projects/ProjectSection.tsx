@@ -16,7 +16,7 @@ import type { AuthPackage } from '@lib/entity/auth.entity';
 import type { Project } from '@lib/entity/project.entity';
 import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
-import { PROJECTS_PATH } from '@lib/constants/server.constants';
+import { ENDPOINT_PATH } from '@lib/constants/server.constants';
 
 type ProjectSectionProps = {
 	authPackage: AuthPackage;
@@ -58,7 +58,7 @@ export default function ProjectSection({
 						variant="ghost"
 						color="primary"
 						as={Link}
-						href={`${Routes.Projects}/${project.id}/${PROJECTS_PATH}`}
+						href={`${Routes.Projects}/${project.id}/${ENDPOINT_PATH}`}
 					>
 						Create New Endpoint
 					</Button>
