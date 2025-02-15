@@ -13,6 +13,10 @@ export default async function ProjectsPage() {
 	}
 
 	const [projects, error] = await getUserProjects(jwt as string);
+	if (error?.message === 'Project not found') {
+		return;
+	}
+
 	const sortedProjects = projects?.toSorted((a, b) => {
 		if (a.id < b.id) {
 			return -1;

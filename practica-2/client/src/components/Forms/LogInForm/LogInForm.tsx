@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, Input } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { logIn } from '@lib/actions/logIn.action';
 import React, { startTransition, useActionState } from 'react';
+import {useTranslations} from "next-intl";
 
 export default function LogInForm() {
 	const [isVisible, setIsVisible] = React.useState(false);
@@ -27,6 +28,8 @@ export default function LogInForm() {
 		});
 	};
 
+	const t = useTranslations('loginForm');
+
 	return (
 		<Form
 			id="login-form"
@@ -37,9 +40,9 @@ export default function LogInForm() {
 		>
 			<Input
 				isRequired
-				label="Username"
+				label={t('usernameLabel')}
 				name="username"
-				placeholder="Enter your Username"
+				placeholder={t('usernamePlaceholder')}
 				type="text"
 				variant="bordered"
 				size="lg"
@@ -62,17 +65,14 @@ export default function LogInForm() {
 						)}
 					</button>
 				}
-				label="Password"
+				label={t('passwordLabel')}
 				name="password"
-				placeholder="Enter your password"
+				placeholder={t('passwordPlaceholder')}
 				type={isVisible ? 'text' : 'password'}
 				variant="bordered"
 				size="lg"
 				radius="full"
 			/>
-			{/* <div className="flex w-full items-center justify-between px-1 py-2">
-				<Checkbox name="remember">Remember me</Checkbox>
-			</div> */}
 			<Button
 				className="bg-primary font-medium text-white w-1/2"
 				radius="full"
@@ -82,7 +82,7 @@ export default function LogInForm() {
 				isDisabled={pending}
 				isLoading={pending}
 			>
-				Log In
+				{t('buttonLogin')}
 			</Button>
 			{errors?.login && (
 				<p className="text-default-400 text-sm text-center capitalize">

@@ -13,6 +13,7 @@ import type { AuthPackage } from '@/lib/entity/auth.entity';
 import ProjectForm from '@components/Forms/ProjectForm/ProjectForm';
 import { Icon } from '@iconify/react';
 import { useActionState, useEffect } from 'react';
+import {useTranslations} from "next-intl";
 
 type ProjectModalProps = {
 	authPackage: AuthPackage;
@@ -38,6 +39,8 @@ export default function ProjectModal({
 		errors: {},
 	});
 
+	const t = useTranslations('projectModal');
+
 	return (
 		<>
 			<Button
@@ -54,7 +57,7 @@ export default function ProjectModal({
 				radius="full"
 				variant="flat"
 			>
-				New Project
+				{t('newProjectButton')}
 			</Button>
 			<Modal
 				isOpen={isOpen}
@@ -67,7 +70,7 @@ export default function ProjectModal({
 					{(onClose) => (
 						<>
 							<ModalHeader className="flex flex-col gap-1">
-								Create New Project
+								{t('modalTitle')}
 							</ModalHeader>
 							<ModalBody>
 								<ProjectForm
@@ -87,7 +90,7 @@ export default function ProjectModal({
 										setIsModalOpenFromParent(false);
 									}}
 								>
-									Close
+									{t('closeButton')}
 								</Button>
 								<Button
 									form="project-form"
@@ -98,7 +101,7 @@ export default function ProjectModal({
 									isLoading={pending}
 									isDisabled={pending}
 								>
-									Create
+									{t('createButton')}
 								</Button>
 							</ModalFooter>
 						</>

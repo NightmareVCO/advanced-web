@@ -22,6 +22,7 @@ import Routes from '@lib/data/routes.data';
 import { usePathname, useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
 import { menuItems } from '../_config/config';
+import {useTranslations} from "next-intl";
 
 type NavbarDesktopProps = {
 	admin?: boolean;
@@ -63,6 +64,8 @@ export default function NavbarDesktop({
 		router.refresh();
 	};
 
+	const t = useTranslations('navbarDesktop');
+
 	return (
 		<>
 			{/* Left Content */}
@@ -92,7 +95,7 @@ export default function NavbarDesktop({
 						as={Link}
 						href={Routes.LogIn}
 					>
-						Login
+						{t('login')}
 					</Button>
 					{isAuthenticated && (
 						<Button
@@ -104,7 +107,7 @@ export default function NavbarDesktop({
 							as={Link}
 							href={Routes.NewProject}
 						>
-							Create New Project
+							{t('createNewProject')}
 						</Button>
 					)}
 					<Dropdown placement="bottom-end">
@@ -121,7 +124,7 @@ export default function NavbarDesktop({
 							{isAuthenticated ? (
 								<DropdownItem key="profile">
 									<p>
-										User:{' '}
+										{t('username')}{' '}
 										<span className="text-primary font-bold">{userName}</span>
 									</p>
 								</DropdownItem>
@@ -130,7 +133,7 @@ export default function NavbarDesktop({
 							{locale !== 'es' ? (
 								<DropdownItem key="es-lang" onPress={() => changeLocale('es')}>
 									<p>
-										Change to:{' '}
+										{t('changeTo')}{' '}
 										<span className="text-primary font-bold">ES</span>
 									</p>
 								</DropdownItem>
@@ -138,7 +141,7 @@ export default function NavbarDesktop({
 							{locale !== 'en' ? (
 								<DropdownItem key="en-lang" onPress={() => changeLocale('en')}>
 									<p>
-										Change to:{' '}
+										{t('changeTo')}{' '}
 										<span className="text-primary font-bold">EN</span>
 									</p>
 								</DropdownItem>
@@ -150,7 +153,7 @@ export default function NavbarDesktop({
 									as={Link}
 									href={Routes.LogOut}
 								>
-									Log Out
+									{t('logout')}
 								</DropdownItem>
 							) : null}
 						</DropdownMenu>

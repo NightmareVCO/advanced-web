@@ -13,6 +13,7 @@
 	"endpointForm": {
 		"formDividerText1": "Introduzca la ruta, el método y el estado de su endpoint",
 		"inputPathLabel": "Ruta",
+		"inputPathErrorMessage": "Por favor, introduzca una ruta después del prefijo con un nombre y termine con un '/'.",
 		"inputPathPlaceholder": "Introduzca la ruta de su endpoint",
 		"inputMethodLabel": "Método",
 		"autoCompleteLabel": "Seleccione un método",
@@ -20,24 +21,27 @@
 		"formDividerText2": "Introduzca el tipo de contenido y la codificación de su endpoint",
 		"selectContentTypeLabel": "Tipo de contenido",
 		"selectContentTypePlaceholder": "Seleccione un tipo de contenido",
+		"selectEncodingLabel": "Codificación de contenidos",
+		"selectEncodingPlaceholder": "Seleccione una codificación de contenidos",
 		"formDividerText3": "Introduzca la respuesta y las cabeceras de su endpoint",
 		"addHeaderButton": "Añadir cabecera",
-		"inputHeaderKeyPlaceholder1": "Introduzca su #",
-		"inputHeaderKeyPlaceholder2": "Valor de llave",
-		"inputHeaderValuePlaceholder1": "Introduzca su #",
-		"inputHeaderValuePlaceholder2": "valor de cabecera",
+		"inputHeaderKeyLabel": "Clave (Cabecera #{index})",
+		"inputHeaderKeyPlaceholder": "Introduzca su #{index} clave de cabecera",
+		"inputHeaderValueLabel": "Valor (Cabecera #{index})",
+		"inputHeaderValuePlaceholder": "Introduzca su #{index} valor de cabecera",
 		"formDividerText4": "Introduzca la seguridad, el retraso y la expiración de su punto final",
 		"checkboxJWT": "Utilizar JWT para validar la solicitud",
 		"inputDelayLabel": "Retraso (en segundos)",
-		"inputPlaceholder": "Introduzca el retraso de su endpoint",
+		"inputDelayPlaceholder": "Introduzca el retraso de su endpoint",
 		"inputExpirationLabel": "Fecha de expiración",
 		"inputExpirationPlaceholder": "Seleccione la fecha de expiración de su endpoint",
-		"formDividerText5": "Introduzca el nombre y la descripción de su punto final",
+		"formDividerText5": "Introduzca el nombre y la descripción de su endpoint",
 		"inputNameLabel": "Nombre",
 		"inputNamePlaceholder": "Introduzca el nombre de su endpoint",
 		"inputDescriptionLabel": "Descripción",
 		"inputDescriptionPlaceholder": "Introduzca la descripción de su endpoint",
-		"buttonSave": "Crear endpoint"
+		"buttonUpdate": "Actualizar Endpoint",
+		"buttonCreate": "Crear Endpoint"
 	},
 	"loginForm": {
 		"usernameLabel": "Nombre de usuario",
@@ -94,7 +98,7 @@
 		"modalTitle": "Eliminar usuario del equipo",
 		"modalConfirmation": "¿Estás seguro de que quieres eliminar a este usuario del equipo?",
 		"cancelButton": "Cancelar",
-		"removeButton": "Eliminar"
+		"deleteButton": "Eliminar"
 	},
 	"updateProjectModal": {
 		"updateButton": "Actualizar",
@@ -112,11 +116,10 @@
 		"editUser": "Editar Usuario",
 		"createUser": "Crear Nuevo Usuario",
 		"closeButton": "Cerrar",
-		"createButton": "Crear"
+		"createButton": "Confirmar"
 	},
 	"footer": {
-		"rights1": "@ ",
-		"rights2": " Mockify. Todos los derechos reservados.",
+		"rights": "© {currentYear} Mockify. Todos los derechos reservados.",
 		"allSystemsOperational": "Todos los sistemas operativos"
 	},
 
@@ -124,7 +127,7 @@
 		"login": "Iniciar sesión",
 		"createNewProject": "Crear nuevo proyecto",
 		"profile": "Perfil",
-		"username": "Nombre de usuario: ",
+		"username": "Usuario: ",
 		"changeTo": "Cambiar a: ",
 		"logout": "Cerrar sesión",
 		"es": "ES",
@@ -139,6 +142,11 @@
 		"endpoints": "Endpoints",
 		"team": "Equipo",
 		"settings": "Configuraciones"
+	},
+	"projectCard": {
+		"chipPublic": "Público",
+		"chipPrivate": "Privado",
+		"buttonOpen": "Abrir"
 	},
 	"usersModalSection": {
 		"newUser": "Nuevo Usuario"
@@ -162,5 +170,10 @@
 	"usersPage": {
 		"title": "Usuarios",
 		"description": "Gestiona todos los usuarios aquí."
+	},
+	"explorePage": {
+		"title": "Comunidad",
+		"description": "Echa un vistazo a los proyectos abiertos de la comunidad",
+		"noProjects": "No se encontraron proyectos públicos. ¡Crea uno nuevo y compártelo con la comunidad!"
 	}
 }

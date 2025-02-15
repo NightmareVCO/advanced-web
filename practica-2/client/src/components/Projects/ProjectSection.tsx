@@ -16,7 +16,8 @@ import type { AuthPackage } from '@lib/entity/auth.entity';
 import type { Project } from '@lib/entity/project.entity';
 import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
-import { PROJECTS_PATH } from '@lib/constants/server.constants';
+import { ENDPOINT_PATH } from '@lib/constants/server.constants';
+import {useTranslations} from "next-intl";
 
 type ProjectSectionProps = {
 	authPackage: AuthPackage;
@@ -48,6 +49,8 @@ export default function ProjectSection({
 		return 0;
 	});
 
+	const t = useTranslations('projectSection');
+
 	return (
 		<section className="flex flex-col gap-4">
 			<div className="sm:flex gap-x-3 justify-end w-full hidden">
@@ -58,9 +61,9 @@ export default function ProjectSection({
 						variant="ghost"
 						color="primary"
 						as={Link}
-						href={`${Routes.Projects}/${project.id}/${PROJECTS_PATH}`}
+						href={`${Routes.Projects}/${project.id}/${ENDPOINT_PATH}`}
 					>
-						Create New Endpoint
+						{t('createNewEndpoint')}
 					</Button>
 				)}
 				<Button
@@ -90,7 +93,7 @@ export default function ProjectSection({
 				radius="full"
 				variant="light"
 			>
-				<Tab key="endpoints" title="Endpoints">
+				<Tab key="endpoints" title={t('endpoints')}>
 					<Spacer y={4} />
 					<EndpointTable
 						projectId={String(project?.id)}
@@ -106,12 +109,12 @@ export default function ProjectSection({
 							variant="ghost"
 							color="primary"
 						>
-							Create New Endpoint
+							{t('createNewEndpoint')}
 						</Button>
 					</div>
 				</Tab>
 				{authPackage.userId === String(project.owner?.id) && (
-					<Tab key="team" title="Team">
+					<Tab key="team" title={t('team')}>
 						<Spacer y={4} />
 						<AddUserToTeamForm authPackage={authPackage} project={project} />
 						<UsersTable
@@ -125,7 +128,7 @@ export default function ProjectSection({
 					</Tab>
 				)}
 				{authPackage.userId === String(project.owner?.id) && (
-					<Tab key="settings" title="Settings">
+					<Tab key="settings" title={t('settings')}>
 						<div className="bg-black/30 rounded-3xl p-4 w-full max-w-7xl">
 							<Spacer y={4} />
 							<ProjectForm

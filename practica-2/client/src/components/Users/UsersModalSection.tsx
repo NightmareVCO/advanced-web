@@ -4,6 +4,7 @@ import UserModal from '@components/Modal/UserModal';
 import { Button, useDisclosure } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import type { AuthPackage } from '@lib/entity/auth.entity';
+import {useTranslations} from "next-intl";
 
 type UserModalSectionProps = {
 	authPackage: AuthPackage;
@@ -13,6 +14,8 @@ export default function UserModalSection({
 	authPackage,
 }: UserModalSectionProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+	const t = useTranslations('usersModalSection');
 
 	return (
 		<>
@@ -30,7 +33,7 @@ export default function UserModalSection({
 				radius="full"
 				variant="flat"
 			>
-				New User
+				{t('newUser')}
 			</Button>
 			<UserModal
 				actionToPerform="create"

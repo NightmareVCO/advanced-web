@@ -8,6 +8,7 @@ import {
 	useDisclosure,
 } from '@heroui/react';
 import type User from '@lib/entity/user.entity';
+import {useTranslations} from "next-intl";
 
 type AddToUserToTeam = {
 	pending: boolean;
@@ -20,6 +21,8 @@ export default function AddToUserToTeamModal({
 }: AddToUserToTeam) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+	const t = useTranslations('addToUserToTeamModal');
+
 	return (
 		<>
 			<Button
@@ -31,19 +34,19 @@ export default function AddToUserToTeamModal({
 				isDisabled={pending || !username}
 				onPress={onOpen}
 			>
-				Add to Team
+				{t('buttonLabel')}
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
 					{(onClose) => (
 						<>
 							<ModalHeader className="flex flex-col gap-1">
-								Add this user to the team
+								{t('modalTitle')}
 							</ModalHeader>
 							<ModalBody>
-								<p className="text-sm text-default-500">User: {username}</p>
+								<p className="text-sm text-default-500">  {t('modalUserLabel', { username })}</p>
 								<p className="text-sm text-default-500">
-									Are you sure you want to add this user?
+									{t('modalConfirmation')}
 								</p>
 							</ModalBody>
 							<ModalFooter>
@@ -53,7 +56,7 @@ export default function AddToUserToTeamModal({
 									variant="light"
 									onPress={onClose}
 								>
-									Close
+									{t('closeButton')}
 								</Button>
 								<Button
 									form="add-user-to-team"
@@ -64,7 +67,7 @@ export default function AddToUserToTeamModal({
 									isDisabled={pending}
 									isLoading={pending}
 								>
-									Add
+									{t('addButton')}
 								</Button>
 							</ModalFooter>
 						</>

@@ -4,6 +4,7 @@ import type { AuthPackage } from '@lib/entity/auth.entity';
 import Endpoints from '@lib/data/endpoints.data';
 import type { Project } from '@lib/entity/project.entity';
 import { useEffect, useState } from 'react';
+import {useTranslations} from "next-intl";
 
 type ProjectFormProps = {
 	authPackage: AuthPackage;
@@ -27,6 +28,8 @@ export default function ProjectForm({
 		}
 	}, [project]);
 
+	const t = useTranslations('projectForm');
+
 	return (
 		<Form
 			id="project-form"
@@ -40,9 +43,9 @@ export default function ProjectForm({
 			<input type="hidden" name="jwt" defaultValue={authPackage.jwt} />
 			<Input
 				isRequired
-				label="Project Name"
+				label={t('projectNameLabel')}
 				name="name"
-				placeholder="Enter your project name"
+				placeholder={t('projectNamePlaceholder')}
 				type="text"
 				variant="bordered"
 				size="lg"
@@ -51,9 +54,9 @@ export default function ProjectForm({
 			/>
 			<Input
 				isRequired
-				label="Project Description"
+				label={t('projectDescriptionLabel')}
 				name="desc"
-				placeholder="Enter your project description"
+				placeholder={t('projectDescriptionPlaceholder')}
 				type="text"
 				variant="bordered"
 				size="lg"
@@ -65,8 +68,8 @@ export default function ProjectForm({
 				<Select
 					name="tag"
 					isRequired={!project}
-					label="Type of Project"
-					placeholder="Select the type of project"
+					label={t('projectTypeLabel')}
+					placeholder={t('projectTypePlaceholder')}
 					variant="bordered"
 					size="lg"
 					radius="full"
@@ -86,7 +89,7 @@ export default function ProjectForm({
 					defaultSelected={project?.openAccess}
 					onValueChange={setOpenAccess}
 				>
-					Make this project public
+					{t('checkboxPublic')}
 				</Checkbox>
 				<input type="hidden" value={String(openAccess)} name="openAccess" />
 			</div>
