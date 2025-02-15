@@ -14,6 +14,7 @@ import {
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
 import { useActionState } from 'react';
+import {useTranslations} from "next-intl";
 
 type DeleteEndpointModalProps = {
 	authPackage: AuthPackage;
@@ -30,6 +31,8 @@ export default function DeleteUserModal({
 	const [{ errors }, action, pending] = useActionState(deleteUser, {
 		errors: {},
 	});
+
+	const t = useTranslations('deleteUserModal');
 
 	return (
 		<>
@@ -60,7 +63,7 @@ export default function DeleteUserModal({
 					{(onClose) => (
 						<>
 							<ModalHeader>
-								<h2 className="text-lg font-medium">Delete User</h2>
+								<h2 className="text-lg font-medium">{t('modalTitle')}</h2>
 							</ModalHeader>
 							<ModalBody>
 								<Form
@@ -79,7 +82,7 @@ export default function DeleteUserModal({
 										{user.firstName} {user.lastName} - ({user.email})
 									</p>
 									<p className="text-default-400">
-										Are you sure you want to delete this user?
+										{t('modalConfirmation')}
 									</p>
 								</Form>
 							</ModalBody>
@@ -93,7 +96,7 @@ export default function DeleteUserModal({
 										onClose();
 									}}
 								>
-									Cancel
+									{t('cancelButton')}
 								</Button>
 								<Button
 									form="delete-user-form"
@@ -105,7 +108,7 @@ export default function DeleteUserModal({
 									color="danger"
 									radius="full"
 								>
-									Delete
+									{t('deleteButton')}
 								</Button>
 							</ModalFooter>
 						</>

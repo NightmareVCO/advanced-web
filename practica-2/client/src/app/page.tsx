@@ -125,16 +125,15 @@ export default function Page() {
 						radius="full"
 						variant="bordered"
 					>
-						New onboarding experience
+						{t('onboarding')}
 					</Button>
 					<div className="text-center text-[clamp(40px,10vw,44px)] font-bold leading-[1.2] tracking-tighter sm:text-[64px]">
 						<div className="bg-hero-section-title bg-clip-text text-transparent dark:from-[#FFFFFF] dark:to-[#FFFFFF66]">
-							Easiest way to <br /> mock your API's.
+							{t('title1')} <br/> {t('title2')}
 						</div>
 					</div>
 					<p className="text-center font-normal leading-7 text-default-500 sm:w-[466px] sm:text-[18px]">
-						Mockify is an API's mockup tool for developers. It helps you to
-						create a fake API in a few seconds to test your front-end.
+						{t('description')}
 					</p>
 					<div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-6">
 						<Button
@@ -144,7 +143,7 @@ export default function Page() {
 							as={Link}
 							href={Routes.Projects}
 						>
-							Get Started
+							{t('getStarted')}
 						</Button>
 					</div>
 				</section>

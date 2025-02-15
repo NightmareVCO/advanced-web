@@ -14,6 +14,7 @@ import { deleteEndpoint } from '@lib/actions/endpoint.action';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type Endpoint from '@lib/entity/endpoint.entity';
 import { useActionState } from 'react';
+import {useTranslations} from "next-intl";
 
 type DeleteEndpointModalProps = {
 	authPackage: AuthPackage;
@@ -34,6 +35,8 @@ export default function DeleteEndpointModal({
 			deleteEndpoint: '',
 		},
 	});
+
+	const t = useTranslations('deleteEndpointModal');
 
 	return (
 		<>
@@ -64,7 +67,7 @@ export default function DeleteEndpointModal({
 					{(onClose) => (
 						<>
 							<ModalHeader>
-								<h2 className="text-lg font-medium">Delete Endpoint</h2>
+								<h2 className="text-lg font-medium">{t('modalTitle')}</h2>
 							</ModalHeader>
 							<ModalBody>
 								<Form
@@ -83,7 +86,7 @@ export default function DeleteEndpointModal({
 										{endpoint.name} - {endpoint.path}
 									</p>
 									<p className="text-default-400">
-										Are you sure you want to delete this endpoint?
+										{t('modalConfirmation')}
 									</p>
 									{errors.deleteEndpoint && (
 										<p className="text-danger">{errors.deleteEndpoint}</p>
@@ -100,7 +103,7 @@ export default function DeleteEndpointModal({
 										onClose();
 									}}
 								>
-									Cancel
+									{t('cancelButton')}
 								</Button>
 								<Button
 									form="delete-endpoint-form"
@@ -110,7 +113,7 @@ export default function DeleteEndpointModal({
 									isDisabled={pending}
 									isLoading={pending}
 								>
-									Delete
+									{t('deleteButton')}
 								</Button>
 							</ModalFooter>
 						</>

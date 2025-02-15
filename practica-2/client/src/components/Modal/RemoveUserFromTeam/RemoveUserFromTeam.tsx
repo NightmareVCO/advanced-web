@@ -14,6 +14,7 @@ import {
 } from '@heroui/react';
 import type User from '@lib/entity/user.entity';
 import { useActionState } from 'react';
+import {useTranslations} from "next-intl";
 
 type RemoveUserFromTeamProps = {
 	authPackage: AuthPackage;
@@ -32,6 +33,8 @@ export default function RemoveUserFromTeam({
 	const [{ errors }, action, pending] = useActionState(removeUserFromTeam, {
 		errors: {},
 	});
+
+	const t = useTranslations('removeUserFromTeamModal');
 
 	return (
 		<>
@@ -61,7 +64,7 @@ export default function RemoveUserFromTeam({
 					{(onClose) => (
 						<>
 							<ModalHeader>
-								<h2 className="text-lg font-medium">Remove user from team</h2>
+								<h2 className="text-lg font-medium">{t('modalTitle')}</h2>
 							</ModalHeader>
 							<ModalBody>
 								<Form
@@ -77,7 +80,7 @@ export default function RemoveUserFromTeam({
 										{user.firstName} {user.lastName} - ({user.email})
 									</p>
 									<p className="text-default-400">
-										Are you sure you want to remove this user from the team?
+										{t('modalConfirmation')}
 									</p>
 								</Form>
 							</ModalBody>
@@ -91,7 +94,7 @@ export default function RemoveUserFromTeam({
 										onClose();
 									}}
 								>
-									Cancel
+									{t('cancelButton')}
 								</Button>
 								<Button
 									form="remove-user-form-team"
@@ -101,7 +104,7 @@ export default function RemoveUserFromTeam({
 									color="danger"
 									radius="full"
 								>
-									Remove
+									{t('deleteButton')}
 								</Button>
 							</ModalFooter>
 						</>

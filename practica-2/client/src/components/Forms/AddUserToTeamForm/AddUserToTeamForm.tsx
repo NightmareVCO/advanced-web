@@ -5,6 +5,7 @@ import { addUserToTeam } from '@lib/actions/project.action';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type { Project } from '@lib/entity/project.entity';
 import { startTransition, useActionState, useState } from 'react';
+import {useTranslations} from "next-intl";
 
 export type AddUserToTeamFormProps = {
 	authPackage: AuthPackage;
@@ -35,6 +36,8 @@ export default function AddUserToTeamForm({
 		});
 	};
 
+	const t = useTranslations('addUserToTeamForm');
+
 	return (
 		<Form
 			id="add-user-to-team"
@@ -47,10 +50,10 @@ export default function AddUserToTeamForm({
 			<input type="hidden" name="jwt" value={authPackage.jwt} />
 			<Input
 				isRequired
-				label="Member username"
+				label={t('usernameLabel')}
 				isClearable
 				name="username"
-				placeholder="Enter the username of the member"
+				placeholder={t('usernamePlaceholder')}
 				type="text"
 				variant="bordered"
 				size="lg"

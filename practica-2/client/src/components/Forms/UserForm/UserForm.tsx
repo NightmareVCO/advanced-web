@@ -6,6 +6,7 @@ import Role from '@lib/data/roles.data';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
 import { useState } from 'react';
+import {useTranslations} from "next-intl";
 
 type userFormProps = {
 	authPackage: AuthPackage;
@@ -24,6 +25,8 @@ export default function UserForm({
 	const [isVisible, setIsVisible] = useState(false);
 	const toggleVisibility = () => setIsVisible(!isVisible);
 
+	const t = useTranslations('userForm');
+
 	return (
 		<Form
 			id="user-form"
@@ -41,9 +44,9 @@ export default function UserForm({
 			<input type="hidden" name="jwt" defaultValue={authPackage.jwt} />
 			<Input
 				isRequired
-				label="First Name"
+				label={t('firstNameLabel')}
 				name="firstName"
-				placeholder="Enter the user's name"
+				placeholder={t('firstNamePlaceholder')}
 				type="text"
 				variant="bordered"
 				size="lg"
@@ -53,9 +56,9 @@ export default function UserForm({
 
 			<Input
 				isRequired
-				label="Last Name"
+				label={t('lastNameLabel')}
 				name="lastName"
-				placeholder="Enter the user's last name"
+				placeholder={t('lastNamePlaceholder')}
 				type="text"
 				variant="bordered"
 				size="lg"
@@ -65,9 +68,9 @@ export default function UserForm({
 
 			<Input
 				isRequired
-				label="Username"
+				label={t('usernameLabel')}
 				name="username"
-				placeholder="Enter the user's username"
+				placeholder={t('usernamePlaceholder')}
 				type="text"
 				variant="bordered"
 				size="lg"
@@ -79,9 +82,9 @@ export default function UserForm({
 
 			<Input
 				isRequired
-				label="Email"
+				label={t('emailLabel')}
 				name="email"
-				placeholder="Enter the user's email"
+				placeholder={t('emailPlaceholder')}
 				type="email"
 				variant="bordered"
 				size="lg"
@@ -94,9 +97,9 @@ export default function UserForm({
 			{!user && (
 				<Input
 					isRequired
-					label="Password"
+					label={t('passwordLabel')}
 					name="password"
-					placeholder="Enter the user's password"
+					placeholder={t('passwordPlaceholder')}
 					type={isVisible ? 'text' : 'password'}
 					variant="bordered"
 					size="lg"
@@ -121,8 +124,8 @@ export default function UserForm({
 
 			<Select
 				isRequired
-				label="Main Role"
-				placeholder="Select the user's main role"
+				label={t('mainRoleLabel')}
+				placeholder={t('mainRolePlaceholder')}
 				name="role"
 				variant="bordered"
 				size="lg"

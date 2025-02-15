@@ -16,6 +16,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import { Icon } from '@iconify/react';
+import {useTranslations} from "next-intl";
 const THIS_PATH = 'projects';
 
 export type ProjectCardProps = {
@@ -27,6 +28,9 @@ export default function ProjectCard({
 	project: { id, name, owner, desc, tag, openAccess },
 	...props
 }: ProjectCardProps) {
+
+	const t = useTranslations('projectCard');
+
 	return (
 		<Card
 			className="border-small border-default-100 p-3 min-h-66 max-h-66 m-2 hover:scale-[1.02] transition-transform"
@@ -50,7 +54,7 @@ export default function ProjectCard({
 								}
 								color={openAccess ? 'success' : 'warning'}
 							>
-								{openAccess ? 'Public' : 'Private'}
+								{openAccess ? t('chipPublic') : t('chipPrivate')}
 							</Chip>
 						</div>
 						<p className="text-small text-default-500">{owner.username}</p>
@@ -66,7 +70,7 @@ export default function ProjectCard({
 					as={Link}
 					href={`/${THIS_PATH}/${id}`}
 				>
-					Open
+					{t('buttonOpen')}
 				</Button>
 				<Chip color="primary" variant="dot">
 					{tag}

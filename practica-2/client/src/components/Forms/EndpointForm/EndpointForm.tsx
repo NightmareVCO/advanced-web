@@ -39,6 +39,7 @@ import {
 	useEffect,
 	useState,
 } from 'react';
+import {useTranslations} from "next-intl";
 
 type EndpointFormProps = {
 	authPackage?: AuthPackage;
@@ -172,6 +173,8 @@ export default function EndpointForm({
 		([, val]) => val === endpoint?.encoding,
 	)?.[0];
 
+	const t = useTranslations('endpointForm');
+
 	return (
 		<Form
 			id="create-endpoint-form"
@@ -180,22 +183,22 @@ export default function EndpointForm({
 			validationErrors={errors}
 			onSubmit={handleSubmit}
 		>
-			<FormDivider title="Enter the path, method, and status of your endpoint" />
+			<FormDivider title={t('formDividerText1')} />
 			<input type="hidden" name="id" value={endpoint?.id} />
 			<input type="hidden" name="jwt" defaultValue={authPackage?.jwt} />
 
 			<Input
 				isRequired
-				label="Path"
+				label={t('inputPathLabel')}
 				name="path"
-				placeholder="Enter your endpoint path"
+				placeholder={t('inputPathPlaceholder')}
 				type="text"
 				variant="bordered"
 				radius="full"
 				size="lg"
 				value={value}
 				pattern={`${prefix}.+/`}
-				errorMessage="Please enter a path after the prefix with a name and end with a '/'."
+				errorMessage={t('inputPathErrorMessage')}
 				onChange={handleChange}
 			/>
 
@@ -231,8 +234,8 @@ export default function EndpointForm({
 				variant="bordered"
 				radius="full"
 				defaultItems={statusCodes}
-				label="Response Status"
-				placeholder="Search an HTTP status code"
+				label={t('autoCompleteLabel')}
+				placeholder={t('autoCompletePlaceholder')}
 				size="lg"
 				defaultSelectedKey={endpoint?.responseStatus}
 			>
@@ -248,16 +251,16 @@ export default function EndpointForm({
 			</Autocomplete>
 
 			<Spacer y={2} />
-			<FormDivider title="Enter the content type and encoding of your endpoint" />
+			<FormDivider title={t('formDividerText2')} />
 
 			<Select
 				name="contentType"
 				isRequired
 				variant="bordered"
 				radius="full"
-				label="Content Type"
+				label={t('selectContentTypeLabel')}
 				size="lg"
-				placeholder="Select a content type"
+				placeholder={t('selectContentTypePlaceholder')}
 				defaultSelectedKeys={[contentTypeKey ?? '']}
 				onChange={onContentTypeChange}
 			>
@@ -273,9 +276,9 @@ export default function EndpointForm({
 				name="contentEncoding"
 				variant="bordered"
 				radius="full"
-				label="Content Encoding"
+				label={t('selectEncodingLabel')}
 				size="lg"
-				placeholder="Select a content encoding"
+				placeholder={t('selectEncodingPlaceholder')}
 				defaultSelectedKeys={[contentEncodingKey ?? '']}
 			>
 				{Object.keys(ContentEncoding).map((contentEncoding: string) => (
@@ -286,7 +289,7 @@ export default function EndpointForm({
 			</Select>
 
 			<Spacer y={2} />
-			<FormDivider title="Enter the response and headers of your endpoint" />
+			<FormDivider title={t('formDividerText3')} />
 
 			<div className="hidden xl:block">
 				<CodeEditor
@@ -361,7 +364,7 @@ export default function EndpointForm({
 					}
 					onPress={() => setHeaders([...headers, Date.now()])}
 				>
-					Add Header
+					{t('addHeaderButton')}
 				</Button>
 			</div>
 			{headers.length > 0 && (
@@ -381,9 +384,9 @@ export default function EndpointForm({
 						<div className="flex flex-col md:flex-row gap-4 w-full">
 							<Input
 								isRequired
-								label={`Key (Header #${index + 1})`}
+								label={t('inputHeaderKeyLabel', { index: index + 1 })}
 								name={`headerKey-${index}`}
-								placeholder={`Enter your #${index + 1} header key`}
+								placeholder={t('inputHeaderKeyPlaceholder', { index: index + 1 })}
 								type="text"
 								variant="bordered"
 								radius="full"
@@ -393,9 +396,9 @@ export default function EndpointForm({
 
 							<Input
 								isRequired
-								label={`Value (Header #${index + 1})`}
+								label={t('inputHeaderValueLabel', { index: index + 1 })}
 								name={`headerValue-${index}`}
-								placeholder={`Enter your #${index + 1} header value`}
+								placeholder={t('inputHeaderValuePlaceholder', { index: index + 1 })}
 								type="text"
 								variant="bordered"
 								radius="full"
@@ -425,7 +428,7 @@ export default function EndpointForm({
 			))}
 
 			<Spacer y={2} />
-			<FormDivider title="Enter the security, delay and expiration of your endpoint" />
+			<FormDivider title={t('formDividerText4')} />
 
 			<div className="flex w-full items-center justify-start">
 				<Checkbox
@@ -433,7 +436,7 @@ export default function EndpointForm({
 					defaultSelected={endpoint?.security}
 					onValueChange={(isSelected) => setSecurity(isSelected)}
 				>
-					Use JWT to validate the request
+					{t('checkboxJWT')}
 				</Checkbox>
 			</div>
 			<input type="hidden" name="security" value={security ? 'on' : 'off'} />
@@ -441,9 +444,9 @@ export default function EndpointForm({
 			<Input
 				isRequired
 				isClearable
-				label="Delay (in seconds)"
+				label={t('inputDelayLabel')}
 				name="delay"
-				placeholder="Enter your endpoint delay"
+				placeholder={t('inputDelayPlaceholder')}
 				type="number"
 				defaultValue={endpoint?.delay ? endpoint.delay.toString() : '0'}
 				min={0}
@@ -457,9 +460,9 @@ export default function EndpointForm({
 				name="expirationDate"
 				variant="bordered"
 				radius="full"
-				label="Expiration Date"
+				label={t('inputExpirationLabel')}
 				size="lg"
-				placeholder="Select an expiration date"
+				placeholder={t('inputExpirationPlaceholder')}
 				defaultSelectedKeys={endpoint?.expirationDate}
 			>
 				{Object.keys(Expiration).map((expirationDate: string) => (
@@ -470,14 +473,14 @@ export default function EndpointForm({
 			</Select>
 
 			<Spacer y={2} />
-			<FormDivider title="Enter the name and description of your endpoint" />
+			<FormDivider title={t('formDividerText5')} />
 
 			<Input
 				isRequired
 				isClearable
-				label="Name"
+				label={t('inputNameLabel')}
 				name="name"
-				placeholder="Enter your endpoint name"
+				placeholder={t('inputNamePlaceholder')}
 				type="text"
 				minLength={2}
 				variant="bordered"
@@ -489,9 +492,9 @@ export default function EndpointForm({
 			<Input
 				isRequired
 				isClearable
-				label="Description"
+				label={t('inputDescriptionLabel')}
 				name="description"
-				placeholder="Enter your endpoint description"
+				placeholder={t('inputDescriptionPlaceholder')}
 				type="text"
 				minLength={5}
 				variant="bordered"
@@ -513,7 +516,7 @@ export default function EndpointForm({
 				isDisabled={pending}
 				isLoading={pending}
 			>
-				{endpoint ? 'Update Endpoint' : 'Create Endpoint'}
+				{endpoint ? t('buttonUpdate') : t('buttonCreate')}
 			</Button>
 			{errors?.error && (
 				<p className="text-red-400 text-sm text-center capitalize">

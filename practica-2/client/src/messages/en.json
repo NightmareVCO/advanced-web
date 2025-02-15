@@ -13,6 +13,7 @@
 	"endpointForm": {
 		"formDividerText1": "Enter the path, method, and status of your endpoint",
 		"inputPathLabel": "Path",
+		"inputPathErrorMessage": "Please enter a path after the prefix with a name and end with a '/'.",
 		"inputPathPlaceholder": "Enter your endpoint path",
 		"inputMethodLabel": "Method",
 		"autoCompleteLabel": "Select a method",
@@ -20,16 +21,18 @@
 		"formDividerText2": "Enter the content type and encoding of your endpoint",
 		"selectContentTypeLabel": "Content Type",
 		"selectContentTypePlaceholder": "Select a content type",
+		"selectEncodingLabel": "Content Encoding",
+		"selectEncodingPlaceholder": "Select a content encoding",
 		"formDividerText3": "Enter the response and headers of your endpoint",
 		"addHeaderButton": "Add Header",
-		"inputHeaderKeyPlaceholder1": "Enter your #",
-		"inputHeaderKeyPlaceholder2": "key value",
-		"inputHeaderValuePlaceholder1": "Enter your #",
-		"inputHeaderValuePlaceholder2": "header value",
+		"inputHeaderKeyLabel": "Key (Header #{index})",
+		"inputHeaderKeyPlaceholder": "Enter your #{index} header key",
+		"inputHeaderValueLabel": "Value (Header #{index})",
+		"inputHeaderValuePlaceholder": "Enter your #{index} header value",
 		"formDividerText4": "Enter the security, delay, and expiration of your endpoint",
 		"checkboxJWT": "Use JWT to validate the request",
 		"inputDelayLabel": "Delay (in seconds)",
-		"inputPlaceholder": "Enter your endpoint delay",
+		"inputDelayPlaceholder": "Enter your endpoint delay",
 		"inputExpirationLabel": "Expiration Date",
 		"inputExpirationPlaceholder": "Select your endpoint expiration date",
 		"formDividerText5": "Enter the name and description of your endpoint",
@@ -37,7 +40,8 @@
 		"inputNamePlaceholder": "Enter your endpoint name",
 		"inputDescriptionLabel": "Description",
 		"inputDescriptionPlaceholder": "Enter your endpoint description",
-		"buttonSave": "Create Endpoint"
+		"buttonUpdate": "Update Endpoint",
+		"buttonCreate": "Create Endpoint"
 	},
 	"loginForm": {
 		"usernameLabel": "Username",
@@ -67,8 +71,7 @@
 		"passwordLabel": "Password",
 		"passwordPlaceholder": "Enter the user's password",
 		"mainRoleLabel": "Main Role",
-		"mainRolePlaceholder": "Select the user's main role",
-		"togglePasswordVisibility": "Show or hide password"
+		"mainRolePlaceholder": "Select the user's main role"
 	},
 	"addToUserToTeamModal": {
 		"buttonLabel": "Add to Team",
@@ -94,7 +97,7 @@
 		"modalTitle": "Remove User from Team",
 		"modalConfirmation": "Are you sure you want to remove this user from the team?",
 		"cancelButton": "Cancel",
-		"removeButton": "Remove"
+		"deleteButton": "Delete"
 	},
 	"updateProjectModal": {
 		"updateButton": "Update",
@@ -112,18 +115,17 @@
 		"editUser": "Edit User",
 		"createUser": "Create New User",
 		"closeButton": "Close",
-		"createButton": "Create"
+		"createButton": "Confirm"
 	},
 	"footer": {
-		"rights1": "@ ",
-		"rights2": " Mockify. All rights reserved.",
+		"rights": "© {currentYear} Mockify. All rights reserved.",
 		"allSystemsOperational": "All systems operational"
 	},
 	"navbarDesktop": {
 		"login": "Login",
 		"createNewProject": "Create New Project",
 		"profile": "Profile",
-		"username": "Username: ",
+		"username": "User: ",
 		"changeTo": "Change to: ",
 		"logout": "Logout",
 		"es": "ES",
@@ -139,12 +141,17 @@
 		"team": "Team",
 		"settings": "Settings"
 	},
+	"projectCard": {
+		"chipPublic": "Public",
+		"chipPrivate": "Private",
+		"buttonOpen": "Open"
+	},
 	"usersModalSection": {
 		"newUser": "New User"
 	},
 	"testimonialSection": {
 		"testimonial": "A game changer! 🚀 This app makes testing APIs fast and hassle-free. Simulate responses instantly, without relying on servers. Simple, powerful, and essential!",
-		"h2Text": "Login"
+		"h2Text": "Log in"
 	},
 	"createEndpointPage": {
 		"title": "New endpoint for project {id}",
@@ -161,5 +168,11 @@
 	"usersPage": {
 		"title": "Users",
 		"description": "Manage all users here."
+	},
+	"explorePage": {
+		"title": "Community",
+		"description": "Take a look over the community open projects",
+		"noProjects": "No public projects found. Create a new one and share with the community!"
 	}
+
 }

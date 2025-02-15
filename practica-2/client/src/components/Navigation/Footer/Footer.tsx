@@ -4,10 +4,12 @@ import { Chip, Divider } from '@heroui/react';
 import React from 'react';
 
 import BrandLogoIcon from '@/components/Icons/BrandLogoIcon';
+import {useTranslations} from "next-intl";
 
 export default function Footer() {
 	const currentYear = new Date().getFullYear();
-	const rights = `© ${currentYear} Mockify. All rights reserved.`;
+	const t = useTranslations('footer');
+	const rights = t('rights', { currentYear });
 
 	return (
 		<footer className="flex w-full flex-col">
@@ -23,7 +25,7 @@ export default function Footer() {
 							color="success"
 							variant="dot"
 						>
-							All systems operational
+							{t('allSystemsOperational')}
 						</Chip>
 					</div>
 					<p className="text-center text-tiny text-default-400 md:text-start">

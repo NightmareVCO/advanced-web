@@ -14,6 +14,7 @@ import { createUser, updateUser } from '@lib/actions/users.action';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
 import { useActionState, useEffect } from 'react';
+import {useTranslations} from "next-intl";
 
 type UserModalProps = {
 	authPackage: AuthPackage;
@@ -45,6 +46,8 @@ export default function UserModal({
 		errors: {},
 	});
 
+	const t = useTranslations('userModal');
+
 	return (
 		<Modal
 			isOpen={isOpen}
@@ -57,7 +60,7 @@ export default function UserModal({
 				{(onClose) => (
 					<>
 						<ModalHeader className="flex flex-col gap-1">
-							{user ? 'Edit User' : 'Create New User'}
+							{user ? t('editUser') : t('createUser')}
 						</ModalHeader>
 						<ModalBody>
 							<UserForm
@@ -78,7 +81,7 @@ export default function UserModal({
 									onClose();
 								}}
 							>
-								Close
+								{t('closeButton')}
 							</Button>
 							<Button
 								form="user-form"
@@ -89,7 +92,7 @@ export default function UserModal({
 								isDisabled={pending}
 								isLoading={pending}
 							>
-								Confirm
+								{t('createButton')}
 							</Button>
 						</ModalFooter>
 					</>
