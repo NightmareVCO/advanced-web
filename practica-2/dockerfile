@@ -21,18 +21,3 @@ EXPOSE 8080
 # Comando para ejecutar la aplicación
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
-# Debug Mode
-
-FROM eclipse-temurin:21-alpine AS dev
-
-WORKDIR /app
-
-COPY --from=builder /app/build/libs/web-1.0.0.jar app.jar
-
-EXPOSE 8080
-EXPOSE 5005
-
-# Comando para ejecutar la aplicación
-
-ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]
