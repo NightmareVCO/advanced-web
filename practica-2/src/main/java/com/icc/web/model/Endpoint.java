@@ -28,6 +28,9 @@ public class Endpoint {
     private String responseType;
     private String responseStatus;
     private String jwt;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     @Builder.Default

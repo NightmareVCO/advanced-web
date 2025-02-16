@@ -83,10 +83,11 @@ export async function updateEndpoint(prevState: unknown, formData: FormData) {
 	const id = formData.get('projectId');
 	try {
 		const endpoint = Object.fromEntries(formData.entries());
-		const prefix = SERVER_PATH;
+
+		const prefix = PUBLIC_SERVER_PATH;
 		const path = endpoint.path as string;
 		const cleanPath = path.replace(prefix, '');
-
+		console.log('cleanPath', cleanPath);
 		const endpointDTO = {
 			name: String(endpoint.name).toLowerCase(),
 			description: endpoint.description,
