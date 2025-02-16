@@ -20,7 +20,10 @@ import MethodColor from '@lib/data/method.color.data';
 import type { AuthPackage } from '@/lib/entity/auth.entity';
 import DeleteEndpointModal from '@components/Modal/DeleteModals/DeleteEndpointModal';
 import { Icon } from '@iconify/react';
-import { ENDPOINT_PATH, SERVER_PATH } from '@lib/constants/server.constants';
+import {
+	ENDPOINT_PATH,
+	PUBLIC_SERVER_PATH,
+} from '@lib/constants/server.constants';
 import Routes from '@lib/data/routes.data';
 import { statusCodesRecord } from '@lib/data/statusCode.data';
 import type Endpoint from '@lib/entity/endpoint.entity';
@@ -131,7 +134,7 @@ export default function EndpointTable({
 								disableCopy={!endpoint.status}
 								onCopy={() => {
 									navigator.clipboard.writeText(
-										`${SERVER_PATH}/${ENDPOINT_PATH}/${endpoint.path}`,
+										`${PUBLIC_SERVER_PATH}/${ENDPOINT_PATH}/${endpoint.path}`,
 									);
 								}}
 							/>

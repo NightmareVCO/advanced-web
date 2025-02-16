@@ -35,7 +35,6 @@ export default async function ViewEndpointPage({
 		redirect(Routes.Projects);
 	}
 
-	const t = await getTranslations('createEndpointPage');
 	const t2 = await getTranslations('projectPage');
 
 	return (
