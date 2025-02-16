@@ -39,15 +39,17 @@ export default function ProjectSection({
 	}, []);
 
 	const router = useRouter();
-	const sortedEndpoints = project?.endpoints?.toSorted((a, b) => {
-		if (a.name < b.name) {
-			return -1;
-		}
-		if (a.name > b.name) {
-			return 1;
-		}
-		return 0;
-	});
+	const sortedEndpoints = project?.endpoints
+		? [...project.endpoints].sort((a, b) => {
+				if (a.name < b.name) {
+					return -1;
+				}
+				if (a.name > b.name) {
+					return 1;
+				}
+				return 0;
+			})
+		: [];
 
 	const t = useTranslations('projectSection');
 

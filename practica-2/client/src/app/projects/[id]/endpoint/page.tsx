@@ -4,6 +4,10 @@ import Header from '@components/Header/Header';
 import React from 'react';
 
 import Routes from '@lib/data/routes.data';
+import { getProject } from '@/lib/data/fetch/projects.fetch';
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { getTranslations } from 'next-intl/server';
 
 export default async function CreateEndpointPage({
 	params,
@@ -11,16 +15,25 @@ export default async function CreateEndpointPage({
 	params: Promise<{ id: string }>;
 }) {
 	const id = (await params).id;
+	const jwt = (await cookies()).get('session')?.value;
+
+	const [_, error] = await getProject({ token: jwt as string, id });
+	if (error?.message === 'Project not found') {
+		redirect(Routes.Projects);
+	}
+
+	const t = await getTranslations('createEndpointPage');
+	const t2 = await getTranslations('projectPage');
 
 	return (
 		<main className="mt-6 flex w-full flex-col items-center">
 			<Header
-				title={`New endpoint of project ${id}`}
+				title={`${t('title')}: ${id}`}
 				description="Add your new endpoint here."
 			>
 				<BreadcrumbsBuilder
 					items={[
-						{ name: 'Projects', href: Routes.Projects },
+						{ name: t2('title'), href: Routes.Projects },
 						{ name: id, href: `${Routes.Projects}/${id}` },
 						{ name: 'Endpoint', href: '#' },
 					]}

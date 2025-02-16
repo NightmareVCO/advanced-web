@@ -1,3 +1,4 @@
+import { getProject } from '@lib/data/fetch/projects.fetch';
 import BreadcrumbsBuilder from '@components/BreadcrumbsBuilder/BreadcrumbsBuilder';
 import EndpointForm from '@components/Forms/EndpointForm/EndpointForm';
 import Header from '@components/Header/Header';
@@ -6,6 +7,7 @@ import Routes from '@lib/data/routes.data';
 import { getAuthUser } from '@lib/utils/auth.utils';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 
 export default async function ViewEndpointPage({
 	params,
@@ -15,6 +17,12 @@ export default async function ViewEndpointPage({
 	const id = (await params).id;
 	const slug = (await params).slug;
 	const jwt = (await cookies()).get('session')?.value;
+
+	const [_, errorProject] = await getProject({ token: jwt as string, id });
+	if (errorProject?.message === 'Project not found') {
+		redirect(Routes.Projects);
+	}
+
 	const [endpoint, error] = await getEndpoint({
 		token: jwt as string,
 		id: slug,
@@ -26,12 +34,16 @@ export default async function ViewEndpointPage({
 	if (authError) {
 		redirect(Routes.Projects);
 	}
+
+	const t = await getTranslations('createEndpointPage');
+	const t2 = await getTranslations('projectPage');
+
 	return (
 		<main className="mt-6 flex w-full flex-col items-center">
 			<Header title={`Endpoint ${id}`} description="Manage your endpoint here.">
 				<BreadcrumbsBuilder
 					items={[
-						{ name: 'Projects', href: Routes.Projects },
+						{ name: t2('title'), href: Routes.Projects },
 						{ name: id, href: `${Routes.Projects}/${id}` },
 						{
 							name: 'Endpoint',

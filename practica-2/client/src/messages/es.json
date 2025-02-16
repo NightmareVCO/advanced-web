@@ -211,12 +211,13 @@
 		"h2Text": "Iniciar Sesión"
 	},
 	"createEndpointPage": {
-		"title": "Nuevo endpoint del proyecto {id}",
+		"title": "Nuevo endpoint del proyecto",
 		"description": "Agrega tu nuevo endpoint aquí."
 	},
 	"projectPage": {
-		"title": "Proyecto {id}",
-		"description": "Gestiona tu proyecto aquí."
+		"title": "Proyecto",
+		"description": "Gestiona tu proyecto aquí.",
+		"error": "Se produjo un error al buscar este proyecto. Por favor, inténtelo de nuevo más tarde."
 	},
 	"projectsPage": {
 		"title": "Proyectos",

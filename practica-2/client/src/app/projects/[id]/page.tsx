@@ -4,6 +4,7 @@ import ProjectSection from '@components/Projects/ProjectSection';
 import { getProject } from '@lib/data/fetch/projects.fetch';
 import Routes from '@lib/data/routes.data';
 import { getAuthUser } from '@lib/utils/auth.utils';
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -23,12 +24,17 @@ export default async function ProjectPage({
 		redirect(Routes.Projects);
 	}
 
+	const t = await getTranslations('projectPage');
+
 	return (
 		<main className="mt-6 flex w-full flex-col items-center">
-			<Header title={`Project: ${project.name}`} description={project.desc}>
+			<Header
+				title={`${t('title')}: ${project.name}`}
+				description={project.desc}
+			>
 				<BreadcrumbsBuilder
 					items={[
-						{ name: 'Projects', href: Routes.Projects },
+						{ name: t('title'), href: Routes.Projects },
 						{ name: id, href: '#' },
 					]}
 				/>
@@ -36,11 +42,7 @@ export default async function ProjectPage({
 			<section className="w-full max-w-7xl px-4 lg:px-8">
 				<ProjectSection project={project} authPackage={authPackage} />
 			</section>
-			{error && (
-				<p className="text-start text-red-400">
-					{`An error occurred while fetching the project ${error}`}
-				</p>
-			)}
+			{error && <p className="text-start text-red-400">{t('error')}</p>}
 		</main>
 	);
 }

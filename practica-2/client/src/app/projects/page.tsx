@@ -20,8 +20,8 @@ export default async function ProjectsPage() {
 		return;
 	}
 
-	if (Array.isArray(projects)) {
-		sortedProjects = projects?.toSorted((a, b) => {
+	if (Array.isArray(projects) && projects.length > 0) {
+		sortedProjects = [...projects].sort((a, b) => {
 			if (a.id < b.id) {
 				return -1;
 			}

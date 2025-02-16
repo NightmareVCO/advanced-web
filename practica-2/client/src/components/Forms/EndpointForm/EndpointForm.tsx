@@ -24,7 +24,7 @@ import FormDivider from '@components/Forms/FormDivider/FormDivider';
 import {
 	API_PATH,
 	PROJECTS_PATH,
-	SERVER_PATH,
+	PUBLIC_SERVER_PATH,
 } from '@lib/constants/server.constants';
 import ContentEncoding from '@lib/data/contentEncoding.data';
 import ContentType from '@lib/data/contentType.data';
@@ -52,13 +52,13 @@ export default function EndpointForm({
 	endpoint,
 	projectId,
 }: EndpointFormProps) {
-	const prefix = `${SERVER_PATH}/${PROJECTS_PATH}/${projectId}/${API_PATH}/`;
+	const prefix = `${PUBLIC_SERVER_PATH}/${PROJECTS_PATH}/${projectId}/${API_PATH}/`;
 	// Limpia la ruta de entrada
 	let rawPath = endpoint?.path ?? '';
 
-	if (rawPath.includes(SERVER_PATH)) {
+	if (rawPath.includes(PUBLIC_SERVER_PATH)) {
 		// Elimina cualquier parte del servidor y api/v1
-		rawPath = rawPath.replace(SERVER_PATH, '');
+		rawPath = rawPath.replace(PUBLIC_SERVER_PATH, '');
 	}
 
 	// Elimina cualquier patrón de projects/ID/api/

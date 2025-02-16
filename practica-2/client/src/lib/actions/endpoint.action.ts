@@ -1,6 +1,6 @@
 'use server';
 
-import { SERVER_PATH } from '@lib/constants/server.constants';
+import { SERVER_PATH, PUBLIC_SERVER_PATH  } from '@lib/constants/server.constants';
 import ContentEncoding from '@lib/data/contentEncoding.data';
 import ContentType from '@lib/data/contentType.data';
 import Method from '@lib/data/method.data';
@@ -18,7 +18,7 @@ export async function createEndpoint(prevState: unknown, formData: FormData) {
 	try {
 		const endpoint = Object.fromEntries(formData.entries());
 
-		const prefix = SERVER_PATH;
+		const prefix = PUBLIC_SERVER_PATH;
 		const path = endpoint.path as string;
 		const cleanPath = path.replace(prefix, '');
 		const endpointDTO = {

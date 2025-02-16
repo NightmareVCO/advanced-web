@@ -209,12 +209,13 @@
 		"h2Text": "Log in"
 	},
 	"createEndpointPage": {
-		"title": "New endpoint for project {id}",
+		"title": "New endpoint for project",
 		"description": "Add your new endpoint here."
 	},
 	"projectPage": {
-		"title": "Project {id}",
-		"description": "Manage your project here."
+		"title": "Project",
+		"description": "Manage your project here.",
+		"error": "An error occurred while fetching this project. Please try again later."
 	},
 	"projectsPage": {
 		"title": "Projects",
