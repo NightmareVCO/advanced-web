@@ -1,10 +1,9 @@
 import LogInForm from '@components/Forms/LogInForm/LogInForm';
 import Testimonials from '@components/Testimonials/Testimonials';
 import { Spacer } from '@heroui/react';
-import {useTranslations} from "next-intl";
+import { useTranslations } from 'next-intl';
 
 export default function LogInPage() {
-
 	const t = useTranslations('testimonialSection');
 
 	return (

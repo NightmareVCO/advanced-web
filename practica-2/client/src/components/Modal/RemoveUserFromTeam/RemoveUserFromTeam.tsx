@@ -1,6 +1,5 @@
-import DeleteIcon from '@components/Icons/DeleteIcon';
 import { removeUserFromTeam } from '@/lib/actions/project.action';
-import type { AuthPackage } from '@lib/entity/auth.entity';
+import DeleteIcon from '@components/Icons/DeleteIcon';
 import {
 	Button,
 	Form,
@@ -12,9 +11,10 @@ import {
 	Tooltip,
 	useDisclosure,
 } from '@heroui/react';
+import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
+import { useTranslations } from 'next-intl';
 import { useActionState } from 'react';
-import {useTranslations} from "next-intl";
 
 type RemoveUserFromTeamProps = {
 	authPackage: AuthPackage;
@@ -79,9 +79,7 @@ export default function RemoveUserFromTeam({
 									<p className="text-default-400">
 										{user.firstName} {user.lastName} - ({user.email})
 									</p>
-									<p className="text-default-400">
-										{t('modalConfirmation')}
-									</p>
+									<p className="text-default-400">{t('modalConfirmation')}</p>
 								</Form>
 							</ModalBody>
 							<ModalFooter>

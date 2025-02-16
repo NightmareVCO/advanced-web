@@ -12,12 +12,12 @@ import EndpointTable from '@components/Table/EndpointsTable';
 import UsersTable from '@components/Table/UsersTable';
 import { Icon } from '@iconify/react';
 import { updateProject } from '@lib/actions/project.action';
+import { ENDPOINT_PATH } from '@lib/constants/server.constants';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type { Project } from '@lib/entity/project.entity';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
-import { ENDPOINT_PATH } from '@lib/constants/server.constants';
-import {useTranslations} from "next-intl";
 
 type ProjectSectionProps = {
 	authPackage: AuthPackage;

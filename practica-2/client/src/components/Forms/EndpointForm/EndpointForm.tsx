@@ -32,6 +32,7 @@ import Expiration from '@lib/data/expiration.data';
 import statusCodes from '@lib/data/statusCode.data';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type Endpoint from '@lib/entity/endpoint.entity';
+import { useTranslations } from 'next-intl';
 import {
 	startTransition,
 	useActionState,
@@ -39,7 +40,6 @@ import {
 	useEffect,
 	useState,
 } from 'react';
-import {useTranslations} from "next-intl";
 
 type EndpointFormProps = {
 	authPackage?: AuthPackage;
@@ -386,7 +386,9 @@ export default function EndpointForm({
 								isRequired
 								label={t('inputHeaderKeyLabel', { index: index + 1 })}
 								name={`headerKey-${index}`}
-								placeholder={t('inputHeaderKeyPlaceholder', { index: index + 1 })}
+								placeholder={t('inputHeaderKeyPlaceholder', {
+									index: index + 1,
+								})}
 								type="text"
 								variant="bordered"
 								radius="full"
@@ -398,7 +400,9 @@ export default function EndpointForm({
 								isRequired
 								label={t('inputHeaderValueLabel', { index: index + 1 })}
 								name={`headerValue-${index}`}
-								placeholder={t('inputHeaderValuePlaceholder', { index: index + 1 })}
+								placeholder={t('inputHeaderValuePlaceholder', {
+									index: index + 1,
+								})}
 								type="text"
 								variant="bordered"
 								radius="full"

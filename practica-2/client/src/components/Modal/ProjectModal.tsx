@@ -12,8 +12,8 @@ import { createProject } from '@/lib/actions/project.action';
 import type { AuthPackage } from '@/lib/entity/auth.entity';
 import ProjectForm from '@components/Forms/ProjectForm/ProjectForm';
 import { Icon } from '@iconify/react';
+import { useTranslations } from 'next-intl';
 import { useActionState, useEffect } from 'react';
-import {useTranslations} from "next-intl";
 
 type ProjectModalProps = {
 	authPackage: AuthPackage;

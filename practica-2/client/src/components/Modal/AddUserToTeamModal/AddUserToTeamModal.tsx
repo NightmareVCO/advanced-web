@@ -8,7 +8,7 @@ import {
 	useDisclosure,
 } from '@heroui/react';
 import type User from '@lib/entity/user.entity';
-import {useTranslations} from "next-intl";
+import { useTranslations } from 'next-intl';
 
 type AddToUserToTeam = {
 	pending: boolean;
@@ -44,7 +44,10 @@ export default function AddToUserToTeamModal({
 								{t('modalTitle')}
 							</ModalHeader>
 							<ModalBody>
-								<p className="text-sm text-default-500">  {t('modalUserLabel', { username })}</p>
+								<p className="text-sm text-default-500">
+									{' '}
+									{t('modalUserLabel', { username })}
+								</p>
 								<p className="text-sm text-default-500">
 									{t('modalConfirmation')}
 								</p>

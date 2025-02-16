@@ -19,10 +19,10 @@ import NavbarDesktopItems from './NavbarDesktopItems';
 import { logout } from '@/lib/actions/logIn.action';
 import { Icon } from '@iconify/react';
 import Routes from '@lib/data/routes.data';
+import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
 import { menuItems } from '../_config/config';
-import {useTranslations} from "next-intl";
 
 type NavbarDesktopProps = {
 	admin?: boolean;

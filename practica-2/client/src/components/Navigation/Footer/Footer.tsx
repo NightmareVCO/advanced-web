@@ -4,7 +4,7 @@ import { Chip, Divider } from '@heroui/react';
 import React from 'react';
 
 import BrandLogoIcon from '@/components/Icons/BrandLogoIcon';
-import {useTranslations} from "next-intl";
+import { useTranslations } from 'next-intl';
 
 export default function Footer() {
 	const currentYear = new Date().getFullYear();

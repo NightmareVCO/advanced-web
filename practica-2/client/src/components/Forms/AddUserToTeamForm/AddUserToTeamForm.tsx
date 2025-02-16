@@ -1,11 +1,10 @@
-
 import AddToUserToTeamModal from '@components/Modal/AddUserToTeamModal/AddUserToTeamModal';
 import { Form, Input } from '@heroui/react';
 import { addUserToTeam } from '@lib/actions/project.action';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type { Project } from '@lib/entity/project.entity';
+import { useTranslations } from 'next-intl';
 import { startTransition, useActionState, useState } from 'react';
-import {useTranslations} from "next-intl";
 
 export type AddUserToTeamFormProps = {
 	authPackage: AuthPackage;

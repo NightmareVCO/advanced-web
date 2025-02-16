@@ -13,8 +13,8 @@ import {
 import { deleteEndpoint } from '@lib/actions/endpoint.action';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type Endpoint from '@lib/entity/endpoint.entity';
+import { useTranslations } from 'next-intl';
 import { useActionState } from 'react';
-import {useTranslations} from "next-intl";
 
 type DeleteEndpointModalProps = {
 	authPackage: AuthPackage;
@@ -85,9 +85,7 @@ export default function DeleteEndpointModal({
 									<p className="text-default-400">
 										{endpoint.name} - {endpoint.path}
 									</p>
-									<p className="text-default-400">
-										{t('modalConfirmation')}
-									</p>
+									<p className="text-default-400">{t('modalConfirmation')}</p>
 									{errors.deleteEndpoint && (
 										<p className="text-danger">{errors.deleteEndpoint}</p>
 									)}

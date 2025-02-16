@@ -4,7 +4,7 @@ import UserModal from '@components/Modal/UserModal';
 import { Button, useDisclosure } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import type { AuthPackage } from '@lib/entity/auth.entity';
-import {useTranslations} from "next-intl";
+import { useTranslations } from 'next-intl';
 
 type UserModalSectionProps = {
 	authPackage: AuthPackage;

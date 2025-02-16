@@ -13,8 +13,8 @@ import {
 } from '@heroui/react';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
+import { useTranslations } from 'next-intl';
 import { useActionState } from 'react';
-import {useTranslations} from "next-intl";
 
 type DeleteEndpointModalProps = {
 	authPackage: AuthPackage;
@@ -81,9 +81,7 @@ export default function DeleteUserModal({
 									<p className="text-default-400">
 										{user.firstName} {user.lastName} - ({user.email})
 									</p>
-									<p className="text-default-400">
-										{t('modalConfirmation')}
-									</p>
+									<p className="text-default-400">{t('modalConfirmation')}</p>
 								</Form>
 							</ModalBody>
 							<ModalFooter>

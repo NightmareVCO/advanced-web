@@ -5,8 +5,8 @@ import { EyeSlashFilledIcon } from '@components/Icons/EyeSlashFilledIcon';
 import Role from '@lib/data/roles.data';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import {useTranslations} from "next-intl";
 
 type userFormProps = {
 	authPackage: AuthPackage;

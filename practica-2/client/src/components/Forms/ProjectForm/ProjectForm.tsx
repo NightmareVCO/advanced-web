@@ -3,8 +3,8 @@ import type { AuthPackage } from '@lib/entity/auth.entity';
 
 import Endpoints from '@lib/data/endpoints.data';
 import type { Project } from '@lib/entity/project.entity';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import {useTranslations} from "next-intl";
 
 type ProjectFormProps = {
 	authPackage: AuthPackage;

@@ -3,8 +3,8 @@
 import { Button, Checkbox, Form, Input } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { logIn } from '@lib/actions/logIn.action';
+import { useTranslations } from 'next-intl';
 import React, { startTransition, useActionState } from 'react';
-import {useTranslations} from "next-intl";
 
 export default function LogInForm() {
 	const [isVisible, setIsVisible] = React.useState(false);
