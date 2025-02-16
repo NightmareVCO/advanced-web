@@ -2,8 +2,6 @@ import type { Project } from '@lib/entity/project.entity';
 
 import { PROJECTS_PATH, SERVER_PATH } from '@lib/constants/server.constants';
 import Method from '@lib/data/method.data';
-import Routes from '@lib/data/routes.data';
-import { redirect } from 'next/navigation';
 const THIS_PATH = PROJECTS_PATH;
 
 const CURRENT_PATH = `${SERVER_PATH}/${THIS_PATH}/`;

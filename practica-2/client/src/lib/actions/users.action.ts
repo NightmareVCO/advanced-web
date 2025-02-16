@@ -14,9 +14,9 @@ export async function createUser(prevState: unknown, formData: FormData) {
 		const userDTO = {
 			firstName: user.firstName,
 			lastName: user.lastName,
-			username: user.username,
+			username: String(user.username).toLocaleLowerCase(),
 			password: user.password,
-			email: user.email,
+			email: String(user.email).toLocaleLowerCase(),
 			roles: [String(user.role).toUpperCase()],
 		};
 

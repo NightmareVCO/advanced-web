@@ -107,7 +107,10 @@ export async function addUserToTeam(prevState: unknown, formData: FormData) {
 	}
 }
 
-export async function removeUserFromTeam(prevState: unknown, formData: FormData) {
+export async function removeUserFromTeam(
+	prevState: unknown,
+	formData: FormData,
+) {
 	try {
 		const userDTO = Object.fromEntries(formData.entries());
 		const response = await fetch(
