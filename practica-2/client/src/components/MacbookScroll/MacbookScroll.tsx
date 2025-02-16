@@ -1,34 +1,34 @@
 'use client';
-import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
+import {
+	IconBrightnessDown,
+	IconBrightnessUp,
+	IconCaretDownFilled,
+	IconCaretLeftFilled,
+	IconCaretRightFilled,
+	IconCaretUpFilled,
+	IconChevronUp,
+	IconCommand,
+	IconMicrophone,
+	IconMoon,
+	IconPlayerSkipForward,
+	IconPlayerTrackNext,
+	IconPlayerTrackPrev,
+	IconSearch,
+	IconTable,
+	IconVolume,
+	IconVolume2,
+	IconVolume3,
+	IconWorld,
+} from '@tabler/icons-react';
 import {
 	type MotionValue,
 	motion,
 	useScroll,
 	useTransform,
 } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import {
-	IconBrightnessDown,
-	IconBrightnessUp,
-	IconCaretRightFilled,
-	IconCaretUpFilled,
-	IconChevronUp,
-	IconMicrophone,
-	IconMoon,
-	IconPlayerSkipForward,
-	IconPlayerTrackNext,
-	IconPlayerTrackPrev,
-	IconTable,
-	IconVolume,
-	IconVolume2,
-	IconVolume3,
-	IconSearch,
-	IconWorld,
-	IconCommand,
-	IconCaretLeftFilled,
-	IconCaretDownFilled,
-} from '@tabler/icons-react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
 

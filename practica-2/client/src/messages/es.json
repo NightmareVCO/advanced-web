@@ -4,7 +4,62 @@
 		"title1": "La forma más fácil",
 		"title2": "de simular tus API's.",
 		"description": "Mockify es una herramienta de simulación de API para desarrolladores. Te ayuda a crear una API falsa en unos segundos para probar tu front-end.",
-		"getStarted": "Comenzar"
+		"getStarted": "Comenzar",
+		"features": "Explora nuestras funcionalidades",
+		"team": "Conoce a nuestro equipo",
+		"featuresList": {
+			"first": {
+				"title": "Crea una API falsa",
+				"description": "Crea una API falsa en unos segundos para probar tu front-end. Mockify es una herramienta de simulación de API para desarrolladores. Te ayuda a crear una API falsa en unos segundos para probar tu front-end."
+			},
+			"second": {
+				"title": "Comparte tu proyecto",
+				"description": "Comparte tu proyecto con la comunidad y obtén comentarios en tiempo real. Puedes variar el tiempo de respuesta, el código de estado y el cuerpo de la respuesta. También puedes agregar cabeceras a tu respuesta."
+			},
+			"third": {
+				"title": "Protege tus endpoints con JWT",
+				"description": "Protege tus endpoints con JWT. Puedes añadir un token JWT a tu solicitud y proteger tus endpoints. También puedes añadir un tiempo de expiración del token."
+			},
+			"fourth": {
+				"title": "Mantén tu endpoint no autorizado",
+				"description": "Si no se proporciona un token JWT, el endpoint devolverá un código de estado 401. Puedes personalizar el cuerpo de la respuesta y el tiempo de respuesta."
+			},
+			"fifth": {
+				"title": "Modifica tus cabeceras",
+				"description": "Puedes agregar cabeceras a tu solicitud. También puedes modificar las cabeceras de la respuesta. Puedes agregar tantas cabeceras como desees."
+			},
+			"sixth": {
+				"title": "Explora todos tus proyectos",
+				"description": "Puedes explorar todos tus proyectos y endpoints. También puedes editar y eliminar tus proyectos y endpoints. También puedes agregar usuarios a tus proyectos."
+			},
+			"seventh": {
+				"title": "Gestiona tus proyectos con tu equipo",
+				"description": "Puedes agregar usuarios a tus proyectos. Podrán probar tus endpoints. También puedes eliminar usuarios de tus proyectos."
+			},
+			"eighth": {
+				"title": "Explora proyectos de la comunidad",
+				"description": "Puedes explorar proyectos de la comunidad. Puedes probar sus endpoints y ver sus respuestas. Pronto podrás bifurcar sus proyectos."
+			},
+			"ninth": {
+				"title": "Cambia tu idioma",
+				"description": "Puedes cambiar tu idioma. Puedes elegir entre inglés y español. También puedes sugerir un nuevo idioma."
+			},
+			"tenth": {
+				"title": "Gracias por usar Mockify"
+			}
+		},
+		"teamMembers": {
+			"first": {
+				"name": "Vladimir Curiel",
+				"role": "Desarrollador Full Stack",
+				"bio": "Ingeniero en Ciencias de la Computación, Vladimir es un desarrollador Full Stack con más de 3 años de experiencia. Le encanta aprender nuevas tecnologías y compartir su conocimiento con la comunidad."
+			},
+			"second": {
+				"name": "Steven Mateo",
+				"role": "Desarrollador Full Stack",
+				"bio": "Ingeniero en Ciencias de la Computación, Steven es un desarrollador Full Stack con más de 3 años de experiencia. Le encanta aprender nuevas tecnologías y compartir su conocimiento con la comunidad."
+			}
+		}
 	},
 	"addUserToTeamForm": {
 		"usernameLabel": "Nombre de usuario",
@@ -165,15 +220,19 @@
 	},
 	"projectsPage": {
 		"title": "Proyectos",
-		"description": "Gestiona tus proyectos aquí."
+		"description": "Gestiona tus proyectos aquí.",
+		"noProjects": "No se encontraron proyectos. ¡Crea uno nuevo y comienza a simular tus API's!",
+		"error": "Se produjo un error al buscar los proyectos. Por favor, inténtelo de nuevo más tarde."
 	},
 	"usersPage": {
 		"title": "Usuarios",
-		"description": "Gestiona todos los usuarios aquí."
+		"description": "Gestiona todos los usuarios aquí.",
+		"error": "Se produjo un error al buscar los usuarios. Por favor, inténtelo de nuevo más tarde."
 	},
 	"explorePage": {
 		"title": "Comunidad",
 		"description": "Echa un vistazo a los proyectos abiertos de la comunidad",
-		"noProjects": "No se encontraron proyectos públicos. ¡Crea uno nuevo y compártelo con la comunidad!"
+		"noProjects": "No se encontraron proyectos públicos. ¡Crea uno nuevo y compártelo con la comunidad!",
+		"error": "Se produjo un error al buscar los proyectos. Por favor, inténtelo de nuevo más tarde."
 	}
 }

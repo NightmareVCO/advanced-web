@@ -13,8 +13,8 @@ import UserForm from '@components/Forms/UserForm/UserForm';
 import { createUser, updateUser } from '@lib/actions/users.action';
 import type { AuthPackage } from '@lib/entity/auth.entity';
 import type User from '@lib/entity/user.entity';
+import { useTranslations } from 'next-intl';
 import { useActionState, useEffect } from 'react';
-import {useTranslations} from "next-intl";
 
 type UserModalProps = {
 	authPackage: AuthPackage;

@@ -16,7 +16,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import { Icon } from '@iconify/react';
-import {useTranslations} from "next-intl";
+import { useTranslations } from 'next-intl';
 const THIS_PATH = 'projects';
 
 export type ProjectCardProps = {
@@ -28,7 +28,6 @@ export default function ProjectCard({
 	project: { id, name, owner, desc, tag, openAccess },
 	...props
 }: ProjectCardProps) {
-
 	const t = useTranslations('projectCard');
 
 	return (
