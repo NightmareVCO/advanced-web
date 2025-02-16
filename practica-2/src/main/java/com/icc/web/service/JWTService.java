@@ -97,31 +97,38 @@ public class JWTService {
         }
     }
 
-    public Optional<Claims> getClaimsOfEndpoint(String jwt, String endpointId) {
+    public Optional<Claims> getClaimsOfEndpoint(String jwt, String endpointId, String projectId) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         try {
             return Optional.ofNullable(Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getPayload());
         } catch (ExpiredJwtException e) {
-            if (this.isTokenExpired(jwt)) {
-                Optional<Endpoint> endpoint = endpointService.getEndpointById(Long.parseLong(endpointId));
-                if (endpoint.isEmpty()) {
-                    return Optional.empty();
-                }
+            // Even if token is expired, we can get claims from the exception
+            Claims expiredClaims = e.getClaims();
 
-                endpoint.get().setStatus(false);
-                endpointService.saveEndpoint(endpoint.get());
+            // Validate if the expired token was for this endpoint
+            String payloadProjectId = expiredClaims.get("projectId", String.class);
+            String payloadEndpointId = expiredClaims.get("endpointId", String.class);
 
+            if (!(projectId.equals(payloadProjectId) && endpointId.equals(payloadEndpointId)))
+                return Optional.empty();
+
+            Optional<Endpoint> endpoint = endpointService.getEndpointById(Long.parseLong(endpointId));
+            if (endpoint.isEmpty()) {
                 return Optional.empty();
             }
+
+            endpoint.get().setStatus(false);
+            endpointService.saveEndpoint(endpoint.get());
+
+            return Optional.of(expiredClaims);
         } catch (Exception e) {
             return Optional.empty();
         }
-        return Optional.empty();
     }
 
     public boolean isJwtEndpointValid(String jwt, String projectId, String endpointId) {
         try {
-            Optional<Claims> payload = this.getClaimsOfEndpoint(jwt, endpointId);
+            Optional<Claims> payload = this.getClaimsOfEndpoint(jwt, endpointId, projectId);
             if (payload.isEmpty()) {
                 return false;
             }
