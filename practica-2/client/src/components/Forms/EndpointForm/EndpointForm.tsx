@@ -112,8 +112,6 @@ export default function EndpointForm({
 	const onContentTypeChange = useCallback(
 		(event: React.ChangeEvent<HTMLSelectElement>) => {
 			const value = event.target.value;
-			console.log(event.target);
-			console.log(value);
 			switch (value) {
 				case 'JSON':
 					setExtension('json');

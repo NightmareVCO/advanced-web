@@ -151,6 +151,7 @@ export default function EndpointTable({
 								</Tooltip>
 							</Link>
 							<DeleteEndpointModal
+								projectId={projectId}
 								projectOwnerId={projectOwnerId}
 								authPackage={authPackage}
 								endpoint={endpoint}

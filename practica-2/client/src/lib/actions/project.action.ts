@@ -123,8 +123,6 @@ export async function removeUserFromTeam(
 				},
 			},
 		);
-		console.log(userDTO);
-		console.log(response.body);
 
 		const result = await response.json();
 		revalidatePath(`${Routes.Projects}/${String(userDTO.projectId)}`);

@@ -83,8 +83,6 @@ export async function updateEndpoint(prevState: unknown, formData: FormData) {
 	const id = formData.get('projectId');
 	try {
 		const endpoint = Object.fromEntries(formData.entries());
-		console.log({ endpoint });
-
 		const prefix = SERVER_PATH;
 		const path = endpoint.path as string;
 		const cleanPath = path.replace(prefix, '');
@@ -119,8 +117,6 @@ export async function updateEndpoint(prevState: unknown, formData: FormData) {
 			projectId: endpoint.projectId,
 		};
 
-		console.log({ endpointDTO });
-
 		const result = await fetch(`${CURRENT_PATH}${String(endpoint.id)}`, {
 			method: Method.PATCH,
 			headers: {
@@ -149,18 +145,15 @@ export async function updateEndpoint(prevState: unknown, formData: FormData) {
 }
 
 export async function deleteEndpoint(prevState: unknown, formData: FormData) {
-	const id = formData.get('projectId');
+	const projectId = formData.get('projectId');
 	try {
 		const endpoint = Object.fromEntries(formData.entries());
-		const result = await fetch(`${CURRENT_PATH}${String(endpoint.id)}`, {
+		await fetch(`${CURRENT_PATH}${String(endpoint.id)}`, {
 			method: Method.DELETE,
 			headers: {
 				'Content-Type': 'application/json',
 			},
 		});
-
-		revalidatePath(`${Routes.Projects}/${String(id)}`);
-		return await result.json();
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
 		return {
@@ -169,4 +162,7 @@ export async function deleteEndpoint(prevState: unknown, formData: FormData) {
 			},
 		};
 	}
+	revalidatePath(`${Routes.Projects}/${String(projectId)}`);
+	redirect(`${Routes.Projects}/${String(projectId)}`);
+
 }

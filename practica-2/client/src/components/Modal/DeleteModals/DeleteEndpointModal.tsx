@@ -20,6 +20,7 @@ type DeleteEndpointModalProps = {
 	authPackage: AuthPackage;
 	projectOwnerId: string;
 	endpoint: Endpoint;
+	projectId: string;
 	setSelectedEndpoint: React.Dispatch<React.SetStateAction<Endpoint | null>>;
 };
 
@@ -27,6 +28,7 @@ export default function DeleteEndpointModal({
 	authPackage,
 	projectOwnerId,
 	endpoint,
+	projectId,
 	setSelectedEndpoint,
 }: DeleteEndpointModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -76,6 +78,7 @@ export default function DeleteEndpointModal({
 									validationErrors={errors}
 									action={action}
 								>
+									<input type="hidden" name="projectId" value={projectId} />
 									<input type="hidden" name="id" value={endpoint.id} />
 									<input
 										type="hidden"
@@ -86,8 +89,8 @@ export default function DeleteEndpointModal({
 										{endpoint.name} - {endpoint.path}
 									</p>
 									<p className="text-default-400">{t('modalConfirmation')}</p>
-									{errors.deleteEndpoint && (
-										<p className="text-danger">{errors.deleteEndpoint}</p>
+									{errors?.deleteEndpoint && (
+										<p className="text-danger">{errors?.deleteEndpoint}</p>
 									)}
 								</Form>
 							</ModalBody>
