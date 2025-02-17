@@ -5,8 +5,10 @@ services:
       context: .
       dockerfile: dockerfile
       target: prod
+    environment:
+      - PORT=${PORT}
     ports:
-      - "8080:8080"
+      - "${PORT}:${PORT}"
     deploy:
       resources:
         limits:
@@ -32,22 +34,3 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-  app-dev:
-    container_name: app-dev
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev
-    ports:
-      - "8080:8080"
-      - "5005:5005"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-
-
