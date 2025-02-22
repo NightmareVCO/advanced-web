@@ -1,0 +1,237 @@
+{
+	"home": {
+		"onboarding": "New onboarding experience",
+		"title1": "Easiest way",
+		"title2": "to mock your APIs.",
+		"description": "Mockify is an API mocking tool for developers. It helps you create a fake API in seconds to test your front-end.",
+		"getStarted": "Get Started",
+		"features": "Explore our features",
+		"team": "Meet our team",
+		"featuresList": {
+			"first": {
+				"title": "Create a fake API",
+				"description": "Create a fake API in a few seconds to test your front-end. Mockify is an API mockup tool for developers. It helps you to create a fake API in a few seconds to test your front-end."
+			},
+			"second": {
+				"title": "Share your project",
+				"description": "Test in real-time your API response. You can vary the response time, the status code, and the response body. You can also add headers to your response."
+			},
+			"third": {
+				"title": "Protect your endpoints with JWT",
+				"description": "Protect your endpoints with JWT. You can add a JWT token to your request and protect your endpoints. You can also add a token expiration time."
+			},
+			"fourth": {
+				"title": "Keep your endpoint unauthorized",
+				"description": "If no JWT token is provided, the endpoint will return a 401 status code. You can customize the response body and the response time."
+			},
+			"fifth": {
+				"title": "Modify your headers",
+				"description": "You can add headers to your request. You can also modify the response headers. You can add as many headers as you want."
+			},
+			"sixth": {
+				"title": "Explore all your projects",
+				"description": "You can explore all your projects and endpoints. You can also edit and delete your projects and endpoints. You can also add users to your projects."
+			},
+			"seventh": {
+				"title": "Manage your projects with your team",
+				"description": "You can add users to your projects. They will be able to test your endpoints. You can also remove users from your projects."
+			},
+			"eighth": {
+				"title": "Explore community projects",
+				"description": "You can explore community projects. You can test their endpoints and see their response. Soon you will be able to fork their projects."
+			},
+			"ninth": {
+				"title": "Change your language",
+				"description": "You can change your language. You can choose between English and Spanish. You can also suggest a new language."
+			},
+			"tenth": {
+				"title": "Thanks you for using Mockify"
+			}
+		},
+		"teamMembers": {
+			"first": {
+				"name": "Vladimir Curiel",
+				"role": "Full Stack Developer",
+				"bio": "Computer Science Engineer, Vladimir is a Full Stack Developer with more than 3 years of experience. He loves learning new technologies and sharing his knowledge with the community."
+			},
+			"second": {
+				"name": "Steven Mateo",
+				"role": "Full Stack Developer",
+				"bio": "Computer Science Engineer, Steven is a Full Stack Developer with more than 3 years of experience. He loves learning new technologies and sharing his knowledge with the community."
+			}
+		}
+	},
+	"addUserToTeamForm": {
+		"usernameLabel": "Username",
+		"usernamePlaceholder": "Enter the member's username"
+	},
+	"endpointForm": {
+		"formDividerText1": "Enter the path, method, and status of your endpoint",
+		"inputPathLabel": "Path",
+		"inputPathErrorMessage": "Please enter a path after the prefix with a name and end with a '/'.",
+		"inputPathPlaceholder": "Enter your endpoint path",
+		"inputMethodLabel": "Method",
+		"autoCompleteLabel": "Select a method",
+		"autoCompletePlaceholder": "Search for an HTTP status code",
+		"formDividerText2": "Enter the content type and encoding of your endpoint",
+		"selectContentTypeLabel": "Content Type",
+		"selectContentTypePlaceholder": "Select a content type",
+		"selectEncodingLabel": "Content Encoding",
+		"selectEncodingPlaceholder": "Select a content encoding",
+		"formDividerText3": "Enter the response and headers of your endpoint",
+		"addHeaderButton": "Add Header",
+		"inputHeaderKeyLabel": "Key (Header #{index})",
+		"inputHeaderKeyPlaceholder": "Enter your #{index} header key",
+		"inputHeaderValueLabel": "Value (Header #{index})",
+		"inputHeaderValuePlaceholder": "Enter your #{index} header value",
+		"formDividerText4": "Enter the security, delay, and expiration of your endpoint",
+		"checkboxJWT": "Use JWT to validate the request",
+		"inputDelayLabel": "Delay (in seconds)",
+		"inputDelayPlaceholder": "Enter your endpoint delay",
+		"inputExpirationLabel": "Expiration Date",
+		"inputExpirationPlaceholder": "Select your endpoint expiration date",
+		"formDividerText5": "Enter the name and description of your endpoint",
+		"inputNameLabel": "Name",
+		"inputNamePlaceholder": "Enter your endpoint name",
+		"inputDescriptionLabel": "Description",
+		"inputDescriptionPlaceholder": "Enter your endpoint description",
+		"buttonUpdate": "Update Endpoint",
+		"buttonCreate": "Create Endpoint"
+	},
+	"loginForm": {
+		"usernameLabel": "Username",
+		"usernamePlaceholder": "Enter your username",
+		"passwordLabel": "Password",
+		"passwordPlaceholder": "Enter your password",
+		"buttonLogin": "Login"
+	},
+	"projectForm": {
+		"projectNameLabel": "Project Name",
+		"projectNamePlaceholder": "Enter your project name",
+		"projectDescriptionLabel": "Project Description",
+		"projectDescriptionPlaceholder": "Enter your project description",
+		"projectTypeLabel": "Project Type",
+		"projectTypePlaceholder": "Select the project type",
+		"checkboxPublic": "Make this project public"
+	},
+	"userForm": {
+		"firstNameLabel": "First Name",
+		"firstNamePlaceholder": "Enter the user's first name",
+		"lastNameLabel": "Last Name",
+		"lastNamePlaceholder": "Enter the user's last name",
+		"usernameLabel": "Username",
+		"usernamePlaceholder": "Enter the username",
+		"emailLabel": "Email",
+		"emailPlaceholder": "Enter the user's email",
+		"passwordLabel": "Password",
+		"passwordPlaceholder": "Enter the user's password",
+		"mainRoleLabel": "Main Role",
+		"mainRolePlaceholder": "Select the user's main role"
+	},
+	"addToUserToTeamModal": {
+		"buttonLabel": "Add to Team",
+		"modalTitle": "Add this user to the team",
+		"modalUserLabel": "User: {username}",
+		"modalConfirmation": "Are you sure you want to add this user?",
+		"closeButton": "Close",
+		"addButton": "Add"
+	},
+	"deleteEndpointModal": {
+		"modalTitle": "Delete Endpoint",
+		"modalConfirmation": "Are you sure you want to delete this endpoint?",
+		"cancelButton": "Cancel",
+		"deleteButton": "Delete"
+	},
+	"deleteUserModal": {
+		"modalTitle": "Delete User",
+		"modalConfirmation": "Are you sure you want to delete this user?",
+		"cancelButton": "Cancel",
+		"deleteButton": "Delete"
+	},
+	"removeUserFromTeamModal": {
+		"modalTitle": "Remove User from Team",
+		"modalConfirmation": "Are you sure you want to remove this user from the team?",
+		"cancelButton": "Cancel",
+		"deleteButton": "Delete"
+	},
+	"updateProjectModal": {
+		"updateButton": "Update",
+		"modalTitle": "Update Project",
+		"modalConfirmation": "Are you sure you want to update this project?",
+		"closeButton": "Close"
+	},
+	"projectModal": {
+		"newProjectButton": "New Project",
+		"modalTitle": "Create New Project",
+		"closeButton": "Close",
+		"createButton": "Create"
+	},
+	"userModal": {
+		"editUser": "Edit User",
+		"createUser": "Create New User",
+		"closeButton": "Close",
+		"createButton": "Confirm"
+	},
+	"footer": {
+		"rights": "© {currentYear} Mockify. All rights reserved.",
+		"allSystemsOperational": "All systems operational"
+	},
+	"navbarDesktop": {
+		"login": "Login",
+		"createNewProject": "Create New Project",
+		"profile": "Profile",
+		"username": "User: ",
+		"changeTo": "Change to: ",
+		"logout": "Logout",
+		"es": "ES",
+		"en": "EN"
+	},
+	"navbarMobile": {
+		"login": "Login",
+		"createNewProject": "Create New Project"
+	},
+	"projectSection": {
+		"createNewEndpoint": "Create New Endpoint",
+		"endpoints": "Endpoints",
+		"team": "Team",
+		"settings": "Settings"
+	},
+	"projectCard": {
+		"chipPublic": "Public",
+		"chipPrivate": "Private",
+		"buttonOpen": "Open"
+	},
+	"usersModalSection": {
+		"newUser": "New User"
+	},
+	"testimonialSection": {
+		"testimonial": "A game changer! 🚀 This app makes testing APIs fast and hassle-free. Simulate responses instantly, without relying on servers. Simple, powerful, and essential!",
+		"h2Text": "Log in"
+	},
+	"createEndpointPage": {
+		"title": "New endpoint for project",
+		"description": "Add your new endpoint here."
+	},
+	"projectPage": {
+		"title": "Project",
+		"description": "Manage your project here.",
+		"error": "An error occurred while fetching this project. Please try again later."
+	},
+	"projectsPage": {
+		"title": "Projects",
+		"description": "Manage your projects here.",
+		"noProjects": "No projects found. Create a new one and start mocking your APIs!",
+		"error": "An error occurred while fetching the projects. Please try again later."
+	},
+	"usersPage": {
+		"title": "Users",
+		"description": "Manage all users here.",
+		"error": "An error occurred while fetching the users. Please try again later."
+	},
+	"explorePage": {
+		"title": "Community",
+		"description": "Take a look over the community open projects",
+		"noProjects": "No public projects found. Create a new one and share with the community!",
+		"error": "An error occurred while fetching the projects. Please try again later."
+	}
+}

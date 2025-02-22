@@ -1,0 +1,74 @@
+services:
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    depends_on:
+      - db
+    environment:
+       - PGADMIN_PORT=${PGADMIN_PORT}
+    ports:
+      - "${PGADMIN_PORT}:80"
+    env_file:
+      - .env
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+  server:
+    container_name: server
+    build:
+      context: .
+      dockerfile: dockerfile
+      target: prod
+    env_file:
+      - .env
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: dockerfile
+    env_file:
+      - ./client/.env
+    ports:
+      - "8080:3000"
+    depends_on:
+      - server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  db-data: {}
+  pgadmin-data: {}
