@@ -19,7 +19,7 @@ services:
       context: ./client
       dockerfile: dockerfile
     ports:
-      - "${PORT}:3000"
+      - "${PORT:-8080}:3000"
     depends_on:
       - server
     deploy:
