@@ -1,0 +1,34 @@
+services:
+  activemqt:
+    container_name: jms-activemq
+    image: rmohr/activemq
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+  sensor-1:
+    container_name: jms-message-sensor-1
+    build:
+      context: ./sensor
+      dockerfile: Dockerfile
+    environment:
+      - URL_BROKER=tcp://activemqt:61616
+      - CLIENT_PROVIDER=1
+      - ACTIVEMQ_USERNAME=admin
+      - ACTIVEMQ_PASSWORD=admin
+      - TIME_OUT=10000
+    depends_on:
+      - activemqt
+
+  sensor-2:
+    container_name: jms-message-sensor-2
+    build:
+      context: ./sensor
+      dockerfile: Dockerfile
+    environment:
+      - URL_BROKER=tcp://activemqt:61616
+      - CLIENT_PROVIDER=2
+      - ACTIVEMQ_USERNAME=admin
+      - ACTIVEMQ_PASSWORD=admin
+      - TIME_OUT=10000
+    depends_on:
+      - activemqt
