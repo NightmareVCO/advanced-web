@@ -1,6 +1,7 @@
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.3'
+	id("com.diffplug.spotless") version "7.0.2"
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -35,6 +36,29 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-activemq'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'com.google.code.gson:gson:2.12.1'
+}
+
+spotless {
+	ratchetFrom 'origin/main'
+
+	format 'misc', {
+		target '*.gradle', '.gitattributes', '.gitignore'
+
+		trimTrailingWhitespace()
+		leadingSpacesToTabs()
+		endWithNewline()
+	}
+	java {
+		target 'src/*/java/**/*.java'
+		importOrder()
+		removeUnusedImports()
+		googleJavaFormat('1.17.0').aosp().reflowLongStrings().skipJavadocFormatting()
+		formatAnnotations()
+		licenseHeader '/* (C)$YEAR */'
+	}
 }
 
 tasks.named('test') {
