@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets';
+import Container from '../shared/Container.astro';
+import Paragraph from '../shared/Paragraph.astro';
+import BtnLink from '../shared/BtnLink.astro';
+---
+
+<section class="relative pt-32 lg:pt-36">
+    <Container className={"flex flex-col lg:flex-row gap-10 lg:gap-12"}>
+        <div class="absolute w-full lg:w-1/2 inset-y-0 lg:right-0">
+            <span
+                class="absolute -left-6 md:left-4 top-24 lg:top-28 w-24 h-24 rotate-90 skew-x-12 rounded-3xl bg-orange-400 blur-xl opacity-60 lg:opacity-95 lg:block hidden"
+            ></span>
+            <span
+                class="absolute right-4 bottom-12 w-24 h-24 rounded-3xl bg-red-700 blur-xl opacity-80"
+            ></span>
+        </div>
+        <span
+            class="w-4/12 lg:w-2/12 aspect-square bg-gradient-to-tr from-red-700 to-orange-400 absolute -top-5 lg:left-0 rounded-full skew-y-12 blur-2xl opacity-40 skew-x-12 rotate-90"
+        ></span>
+        <div
+            class="relative flex flex-col items-center text-center lg:text-left lg:py-7 xl:py-8
+        lg:items-start lg:max-w-none max-w-3xl mx-auto lg:mx-0 lg:flex-1 lg:w-1/2"
+        >
+            <h1
+                class="text-3xl/tight sm:text-4xl/tight md:text-5xl/tight xl:text-6xl/tight
+             font-bold text-heading-1"
+            >
+                JMS <span
+                    class="text-transparent bg-clip-text bg-gradient-to-br from-red-700 from-20% via-red-400 via-30% to-orange-600"
+                    >Sensor</span
+                > Hub.
+            </h1>
+            <Paragraph className="mt-8">
+                Mensajería en tiempo real para un mundo inteligente: conectando
+                dispositivos físicos, optimizando datos y facilitando decisiones
+                precisas en cada instante. Utilizando ActiveMQ, MQTT y
+                WebSockets para la comunicación entre dispositivos y el
+                servidor. <br />
+                <br /> Se puede visualizar la información en tiempo real en la página
+                de monitoreo, la cual se actualiza automáticamente cada 5 segundos
+                en un formato de tablas y gráficas.
+            </Paragraph>
+
+            <div class="flex flex-col gap-6 lg:flex-row lg:gap-8 mt-8">
+                <BtnLink
+                    text="Gráfica de Humedad"
+                    variant="primary"
+                    href="/humedad"
+                    className="mt-8"
+                />
+
+                <BtnLink
+                    text="Gráfica de Temperatura"
+                    variant="primary"
+                    href="/temperatura"
+                    className="mt-8"
+                />
+            </div>
+        </div>
+
+        <div
+            class="flex flex-1 lg:w-1/2 lg:h-auto relative lg:max-w-none lg:mx-0 mx-auto max-w-3xl"
+        >
+            <Image
+                src="/hero-pagado.svg"
+                alt="Hero image"
+                width="2350"
+                height="2359"
+                class="lg:absolute lg:w-full lg:h-full rounded-3xl object-cover lg:max-h-none max-h-96"
+            />
+        </div>
+    </Container>
+</section>

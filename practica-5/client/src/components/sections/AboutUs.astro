@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import Info from '../cards/Info.astro';
+import Container from '../shared/Container.astro';
+import Paragraph from '../shared/Paragraph.astro';
+import Title from '../shared/Title.astro';
+---
+
+<section id="about-us">
+    <Container className="flex flex-col midmd:flex-row gap-10 lg:gap-12">
+        <div class="flex-1 flex midmd:w-7/12 flex-col">
+            <Title>
+                Nuestro equipo está conformado por expertos del area.
+            </Title>
+            <Paragraph className="mt-8">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus,
+                saepe aliquid autem alias vero distinctio dignissimos
+                consequatur? Excepturi quibusdam, quam ipsum hic, laudantium
+                ducimus suscipit, culpa facere consequuntur repellat delectus.
+            </Paragraph>
+            <div
+                class="pt-8 grid grid-cols-2 items-center gap-4 max-w-3xl md:max-w-[none]"
+            >
+                <Info
+                    description="Ingeniero en Ciencias de la Computación, Vladimir es un desarrollador Full Stack con más de 3 años de experiencia. Le encanta aprender nuevas tecnologías y compartir su conocimiento con la comunidad."
+                    title="Vladimir Curiel"
+                >
+                    <Image
+                        src="/images/vladimircuriel.webp"
+                        width={200}
+                        height={200}
+                        alt="Vladimir Curiel"
+                        class="rounded-2xl"
+                    />
+                </Info>
+                <Info
+                    description="Ingeniero en Ciencias de la Computación, Steven es un desarrollador Full Stack con más de 3 años de experiencia. Le encanta aprender nuevas tecnologías y compartir su conocimiento con la comunidad."
+                    title="Steven Mateo"
+                >
+                    <Image
+                        src="/images/stevenmateo.webp"
+                        width={200}
+                        height={200}
+                        alt="Steven Mateo"
+                        class="rounded-2xl"
+                    />
+                </Info>
+            </div>
+        </div>
+    </Container>
+</section>

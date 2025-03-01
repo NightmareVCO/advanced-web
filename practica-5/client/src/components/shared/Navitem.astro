@@ -1,0 +1,17 @@
+---
+export interface Props {
+	href: string;
+	text: string;
+	currentPath: string;
+}
+const { href, text, currentPath } = Astro.props;
+---
+
+<li class="hover:scale-110 transition-transform">
+    <a
+        href={href}
+        class={`duration-300 font-medium text-xl ease-linear ${currentPath === href ? "text-orange-500" : ""} hover:text-orange-500 py-3`}
+    >
+        {text}
+    </a>
+</li>
