@@ -1,12 +1,12 @@
-/* (C)2025 */
 package com.icc.web.controller;
 
+import com.google.gson.Gson;
+import com.icc.web.entity.SensorData;
 import com.icc.web.services.Consumidor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,34 +15,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/jms/")
+@RequestMapping("/api/v1/jms")
 public class SensorDataController {
     private final Consumidor consumidor;
-    private SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final Gson gson = new Gson();
 
     @JmsListener(destination = "notificacion_sensores", containerFactory = "topicListenerFactory")
-    @GetMapping()
-    public ResponseEntity<?> procesarMensaje1(@RequestBody String entity) {
+    public void procesarMensaje1(String entity) {
         if (entity == null) {
-            return ResponseEntity.badRequest().body("No se recibió un mensaje");
+            throw new IllegalArgumentException("No se recibió un mensaje");
         }
-        // TODO: Parsear el String a un objeto SensorData. Req: Gson
-        // TODO: Cada uno debe retornar el mensaje.
-        // consumidor.guardarMensaje1(sensorData);
-        // messagingTemplate.convertAndSend("/topic/sensores", sensorData);
-        return ResponseEntity.ok(sensorData);
+        SensorData sensorData = gson.fromJson(entity, SensorData.class);
+        consumidor.guardarMensaje1(sensorData);
+        messagingTemplate.convertAndSend("/topic/sensores", sensorData);
     }
 
     @JmsListener(destination = "notificacion_sensores", containerFactory = "topicListenerFactory")
-    @GetMapping()
-    public ResponseEntity<?> procesarMensaje2(@RequestBody String entity) {
+    public void procesarMensaje2(String entity) {
         if (entity == null) {
-            return ResponseEntity.badRequest().body("No se recibió un mensaje");
+            throw new IllegalArgumentException("No se recibió un mensaje");
         }
-        // TODO: Parsear el String a un objeto SensorData. Req: Gson
-        // TODO: Cada uno debe retornar el mensaje.
-        // consumidor.guardarMensaje2(sensorData);
-        // messagingTemplate.convertAndSend("/topic/sensores", sensorData);
-        return ResponseEntity.ok(sensorData);
+        SensorData sensorData = gson.fromJson(entity, SensorData.class);
+        consumidor.guardarMensaje2(sensorData);
+        messagingTemplate.convertAndSend("/topic/sensores", sensorData);
     }
 }

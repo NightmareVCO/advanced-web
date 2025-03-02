@@ -1,14 +1,19 @@
-/* (C)2025 */
 package com.icc.web.entity;
 
 import java.io.Serializable;
-import lombok.Builder;
-import lombok.Data;
 
-// TODO: Crear un constructor de gson/string a SensorData
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.Data;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
+@Entity
 @Data
-@Builder
 public class SensorData implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int id;
     int idDispositivo;
     int clientProvider;
     double temperatura;
