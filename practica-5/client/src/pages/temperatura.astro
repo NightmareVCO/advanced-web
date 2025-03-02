@@ -1,7 +1,7 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Container from '../components/shared/Container.astro';
-import TemperatureGraph from '../components/graph/TemperatureGraph';
+import Layout from "../layouts/Layout.astro";
+import Container from "../components/shared/Container.astro";
+import TemperatureGraph from "../components/graph/TemperatureGraph";
 ---
 
 <Layout title="Temperatura">
@@ -29,7 +29,7 @@ import TemperatureGraph from '../components/graph/TemperatureGraph';
       </Container>
       <section class="flex flex-col justify-evenly pb-10">
         <div class="flex justify-center items-center">
-          <TemperatureGraph client:visible />
+          <TemperatureGraph client:only />
         </div>
       </section>
     </section>

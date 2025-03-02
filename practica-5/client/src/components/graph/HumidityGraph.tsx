@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Chip, Card, cn, Tab, Tabs, Spacer } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { Client } from '@stomp/stompjs';
 
 type ChartData = {
 	time: string;
@@ -9,7 +10,7 @@ type ChartData = {
 };
 
 type Chart = {
-	key: string;
+	key: int;
 	title: string;
 	value: number;
 	suffix: string;
@@ -21,62 +22,24 @@ type Chart = {
 
 const initialData: Chart[] = [
 	{
-		key: 'sensor-1',
+		key: 1,
 		title: 'Valores del Sensor 1',
 		suffix: '%',
-		value: 147000,
+		value: 0,
 		type: 'number',
-		change: '12.8%',
+		change: '0%',
 		changeType: 'humidity',
-		chartData: [
-			{ time: '00:00', value: 98000 },
-			{ time: '01:00', value: 125000 },
-			{ time: '02:00', value: 89000 },
-			{ time: '03:00', value: 156000 },
-			{ time: '04:00', value: 112000 },
-			{ time: '05:00', value: 167000 },
-			{ time: '06:00', value: 138000 },
-			{ time: '07:00', value: 178000 },
-			{ time: '08:00', value: 129000 },
-			{ time: '09:00', value: 159000 },
-			{ time: '10:00', value: 147000 },
-			{ time: '11:00', value: 127000 },
-		],
+		chartData: [{ time: '00:00:00', value: 0 }],
 	},
 	{
-		key: 'sensor-2',
+		key: 2,
 		title: 'Valores del Sensor 2',
 		suffix: '%',
-		value: 623000,
+		value: 0,
 		type: 'number',
-		change: '-2.1%',
+		change: '0%',
 		changeType: 'humidity',
-		chartData: [
-			{ time: '00:00', value: 10 },
-			{ time: '00:30', value: 1 },
-			{ time: '01:00', value: 12 },
-			{ time: '01:30', value: 2 },
-			{ time: '02:00', value: 13 },
-			{ time: '02:30', value: 3 },
-			{ time: '03:00', value: 14 },
-			{ time: '03:30', value: 4 },
-			{ time: '04:00', value: 15 },
-			{ time: '04:30', value: 5 },
-			{ time: '05:00', value: 16 },
-			{ time: '05:30', value: 6 },
-			{ time: '06:00', value: 17 },
-			{ time: '06:30', value: 7 },
-			{ time: '07:00', value: 18 },
-			{ time: '07:30', value: 8 },
-			{ time: '08:00', value: 19 },
-			{ time: '08:30', value: 9 },
-			{ time: '09:00', value: 20 },
-			{ time: '09:30', value: 10 },
-			{ time: '10:00', value: 21 },
-			{ time: '10:30', value: 11 },
-			{ time: '11:00', value: 22 },
-			{ time: '11:30', value: 12 },
-		],
+		chartData: [{ time: '00:00:00', value: 0 }],
 	},
 ];
 
@@ -95,53 +58,54 @@ const formatValue = (value: number, type: string | undefined) => {
 	return value;
 };
 
-const formatMonth = (month: string) => {
-	const monthNumber =
-		{
-			Jan: 0,
-			Feb: 1,
-			Mar: 2,
-			Apr: 3,
-			May: 4,
-			Jun: 5,
-			Jul: 6,
-			Aug: 7,
-			Sep: 8,
-			Oct: 9,
-			Nov: 10,
-			Dec: 11,
-		}[month] ?? 0;
-
-	return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(2024, monthNumber, 1));
-};
-
 export default function HumidityGraph() {
 	const [data, setData] = React.useState(initialData);
 	const [activeChart, setActiveChart] = React.useState<(typeof data)[number]['key']>(data[0].key);
 
 	useEffect(() => {
-		const interval = setInterval(() => {
-			setData((prevData) =>
-				prevData.map((chart) => {
-					const newPoint = {
-						time: new Date().toLocaleTimeString(),
-						value:
-							chart.chartData[chart.chartData.length - 1].value +
-							Math.floor(Math.random() * 10 - 5),
-					};
-					const updatedChartData = [...chart.chartData, newPoint];
-					if (updatedChartData.length > 12) {
-						updatedChartData.shift(); // Remove the oldest point if we exceed the limit
-					}
-					return {
-						...chart,
-						chartData: updatedChartData,
-					};
-				}),
-			);
-		}, 5000); // Update every 5 seconds
+		const client = new Client({
+			brokerURL: 'ws://localhost:8081/ws',
+			reconnectDelay: 5000,
+			onConnect: () => {
+				client.subscribe('/topic/sensores', (message) => {
+					const sensorData = JSON.parse(message.body);
+					setData((prevData) =>
+						prevData.map((chart) => {
+							console.log(sensorData);
+							if (chart.key === sensorData.clientProvider) {
+								const newPoint = {
+									time: new Date().toLocaleTimeString(),
+									value: sensorData.humedad,
+								};
+								const updatedChartData = [...chart.chartData, newPoint];
+								if (updatedChartData.length > 12) {
+									updatedChartData.shift();
+								}
+								return {
+									...chart,
+									chartData: updatedChartData,
+									value: sensorData.humedad,
+									change: `${((sensorData.humedad - chart.value) / chart.value).toFixed(1)}%`,
+									changeType:
+										sensorData.humedad > chart.value
+											? 'positive'
+											: sensorData.humedad < chart.value
+												? 'negative'
+												: 'neutral',
+								};
+							}
+							return chart;
+						}),
+					);
+				});
+			},
+		});
 
-		return () => clearInterval(interval);
+		client.activate();
+
+		return () => {
+			client.deactivate();
+		};
 	}, []);
 
 	const activeChartData = React.useMemo(() => {

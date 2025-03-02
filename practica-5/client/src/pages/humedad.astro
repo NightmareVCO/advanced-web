@@ -1,7 +1,7 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Container from '../components/shared/Container.astro';
-import HumidityGraph from '../components/graph/HumidityGraph';
+import Layout from "../layouts/Layout.astro";
+import Container from "../components/shared/Container.astro";
+import HumidityGraph from "../components/graph/HumidityGraph";
 ---
 
 <Layout title="Humedad">
@@ -29,7 +29,7 @@ import HumidityGraph from '../components/graph/HumidityGraph';
       </Container>
       <section class="flex flex-col justify-evenly pb-10">
         <div class="flex justify-center items-center">
-          <HumidityGraph client:visible />
+          <HumidityGraph client:only />
         </div>
       </section>
     </section>
