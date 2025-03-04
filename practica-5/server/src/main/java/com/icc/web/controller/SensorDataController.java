@@ -20,22 +20,12 @@ public class SensorDataController {
     private final Gson gson = new Gson();
 
     @JmsListener(destination = "notificacion_sensores", containerFactory = "topicListenerFactory")
-    public void procesarMensaje1(String entity) {
+    public void procesarMensaje(String entity) {
         if (entity == null) {
             throw new IllegalArgumentException("No se recibió un mensaje");
         }
         SensorData sensorData = gson.fromJson(entity, SensorData.class);
-        consumidor.guardarMensaje1(sensorData);
-        messagingTemplate.convertAndSend("/topic/sensores", sensorData);
-    }
-
-    @JmsListener(destination = "notificacion_sensores", containerFactory = "topicListenerFactory")
-    public void procesarMensaje2(String entity) {
-        if (entity == null) {
-            throw new IllegalArgumentException("No se recibió un mensaje");
-        }
-        SensorData sensorData = gson.fromJson(entity, SensorData.class);
-        consumidor.guardarMensaje2(sensorData);
+        consumidor.guardarMensaje(sensorData);
         messagingTemplate.convertAndSend("/topic/sensores", sensorData);
     }
 }

@@ -12,13 +12,8 @@ import org.springframework.stereotype.Service;
 public class Consumidor {
     private final SensorDataRepository sensorDataRepository;
 
-    public void guardarMensaje1(SensorData sensorData) {
-        log.info("Mensaje recibido 1: {}", sensorData);
-        sensorDataRepository.save(sensorData);
-    }
-
-    public void guardarMensaje2(SensorData sensorData) {
-        log.info("Mensaje recibido 2: {}", sensorData);
+    public void guardarMensaje(SensorData sensorData) {
+        log.info("Mensaje recibido: {}", sensorData);
         sensorDataRepository.save(sensorData);
     }
 }
