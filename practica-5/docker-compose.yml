@@ -7,9 +7,7 @@ services:
       - "8161:8161"
   sensor-1:
     container_name: jms-message-sensor-1
-    build:
-      context: ./sensor
-      dockerfile: Dockerfile
+    image: nightmarevco/broker-mensajeria:sensor
     environment:
       - URL_BROKER=tcp://activemqt:61616
       - CLIENT_PROVIDER=1
@@ -71,9 +69,7 @@ services:
           memory: 256M
   server:
       container_name: jms-message-server
-      build:
-        context: ./server
-        dockerfile: Dockerfile
+      image: nightmarevco/broker-mensajeria:server
       ports:
         - "8081:8080"
       environment:
@@ -98,9 +94,7 @@ services:
             memory: 256M
   astro:
     container_name: jms-message-astro
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    image: nightmarevco/broker-mensajeria:astro
     environment:
       - API_URL=http://server:8080
       - HOST=0.0.0.0
