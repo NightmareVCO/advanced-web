@@ -1,21 +1,21 @@
 ---
-import BtnLink from "../shared/BtnLink.astro";
-import Container from "../shared/Container.astro";
-import Navitem from "../shared/Navitem.astro";
+import BtnLink from '../shared/BtnLink.astro';
+import Container from '../shared/Container.astro';
+import Navitem from '../shared/Navitem.astro';
 
 const navItems = [
-    {
-        href: "/",
-        text: "Inicio",
-    },
-    {
-        href: "/temperatura",
-        text: "Temperatura",
-    },
-    {
-        href: "/humedad",
-        text: "Humedad",
-    },
+	{
+		href: '/',
+		text: 'Inicio',
+	},
+	{
+		href: '/temperatura',
+		text: 'Temperatura',
+	},
+	{
+		href: '/humedad',
+		text: 'Humedad',
+	},
 ];
 
 const currentPath = Astro.url.pathname;

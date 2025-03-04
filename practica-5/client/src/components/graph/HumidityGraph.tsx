@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Chip, Card, cn, Tab, Tabs, Spacer } from '@heroui/react';
+import { Chip, Card, cn, Spacer } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { Client } from '@stomp/stompjs';
@@ -10,7 +10,7 @@ type ChartData = {
 };
 
 type Chart = {
-	key: int;
+	key: number;
 	title: string;
 	value: number;
 	suffix: string;
@@ -45,12 +45,10 @@ const initialData: Chart[] = [
 
 const formatValue = (value: number, type: string | undefined) => {
 	if (type === 'number') {
-		if (value >= 1000000) {
-			return `${(value / 1000000).toFixed(1)}M`;
-		} else if (value >= 1000) {
+		if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+		if (value >= 1000) {
 			return `${(value / 1000).toFixed(0)}k`;
 		}
-
 		return value.toLocaleString();
 	}
 	if (type === 'percentage') return `${value}%`;
@@ -71,7 +69,6 @@ export default function HumidityGraph() {
 					const sensorData = JSON.parse(message.body);
 					setData((prevData) =>
 						prevData.map((chart) => {
-							console.log(sensorData);
 							if (chart.key === sensorData.clientProvider) {
 								const newPoint = {
 									time: new Date().toLocaleTimeString(),
@@ -94,6 +91,7 @@ export default function HumidityGraph() {
 												: 'neutral',
 								};
 							}
+							console.log({ chart });
 							return chart;
 						}),
 					);
@@ -141,13 +139,6 @@ export default function HumidityGraph() {
 							<dt className="text-medium font-medium text-foreground">Humedad vs Tiempo</dt>
 						</div>
 						<Spacer y={2} />
-						<Tabs size="sm">
-							<Tab key="6-months" title="6 Months" />
-							<Tab key="3-months" title="3 Months" />
-							<Tab key="30-days" title="30 Days" />
-							<Tab key="7-days" title="7 Days" />
-							<Tab key="24-hours" title="24 Hours" />
-						</Tabs>
 						<div className="mt-2 flex w-full items-center">
 							<div className="-my-3 flex w-full max-w-7xl items-center gap-x-3 overflow-x-auto py-3">
 								{data.map(({ key, change, changeType, type, value, title }) => (
