@@ -22,7 +22,7 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-sudo certbot certonly -m  admin@mockify.com -d steven-mateo.systems 
+sudo certbot certonly -m  admin@mockify.com -d mockify.steven-mateo.systems
 
 git clone https://github.com/NightmareVCO/advanced-web.git
 
