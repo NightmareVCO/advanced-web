@@ -9,7 +9,7 @@ sudo cp /etc/fstab /etc/fstab.bak
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 sudo apt-get update
-sudo apt-get install ca-certificates curl certbot
+sudo apt-get install ca-certificates curl certbot zip unzip nmap apache2 certbot tree
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -22,12 +22,19 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+sudo service apache2 start
+sudo a2enmod proxy proxy_html proxy_http ssl
+sudo systemctl restart apache2
+sudo service apache2 stop
+
 sudo certbot certonly -m  admin@mockify.com -d mockify.steven-mateo.systems
 
 git clone https://github.com/NightmareVCO/advanced-web.git
 
-cd advanced-web/practica-6/
+cd advanced-web/practica-6
 
-sudo docker compose up -d
+sudo cp ~/advanced-web/practica-6/httpd.conf /etc/apache2/sites-available/httpd.conf
+sudo a2ensite httpd.conf
+sudo service apache2 start
 
 echo "Estructura basica instalada"
