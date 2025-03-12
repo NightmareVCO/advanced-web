@@ -20,13 +20,13 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 
-git clone https://github.com/NightmareVCO/advanced-web.git
-
-cd practica-6/
-
 sudo certbot certonly
 
 sudo systemctl start docker
+
+git clone https://github.com/NightmareVCO/advanced-web.git
+
+cd practica-6/
 
 sudo docker compose up -d
 
