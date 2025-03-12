@@ -35,7 +35,7 @@ cd advanced-web/practica-6
 
 sudo cp ~/advanced-web/practica-6/httpd.conf /etc/apache2/sites-available/httpd.conf
 sudo a2ensite httpd.conf
-sudo systemctl reload apache2
 sudo service apache2 start
+sudo systemctl reload apache2
 
 echo "Estructura basica instalada"
