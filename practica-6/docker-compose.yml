@@ -57,6 +57,19 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+  apache-proxy:
+      image: httpd:latest
+      container_name: apache_proxy
+      restart: always
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - ./apache-proxy.conf:/usr/local/apache2/conf/httpd.conf
+        - /etc/letsencrypt/live/steven-mateo.systems:/etc/letsencrypt/live/steven-mateo.systems:ro
+      depends_on:
+        - haproxy
+        - client
   haproxy:
     image: haproxy:latest
     container_name: haproxy
