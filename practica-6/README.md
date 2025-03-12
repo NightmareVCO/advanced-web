@@ -1,1 +1,1 @@
-wget https://raw.githubusercontent.com/NightmareVCO/advanced-web/practica-6/master/init.sh && chmod +x init.sh && bash init.sh
+wget https://raw.githubusercontent.com/NightmareVCO/advanced-web/refs/heads/main/practica-6/init.sh && chmod +x init.sh && bash init.sh
