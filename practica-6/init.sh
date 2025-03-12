@@ -20,11 +20,12 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install -y docker docker.io docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-sudo certbot certonly
+sudo certbot certonly -m steven-mateo.systems admin@mockify.com
 
 sudo systemctl start docker
+sudo systemctl enable docker
 
 git clone https://github.com/NightmareVCO/advanced-web.git
 
