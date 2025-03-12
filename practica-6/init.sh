@@ -28,7 +28,7 @@ sudo systemctl start docker
 
 git clone https://github.com/NightmareVCO/advanced-web.git
 
-cd practica-6/
+cd /advanced-web/practica-6/
 
 sudo docker compose up -d
 
