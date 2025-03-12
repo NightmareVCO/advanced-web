@@ -20,16 +20,13 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 
-sudo apt-get install -y docker docker.io docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-sudo certbot certonly -m steven-mateo.systems admin@mockify.com
-
-sudo systemctl start docker
-sudo systemctl enable docker
+sudo certbot certonly -m  admin@mockify.com -d steven-mateo.systems 
 
 git clone https://github.com/NightmareVCO/advanced-web.git
 
-cd /advanced-web/practica-6/
+cd advanced-web/practica-6/
 
 sudo docker compose up -d
 
