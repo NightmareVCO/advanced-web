@@ -1,6 +1,24 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import MainSection from "@components/Sections/MainSection/MainSection";
+import { Button } from "@heroui/react";
+import Layout from "@layouts/Layout.astro";
 ---
 
 <Layout>
-</Layout>
+  <main
+    class="container mx-auto mt-[80px] flex max-w-[1024px] flex-col items-start px-8"
+  >
+    <section
+      class="z-20 flex flex-col items-start justify-center gap-[18px] sm:gap-6"
+    >
+      <Button
+        className="h-9 overflow-hidden border-1 border-default-100 bg-default-50 px-[18px] py-2 text-small font-normal leading-5 text-default-500"
+        radius="full"
+        variant="bordered"
+      >
+        New onboarding experience
+      </Button>
+      <MainSection client:only />
+    </section>
+  </main></Layout
+>

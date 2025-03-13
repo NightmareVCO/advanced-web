@@ -1,36 +1,57 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import BasicNavbar from '@components/BasicNavbar/BasicNavbar';
+import '../styles/global.css';
+---
+
 <!doctype html>
 <html lang="es">
 	<head>
-		<meta charSet="UTF-8" />
+		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>LabReservations</title>
+		<ClientRouter />
 	</head>
-	<body>
-		<slot />
+	<body class="relative w-full h-full bg-slate-950 text-[#f9f9f9]">
+		<header>
+			<BasicNavbar client:visible />
+		</header>
+		<div class="relative">
+			<div
+				class="absolute bottom-0 left-[-20%] right-0 top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"
+			>
+			</div>
+			<slot />
+			<div
+				class="absolute bottom-0 right-[-20%] top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"
+			>
+			</div>
+		</div>
 	</body>
 </html>
 
 <style>
 	:root {
-	  color-scheme: light dark;
+		color-scheme: light dark;
 	}
 	html {
-	  background: #f9f9f9;
-	  font-family: "Onest Variable", system-ui, sans-serif;
-	  scroll-behavior: smooth;
+		background: #f9f9f9;
+		font-family: "Onest Variable", system-ui, sans-serif;
+		scroll-behavior: smooth;
 	}
-  
+
 	body {
-	  display: flex;
-	  flex-direction: column;
-	  min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+		overflow: hidden;
 	}
-  
+
 	@media (prefers-reduce-motion: reduce) {
-	  html {
-		scroll-behavior: auto;
-	  }
+		html {
+			scroll-behavior: auto;
+		}
 	}
-  </style>
+</style>
