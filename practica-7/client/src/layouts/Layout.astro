@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charSet="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>LabReservations</title>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style>
+	:root {
+	  color-scheme: light dark;
+	}
+	html {
+	  background: #f9f9f9;
+	  font-family: "Onest Variable", system-ui, sans-serif;
+	  scroll-behavior: smooth;
+	}
+  
+	body {
+	  display: flex;
+	  flex-direction: column;
+	  min-height: 100vh;
+	}
+  
+	@media (prefers-reduce-motion: reduce) {
+	  html {
+		scroll-behavior: auto;
+	  }
+	}
+  </style>
