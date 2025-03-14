@@ -15,6 +15,13 @@ import CalendarBookingConfirmation from './CalendarBookingConfirmation';
 import CalendarBookingForm from './CalendarBookingForm';
 import CalendarTimeSelect from './CalendarTimeSelect';
 
+const compareDate = (a: DateValue, b: DateValue): number => {
+	const dateA = new Date(a.toString());
+	const dateB = new Date(b.toString());
+
+	return dateA.getTime() - dateB.getTime();
+};
+
 const LoadingSkeleton = () => (
 	<div
 		className={
@@ -114,7 +121,7 @@ export default function CalendarBooking({
 	};
 
 	const isDateUnavailable = (date: DateValue) => {
-		return isWeekend(date, 'en-US');
+		return isWeekend(date, 'en-US') || compareDate(date, today(getLocalTimeZone())) < 0;
 	};
 
 	useEffect(() => {

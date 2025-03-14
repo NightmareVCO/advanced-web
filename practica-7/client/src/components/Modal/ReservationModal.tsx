@@ -11,7 +11,7 @@ import {
 import Calendar from '../Calendar/Calendar';
 import { useState } from 'react';
 
-export default function App() {
+export default function ReservationModal() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	const [isComplete, setIsComplete] = useState(false);
 
