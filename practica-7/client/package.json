@@ -12,11 +12,13 @@
 	"dependencies": {
 		"@astrojs/react": "^4.2.1",
 		"@heroui/react": "2.7.6-beta.2",
+		"@internationalized/date": "^3.7.0",
 		"@tailwindcss/postcss": "^4.0.14",
 		"@tailwindcss/vite": "^4.0.14",
 		"@types/react": "^19.0.10",
 		"@types/react-dom": "^19.0.4",
 		"astro": "^5.5.2",
+		"date-fns": "^4.1.0",
 		"framer-motion": "^12.5.0",
 		"postcss": "^8.5.3",
 		"react": "^19.0.0",

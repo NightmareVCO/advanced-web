@@ -41,7 +41,7 @@ export default function MainSection() {
                     ```
                   */}
 						<div className="bg-hero-section-title bg-clip-text text-transparent dark:from-[#FFFFFF] dark:to-[#FFFFFF66]">
-							Easiest way to <br /> power global teams.
+							Reserva tu espacio  <br /> de manera fácil y rápida.
 						</div>
 					</m.div>
 
@@ -56,8 +56,8 @@ export default function MainSection() {
 							type: 'spring',
 						}}
 					>
-						Acme makes running global teams simple. HR, Payroll, International Employment,
-						contractor management and more.
+						LabReservations te permite gestionar el acceso a los laboratorios universitarios.
+						Registra tu solicitud y consulta tus reservas de forma sencilla.
 					</m.div>
 
 					<m.div
@@ -75,7 +75,7 @@ export default function MainSection() {
 							className="h-10 w-[163px] bg-default-foreground px-[16px] py-[10px] text-small font-medium leading-5 text-background"
 							radius="full"
 						>
-							Get Started
+							Reservar
 						</Button>
 						<Button
 							className="h-10 w-[163px] border-1 border-default-100 px-[16px] py-[10px] text-small font-medium leading-5"
@@ -91,7 +91,7 @@ export default function MainSection() {
 							radius="full"
 							variant="bordered"
 						>
-							See our plans
+							Reservaciones
 						</Button>
 					</m.div>
 				</AnimatePresence>

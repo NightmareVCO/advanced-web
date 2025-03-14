@@ -50,12 +50,12 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
 				{/* Center Content */}
 				<NavbarContent justify="center">
 					<NavbarItem>
-						<Link className="transition-transform hover:scale-105" href="#" size="lg">
+						<Link className="transition-transform hover:scale-105" href="/" size="lg">
 							Inicio
 						</Link>
 					</NavbarItem>
 					<NavbarItem>
-						<Link className="transition-transform hover:scale-105" href="#" size="lg">
+						<Link className="transition-transform hover:scale-105" href="/reservations" size="lg">
 							Reservaciones
 						</Link>
 					</NavbarItem>
@@ -91,13 +91,13 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
 					}}
 				>
 					<NavbarMenuItem>
-						<Button fullWidth as={Link} href="/#" variant="faded">
-							Sign In
+						<Button fullWidth as={Link} href="/" variant="faded">
+							Inicio
 						</Button>
 					</NavbarMenuItem>
 					<NavbarMenuItem className="mb-4">
 						<Button fullWidth as={Link} className="bg-foreground text-background" href="/#">
-							Get Started
+							Reservaciones
 						</Button>
 					</NavbarMenuItem>
 					{mobileMenuItems.map((item, index) => (
