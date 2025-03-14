@@ -12,11 +12,39 @@ module.exports = {
 	theme: {
 		extend: {
 			backgroundImage: {
-				'hero-section-title':
-					'linear-gradient(91deg, #FFF 32.88%, rgba(255, 255, 255, 0.40) 99.12%)',
+				'hero-section-title': 'linear-gradient(91deg, #2F2E41 37%, rgba(107, 98, 255, 1) 80%)',
+			},
+			colors: {
+				'main-color': '#6B62FF',
+				'secondary-color': '#2F2E41',
 			},
 		},
 	},
 	darkMode: 'class',
-	plugins: [heroui()],
+	plugins: [
+		heroui({
+			themes: {
+				light: {
+					colors: {
+						primary: {
+							DEFAULT: '#6B62FF',
+						},
+						secondary: {
+							DEFAULT: '#2F2E41',
+						},
+					},
+				},
+				dark: {
+					colors: {
+						primary: {
+							DEFAULT: '#6B62FF',
+						},
+						secondary: {
+							DEFAULT: '#2F2E41',
+						},
+					},
+				},
+			},
+		}),
+	],
 };

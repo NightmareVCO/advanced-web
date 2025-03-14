@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import BasicNavbar from '@components/BasicNavbar/BasicNavbar';
 import '../styles/global.css';
+import Background from '@src/components/Background/Background.astro';
 ---
 
 <!doctype html>
@@ -14,21 +15,12 @@ import '../styles/global.css';
 		<title>LabReservations</title>
 		<ClientRouter />
 	</head>
-	<body class="relative w-full h-full dark bg-black text-[#f9f9f9]">
+	<body class="relative w-full h-full light">
+		<Background />
 		<header>
 			<BasicNavbar client:visible />
 		</header>
-		<div class="relative">
-			<div
-				class="absolute bottom-0 left-[-20%] right-0 top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"
-			>
-			</div>
-			<slot />
-			<div
-				class="absolute bottom-0 right-[-20%] top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"
-			>
-			</div>
-		</div>
+		<slot />
 	</body>
 </html>
 
@@ -36,6 +28,7 @@ import '../styles/global.css';
 	:root {
 		color-scheme: light dark;
 	}
+
 	html {
 		font-family: "Onest Variable", system-ui, sans-serif;
 		scroll-behavior: smooth;

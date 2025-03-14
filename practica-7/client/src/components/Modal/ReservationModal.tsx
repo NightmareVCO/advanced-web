@@ -1,42 +1,61 @@
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-} from "@heroui/react";
+	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	useDisclosure,
+} from '@heroui/react';
 
-import Calendar from "../Calendar/Calendar";
-
+import Calendar from '../Calendar/Calendar';
+import { useState } from 'react';
 
 export default function App() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const [isComplete, setIsComplete] = useState(false);
 
-  return (
-    <>
-      <Button onPress={onOpen}>Crear Reservación</Button>
-      <Modal size="5xl" isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Reservación</ModalHeader>
-              <ModalBody className="flex items-center justify-center">
-                <Calendar />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Save
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
-  );
+	const size = isComplete ? 'sm' : '5xl';
+	const buttonColor = isComplete ? 'primary' : 'danger';
+	const buttonLabel = isComplete ? 'Salir' : 'Cancelar Reservación';
+
+	const handleClose = () => {
+		setIsComplete(false);
+		onOpenChange();
+	};
+
+	return (
+		<>
+			<Button
+				onPress={onOpen}
+				className="h-10 w-[163px] bg-main-color px-[16px] py-[10px] text-small font-medium leading-5 text-white"
+				radius="full"
+			>
+				Crear Reservación
+			</Button>
+			<Modal
+				size={size}
+				isOpen={isOpen}
+				onOpenChange={onOpenChange}
+				className="bg-default-50"
+				isDismissable={false}
+				isKeyboardDismissDisabled={false}
+			>
+				<ModalContent>
+					{(onClose) => (
+						<>
+							<ModalBody className="flex items-center justify-center">
+								<Calendar setIsCompleted={setIsComplete} />
+							</ModalBody>
+							<ModalFooter>
+								<Button color={buttonColor} variant="light" onPress={handleClose}>
+									{buttonLabel}
+								</Button>
+							</ModalFooter>
+						</>
+					)}
+				</ModalContent>
+			</Modal>
+		</>
+	);
 }

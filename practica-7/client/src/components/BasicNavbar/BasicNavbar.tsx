@@ -26,8 +26,8 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
 				ref={ref}
 				{...props}
 				classNames={{
-					base: cn('border-default-100 bg-transparent', {
-						'bg-default-200/50 dark:bg-default-100/50': isMenuOpen,
+					base: cn('border-default-100 bg-black', {
+						'bg-default-200/50': isMenuOpen,
 					}),
 					wrapper: 'w-full justify-center',
 					item: 'hidden md:flex',
@@ -36,42 +36,31 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
 				height="60px"
 				isMenuOpen={isMenuOpen}
 				onMenuOpenChange={setIsMenuOpen}
+				isBlurred
 			>
 				{/* Left Content */}
 				<NavbarBrand>
-					<div className="rounded-full bg-default-foreground text-background">
-						<Icon icon="lucide:computer" width="24" height="24" />
-					</div>
-					<span className="ml-2 font-medium text-small text-default-foreground">
-						LabReservations
-					</span>
+					<Link href="/" size="lg">
+						<div className="text-white rounded-full bg-default-foreground">
+							<Icon icon="lucide:computer" width="24" height="24" color="6B62FF" />
+						</div>
+						<span className="ml-2 text-lg font-bold text-main-color">LabReservations</span>
+					</Link>
 				</NavbarBrand>
-
-				{/* Center Content */}
-				<NavbarContent justify="center">
-					<NavbarItem>
-						<Link className="transition-transform hover:scale-105" href="/" size="lg">
-							Inicio
-						</Link>
-					</NavbarItem>
-					<NavbarItem>
-						<Link className="transition-transform hover:scale-105" href="/reservations" size="lg">
-							Reservaciones
-						</Link>
-					</NavbarItem>
-				</NavbarContent>
 
 				{/* Right Content */}
 				<NavbarContent className="hidden md:flex" justify="end">
 					<NavbarItem className="ml-2 !flex gap-2">
 						<Button
-							className="font-medium text-black bg-white"
+							as={Link}
+							href="/reservas"
+							className="font-medium text-black bg-main-color"
 							color="secondary"
 							endContent={<Icon icon="solar:alt-arrow-right-linear" />}
 							radius="full"
 							variant="flat"
 						>
-							Iniciar
+							Reservas
 						</Button>
 					</NavbarItem>
 				</NavbarContent>

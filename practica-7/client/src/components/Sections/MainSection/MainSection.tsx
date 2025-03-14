@@ -1,5 +1,6 @@
-import { Button } from '@heroui/react';
+import { Button, Link } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import MainVector from '@src/components/SVG/MainVector';
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
 
 export default function MainSection() {
@@ -31,17 +32,8 @@ export default function MainSection() {
 							type: 'spring',
 						}}
 					>
-						{/* 
-                    NOTE: To use `bg-hero-section-title`, you need to add the following to your tailwind config.
-                    ```
-                    backgroundImage: {
-                      "hero-section-title":
-                        "linear-gradient(91deg, #FFF 32.88%, rgba(255, 255, 255, 0.40) 99.12%)",
-                    },
-                    ```
-                  */}
-						<div className="bg-hero-section-title bg-clip-text text-transparent dark:from-[#FFFFFF] dark:to-[#FFFFFF66]">
-							Reserva tu espacio  <br /> de manera fácil y rápida.
+						<div className="text-transparent bg-hero-section-title bg-clip-text">
+							Reserva tu espacio <br /> de manera fácil y rápida.
 						</div>
 					</m.div>
 
@@ -72,17 +64,21 @@ export default function MainSection() {
 						}}
 					>
 						<Button
-							className="h-10 w-[163px] bg-default-foreground px-[16px] py-[10px] text-small font-medium leading-5 text-background"
+							as={Link}
+							href="/reservas?crear"
+							className="h-10 w-[163px] bg-main-color px-[16px] py-[10px] text-small font-medium leading-5 text-white"
 							radius="full"
 						>
 							Reservar
 						</Button>
 						<Button
-							className="h-10 w-[163px] border-1 border-default-100 px-[16px] py-[10px] text-small font-medium leading-5"
+							as={Link}
+							href="/reservas?consultar"
+							className="h-10 w-[163px] border-1 border-default-100 px-[16px] py-[10px] text-small font-medium leading-5 bg-white"
 							endContent={
 								<span className="pointer-events-none flex h-[22px] w-[22px] items-center justify-center rounded-full bg-default-100">
 									<Icon
-										className="text-default-500 [&>path]:stroke-[1.5]"
+										className="text-main-color [&>path]:stroke-[1.5]"
 										icon="solar:arrow-right-linear"
 										width={16}
 									/>
@@ -96,6 +92,22 @@ export default function MainSection() {
 					</m.div>
 				</AnimatePresence>
 			</m.div>
+
+			<AnimatePresence mode="wait">
+				<m.div
+					animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
+					className="absolute top-[25%] left-[47%] w-full"
+					initial={{ filter: 'blur(16px)', opacity: 0, y: 300 }}
+					transition={{
+						bounce: 0,
+						delay: 0.01 * 10,
+						duration: 0.8 + 0.1 * 13,
+						type: 'spring',
+					}}
+				>
+					<MainVector />
+				</m.div>
+			</AnimatePresence>
 		</LazyMotion>
 	);
 }
