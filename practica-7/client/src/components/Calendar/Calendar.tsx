@@ -9,11 +9,11 @@ import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useEffect, useState } from 'react';
 
-import { DurationEnum, type TimeSlot, durations } from '../../config/Calendar/calendar.config';
-import BookingDetails from '../Booking/BookingDetails';
-import CalendarBookingConfirmation from './CalendarBookingConfirmation';
-import CalendarBookingForm from './CalendarBookingForm';
-import CalendarTimeSelect from './CalendarTimeSelect';
+import BookingDetails from '@components/Booking/BookingDetails';
+import CalendarBookingConfirmation from '@components/Calendar/CalendarBookingConfirmation';
+import CalendarBookingForm from '@components/Calendar/CalendarBookingForm';
+import CalendarTimeSelect from '@components/Calendar/CalendarTimeSelect';
+import { DurationEnum, type TimeSlot, durations } from '@config/Calendar/calendar.config';
 
 const compareDate = (a: DateValue, b: DateValue): number => {
 	const dateA = new Date(a.toString());
@@ -173,7 +173,7 @@ export default function CalendarBooking({
 					gridWrapper: 'pb-3',
 					cell: 'p-1.5 w-full',
 					cellButton:
-						'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
+						'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary text-small font-medium',
 				}}
 				isDateUnavailable={isDateUnavailable}
 				value={selectedDate}
@@ -182,6 +182,8 @@ export default function CalendarBooking({
 			/>
 			<CalendarTimeSelect
 				day={selectedDate.day}
+				month={selectedDate.month}
+				year={selectedDate.year}
 				duration={selectedDuration}
 				selectedTime={selectedTime}
 				weekday={format(selectedDate.toString(), 'EEE', { locale: enUS })}

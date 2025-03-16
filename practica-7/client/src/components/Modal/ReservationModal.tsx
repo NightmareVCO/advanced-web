@@ -8,8 +8,8 @@ import {
 	useDisclosure,
 } from '@heroui/react';
 
-import Calendar from '../Calendar/Calendar';
 import { useState } from 'react';
+import Calendar from '../Calendar/Calendar';
 
 export default function ReservationModal() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();

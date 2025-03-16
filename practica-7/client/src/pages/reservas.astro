@@ -1,8 +1,8 @@
 ---
-import Header from '@components/Header/Header';
-import ReservationModal from '@components/Modal/ReservationModal';
-import Table from '@components/Table/Table';
-import Layout from '@layouts/Layout.astro';
+import Header from "@components/Header/Header";
+import ReservationModal from "@components/Modal/ReservationModal";
+import Table from "@components/Table/Table";
+import Layout from "@layouts/Layout.astro";
 ---
 
 <Layout>
@@ -13,6 +13,6 @@ import Layout from '@layouts/Layout.astro';
         >
             <ReservationModal client:visible />
         </Header>
-        <Table />
+        <Table client:visible />
     </section>
 </Layout>

@@ -49,7 +49,16 @@ export default function CalendarTime({
 						}
 					}}
 				>
-					{slot.label}
+					<div className="flex items-center justify-between">
+						<span>{slot.label}</span> &nbsp;
+						{slot.appointmentCount !== undefined && (
+							<span
+								className={`text-xs ${slot.appointmentCount >= 7 ? 'text-danger' : 'text-success'}`}
+							>
+								({slot.appointmentCount}/7)
+							</span>
+						)}
+					</div>
 				</Button>
 			</motion.div>
 			<motion.div
@@ -63,8 +72,9 @@ export default function CalendarTime({
 					color="primary"
 					tabIndex={isSelected ? undefined : -1}
 					onPress={onConfirm}
+					isDisabled={slot.disabled}
 				>
-					Confirm
+					Reservar
 				</Button>
 			</motion.div>
 		</div>

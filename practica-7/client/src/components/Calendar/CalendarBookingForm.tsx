@@ -61,7 +61,12 @@ export default function CalendarBookingForm({
 				onTimeZoneChange={onTimeZoneChange}
 				isShort={false}
 			/>
-			<BookingForm setCalendarBookingStep={setCalendarBookingStep} onConfirm={onConfirm} />
+			<BookingForm
+				selectedTimeSlotRange={selectedTimeSlotRange}
+				selectedDate={selectedDate}
+				setCalendarBookingStep={setCalendarBookingStep}
+				onConfirm={onConfirm}
+			/>
 		</div>
 	);
 }

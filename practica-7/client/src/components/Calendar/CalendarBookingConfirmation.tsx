@@ -3,21 +3,23 @@ import type { CalendarBookingStepType } from '../../lib/types';
 import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
 import { Link } from '@heroui/link';
+import type { DateValue } from '@heroui/react';
 import { Spacer } from '@heroui/spacer';
 import { Icon } from '@iconify/react';
+import type { TimeSlot } from '@src/config/Calendar/calendar.config';
 import { useCallback } from 'react';
 
 interface CalendarBookingConfirmationProps {
 	setCalendarBookingStep?: (step: CalendarBookingStepType) => void;
+	selectedTimeSlotRange?: TimeSlot[];
+	selectedDate?: DateValue;
 }
 
 export default function CalendarBookingConfirmation({
+	selectedDate,
+	selectedTimeSlotRange,
 	setCalendarBookingStep,
 }: CalendarBookingConfirmationProps) {
-	const handleCancelOrReschedule = useCallback(() => {
-		if (setCalendarBookingStep) setCalendarBookingStep('booking_initial');
-	}, [setCalendarBookingStep]);
-
 	return (
 		<div className="flex w-[375px] flex-col items-center gap-5 rounded-large bg-default-50 py-8">
 			<div className="flex flex-col items-center w-full px-8">
@@ -34,16 +36,16 @@ export default function CalendarBookingConfirmation({
 			<div className="flex flex-col items-center w-full gap-4 px-8">
 				<div className="flex flex-col w-full gap-1">
 					<p className="font-medium text-small text-default-foreground">Detalles</p>
-					<p className="text-tiny text-default-500">
-						30min meeting between Zoey Lang and John Thompson
-					</p>
+					<p className="text-tiny text-default-500">Ha reservado el laboratorio durante 1h.</p>
 				</div>
 				<div className="flex flex-col w-full gap-1">
 					<p className="font-medium text-small text-default-foreground">Cuando</p>
 					<p className="text-tiny text-default-500">
-						Friday, December 27, 2024
+						{selectedDate?.day.toString()}/{selectedDate?.month.toString()}/
+						{selectedDate?.year.toString()}
 						<br />
-						6:30 PM - 7:00 PM (Argentina Standard Time)
+						{selectedTimeSlotRange?.[0].label} - {selectedTimeSlotRange?.[1].label}
+						<br />
 					</p>
 				</div>
 				<div className="flex flex-col w-full gap-1">

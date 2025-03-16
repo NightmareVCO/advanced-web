@@ -13,6 +13,7 @@
 		"@astrojs/react": "^4.2.1",
 		"@heroui/react": "2.7.6-beta.2",
 		"@internationalized/date": "^3.7.0",
+		"@react-stately/data": "^3.12.2",
 		"@tailwindcss/postcss": "^4.0.14",
 		"@tailwindcss/vite": "^4.0.14",
 		"@types/react": "^19.0.10",
