@@ -12,4 +12,6 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 	},
+	site: 'https://nightmarevco.github.io',
+	base: 'advanced-web',
 });
