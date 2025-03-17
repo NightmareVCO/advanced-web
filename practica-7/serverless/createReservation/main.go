@@ -22,9 +22,9 @@ type Student struct {
 type LaboratoryReservation struct {
 	ID             string  `json:"id" dynamodbav:"id"`
 	LabName        string  `json:"labName" dynamodbav:"labName"`
-	RequestedDay   string  `json:"requestedDay" dynamodbav:"requestedDay"`
-	RequestedMonth string  `json:"requestedMonth" dynamodbav:"requestedMonth"`
-	RequestedYear  string  `json:"requestedYear" dynamodbav:"requestedYear"`
+	RequestedDay   int     `json:"requestedDay" dynamodbav:"requestedDay"`
+	RequestedMonth int     `json:"requestedMonth" dynamodbav:"requestedMonth"`
+	RequestedYear  int     `json:"requestedYear" dynamodbav:"requestedYear"`
 	RequestedHour  string  `json:"requestedHour" dynamodbav:"requestedHour"`
 	Student        Student `json:"student" dynamodbav:"student"`
 }

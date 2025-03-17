@@ -79,9 +79,9 @@ func handleRequest(ctx context.Context, event APIGatewayProxyRequest) (*dynamodb
 		FilterExpression: &queryExpression,
 		ExpressionAttributeValues: map[string]types.AttributeValue{
 			":requestedHour":  &types.AttributeValueMemberS{Value: query.RequestedTime},
-			":requestedDay":   &types.AttributeValueMemberS{Value: query.RequestedDay},
-			":requestedMonth": &types.AttributeValueMemberS{Value: query.RequestedMonth},
-			":requestedYear":  &types.AttributeValueMemberS{Value: query.RequestedYear},
+			":requestedDay":   &types.AttributeValueMemberN{Value: query.RequestedDay},
+			":requestedMonth": &types.AttributeValueMemberN{Value: query.RequestedMonth},
+			":requestedYear":  &types.AttributeValueMemberN{Value: query.RequestedYear},
 		},
 	}
 
