@@ -52,9 +52,9 @@ export default function BookingForm({
 							},
 							body: JSON.stringify({
 								labName: 'LBA - 01',
-								requestedDay: selectedDate?.day.toString(),
-								requestedMonth: selectedDate?.month.toString(),
-								requestedYear: selectedDate?.year.toString(),
+								requestedDay: selectedDate?.day,
+								requestedMonth: selectedDate?.month,
+								requestedYear: selectedDate?.year,
 								requestedHour: selectedTimeSlotRange?.[0].label,
 								student: {
 									ID: Id,

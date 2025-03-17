@@ -1,6 +1,6 @@
 import { ScrollShadow } from '@heroui/scroll-shadow';
 import { Tab, Tabs } from '@heroui/tabs';
-import { useMemo, useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import type { DurationEnum, TimeSlot } from '../../config/Calendar/calendar.config';
 import { TimeFormatEnum, timeFormats } from '../../config/Calendar/calendar.config';

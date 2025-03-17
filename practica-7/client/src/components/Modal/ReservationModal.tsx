@@ -28,7 +28,7 @@ export default function ReservationModal() {
 		<>
 			<Button
 				onPress={onOpen}
-				className="h-10 w-[163px] bg-main-color px-[16px] py-[10px] text-small font-medium leading-5 text-white"
+				className="h-10 w-[163px] bg-main-color px-[50px] py-[10px] text-small font-medium leading-5 text-white"
 				radius="full"
 			>
 				Crear Reservación

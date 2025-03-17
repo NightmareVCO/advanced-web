@@ -8,9 +8,9 @@ import {
 	Tooltip,
 	useDisclosure,
 } from '@heroui/react';
-import type { Reservation } from '../Table/Table';
 import { useEffect, useState } from 'react';
 import { DeleteIcon } from '../Icons/Icons';
+import type { Reservation } from '../Table/Table';
 
 interface DeleteReservationModalProps {
 	reservation: Reservation;
