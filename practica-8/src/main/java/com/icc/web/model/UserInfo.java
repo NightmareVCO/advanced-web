@@ -3,8 +3,6 @@ package com.icc.web.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -12,7 +10,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
-public class User {
+public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,12 +22,12 @@ public class User {
 
     @Column(unique = true)
     private String email;
+
     private String password;
 
     @Builder.Default
     private boolean active = true;
 
-    @Singular
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-            CascadeType.REFRESH })
-    private Set<Role> roles;}
+    private String role;
+
+}

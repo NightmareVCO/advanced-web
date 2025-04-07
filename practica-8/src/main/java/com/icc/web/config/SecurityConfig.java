@@ -1,6 +1,6 @@
 package com.icc.web.config;
 
-import com.icc.web.services.UserDetailsServiceImplementation;
+import com.icc.web.services.UserDetailsServiceImpl;
 import com.icc.web.views.LoginView;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import com.vaadin.flow.spring.security.VaadinWebSecurity;
 public class SecurityConfig extends VaadinWebSecurity {
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http, UserDetailsServiceImplementation userDetailsServiceImplementation) throws Exception {
+    public AuthenticationManager authManager(HttpSecurity http, UserDetailsServiceImpl userDetailsServiceImplementation) throws Exception {
         AuthenticationManagerBuilder authManager = http.getSharedObject(AuthenticationManagerBuilder.class);
 
         authManager
@@ -36,9 +36,8 @@ public class SecurityConfig extends VaadinWebSecurity {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }
