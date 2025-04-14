@@ -8,6 +8,7 @@ import com.icc.web.views.components.Navbar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -40,7 +41,7 @@ public class ManagerSettingsView extends VerticalLayout {
         layoutStyle.set("margin", "0");
 
         Navbar navbar = new Navbar();
-        Div pageSection = createFormSection();
+        Div pageSection = pageSection();
         Footer footer = new Footer();
 
         layout.add(navbar);
@@ -51,31 +52,49 @@ public class ManagerSettingsView extends VerticalLayout {
         layout.setAlignItems(Alignment.CENTER);
     }
 
-    private Div createFormSection() {
-        Div formContainer = new Div();
-        formContainer.getStyle().set("display", "flex");
-        formContainer.getStyle().set("width", "100%");
-        formContainer.getStyle().set("flex-grow", "1");
-        formContainer.getStyle().set("align-items", "center");
-        formContainer.getStyle().set("justify-content", "center");
+    private Div pageSection() {
+        Div pageContainer = new Div();
+        pageContainer.getStyle().set("display", "flex");
+        pageContainer.getStyle().set("width", "100%");
+        pageContainer.getStyle().set("flex-grow", "1");
+        pageContainer.getStyle().set("align-items", "center");
+        pageContainer.getStyle().set("justify-content", "center");
 
-        VerticalLayout formLayout = createForm();
+        VerticalLayout formContainer = createForm();
+        VerticalLayout formImageContainer = new VerticalLayout();
 
         // Add a title to the form
         H2 title = new H2("Profile Settings");
-        title.getStyle().set("margin-bottom", "20px");
+        Style titleStyle = title.getStyle();
+        titleStyle.set("color", "var(--lumo-primary-text-color)");
+        titleStyle.set("white-space", "nowrap");
 
-        formLayout.addComponentAsFirst(title);
-        formContainer.add(formLayout);
+        Image settingImage = new Image("/images/settings.svg", "Settings");
+        settingImage.setWidth("650px");
 
-        return formContainer;
+        formImageContainer.add(settingImage);
+        Style formImageContainerStyle = formImageContainer.getStyle();
+
+        formImageContainerStyle.set("display", "flex");
+        formImageContainerStyle.set("align-items", "center");
+        formImageContainerStyle.set("justify-content", "center");
+
+        formContainer.addComponentAsFirst(title);
+        pageContainer.add(formContainer, formImageContainer);
+
+        return pageContainer;
     }
 
     private VerticalLayout createForm() {
         VerticalLayout formLayout = new VerticalLayout();
-        formLayout.setWidth("400px");
-
-        // Load current manager info
+        Style formLayoutStyle = formLayout.getStyle();
+        formLayoutStyle.set("display", "flex");
+        formLayoutStyle.set("width", "100%");
+        formLayoutStyle.set("background-color", "var(--white)");
+        formLayoutStyle.set("align-items", "center");
+        formLayoutStyle.set("justify-content", "center");
+        formLayoutStyle.set("padding", "20px");
+        
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         UserInfo currentUser = userInfoService.findByUsername(currentUsername);
 
