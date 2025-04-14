@@ -76,10 +76,6 @@ public class Navbar extends Composite<HorizontalLayout> {
         homeLink.addClassName("nav-link");
         homeLink.setRoute(IndexView.class);
 
-        featureLink.setText("About Us");
-        featureLink.addClassName("nav-link");
-        featureLink.setRoute(IndexView.class);
-
         aboutLink.setText("Users");
         aboutLink.addClassName("nav-link");
         aboutLink.setRoute(UserManagementView.class);
@@ -139,6 +135,11 @@ public class Navbar extends Composite<HorizontalLayout> {
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.setTarget(avatar);
             contextMenu.setOpenOnClick(true); // Se abre al hacer clic en el avatar
+
+            // Add "Settings" option
+            contextMenu.addItem("Settings", e -> UI.getCurrent().navigate("settings"));
+
+            // Add "Logout" option
             contextMenu.addItem(
                     "Logout",
                     e -> {
@@ -162,6 +163,15 @@ public class Navbar extends Composite<HorizontalLayout> {
         Button scheduleButton = new Button();
         scheduleButton.setText("Schedule");
         scheduleButton.getStyle().set("background-color", "var(--white)");
+
+        scheduleButton.addClickListener(event -> {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+                UI.getCurrent().navigate("login");
+            } else {
+                UI.getCurrent().navigate("events");
+            }
+        });
 
         actionButtonContainer.add(scheduleButton);
 

@@ -32,9 +32,7 @@ public class LoginView extends Composite<VerticalLayout> implements BeforeEnterO
         Div pageSection = loginSection();
         Footer footer = new Footer();
 
-        layout.add(navbar);
-        layout.add(pageSection);
-        layout.add(footer);
+        layout.add(navbar, pageSection, footer);
 
         layout.setFlexGrow(1, pageSection);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -42,21 +40,27 @@ public class LoginView extends Composite<VerticalLayout> implements BeforeEnterO
 
     public Div loginSection() {
         Div loginContainer = new Div();
-        loginContainer.getStyle().set("display", "flex");
-        loginContainer.getStyle().set("width", "100%");
-        loginContainer.getStyle().set("flex-grow", "1");
-        loginContainer.getStyle().set("align-items", "center");
-        loginContainer.getStyle().set("justify-content", "space-between");
+        Style loginContainerStyle = loginContainer.getStyle();
+
+        loginContainerStyle.set("display", "flex");
+        loginContainerStyle.set("width", "100%");
+        loginContainerStyle.set("flex-grow", "1");
+        loginContainerStyle.set("align-items", "center");
+        loginContainerStyle.set("justify-content", "space-between");
 
         VerticalLayout formContainer = new VerticalLayout();
-        formContainer.getStyle().set("display", "flex");
-        formContainer.getStyle().set("align-items", "center");
-        formContainer.getStyle().set("justify-content", "center");
+        Style formContainerStyle = formContainer.getStyle();
+
+        formContainerStyle.set("display", "flex");
+        formContainerStyle.set("align-items", "center");
+        formContainerStyle.set("justify-content", "center");
 
         VerticalLayout formImageContainer = new VerticalLayout();
-        formImageContainer.getStyle().set("display", "flex");
-        formImageContainer.getStyle().set("align-items", "center");
-        formImageContainer.getStyle().set("justify-content", "center");
+        Style formImageContainerStyle = formImageContainer.getStyle();
+
+        formImageContainerStyle.set("display", "flex");
+        formImageContainerStyle.set("align-items", "center");
+        formImageContainerStyle.set("justify-content", "center");
 
         Image brandImage = new Image("/images/chronoguard.svg", "Chrono Guard");
         brandImage.setWidth("250px");

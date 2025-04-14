@@ -42,8 +42,8 @@ import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
 
-@Route("admin/events")
-@RolesAllowed(Role.ADMIN)
+@Route("events")
+@RolesAllowed({Role.USER, Role.ADMIN})
 @PageTitle("Home | Chrono Guard")
 public class EventsView extends Composite<VerticalLayout> {
     private final EventService eventService;
@@ -59,22 +59,28 @@ public class EventsView extends Composite<VerticalLayout> {
 
         VerticalLayout layout = this.getContent();
         Style layoutStyle = layout.getStyle();
+
         layoutStyle.set("width", "100%");
         layoutStyle.set("height", "100%");
         layoutStyle.set("padding", "0");
         layoutStyle.set("margin", "0");
+
         Navbar navbar = new Navbar();
         Div pageSection = pageSection();
         Footer footer = new Footer();
+
         layout.add(navbar, pageSection, footer);
+
         layout.setFlexGrow(1, pageSection);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
+
         loadUserEvents();
     }
 
     private Div pageSection() {
         Div pageContainer = new Div();
         Style pageContainerStyle = pageContainer.getStyle();
+
         pageContainerStyle.set("display", "flex");
         pageContainerStyle.set("width", "95%");
         pageContainerStyle.set("flex-direction", "column");
@@ -85,6 +91,7 @@ public class EventsView extends Composite<VerticalLayout> {
 
         HorizontalLayout header = new HorizontalLayout();
         Style headerStyle = header.getStyle();
+
         headerStyle.set("display", "flex");
         headerStyle.set("width", "100%");
         headerStyle.set("align-items", "center");
@@ -98,6 +105,7 @@ public class EventsView extends Composite<VerticalLayout> {
 
         Div calendarButtons = new Div();
         Style calendarButtonsStyle = calendarButtons.getStyle();
+
         calendarButtonsStyle.set("display", "flex");
         calendarButtonsStyle.set("width", "100%");
         calendarButtonsStyle.set("align-items", "center");
@@ -128,6 +136,7 @@ public class EventsView extends Composite<VerticalLayout> {
 
         VerticalLayout calendarContainer = new VerticalLayout();
         Style calendarContainerStyle = calendarContainer.getStyle();
+        
         calendarContainerStyle.set("display", "flex");
         calendarContainerStyle.set("width", "100%");
         calendarContainerStyle.set("height", "100%");
