@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
     UserInfo findByUsername(String username);
+
     boolean existsByUsernameIgnoreCase(String username);
+
     void deleteByUsername(String username);
     Page<UserInfo> findAll(Pageable pageable);
 }

@@ -202,7 +202,6 @@ gradle-app.setting
 .classpath
 
 target
-frontend
 node_modules
 dist
 

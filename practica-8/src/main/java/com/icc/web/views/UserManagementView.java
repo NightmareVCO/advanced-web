@@ -3,12 +3,16 @@ package com.icc.web.views;
 import com.icc.web.model.UserInfo;
 import com.icc.web.services.UserInfoService;
 import com.icc.web.utils.constants.Role;
+import com.icc.web.views.components.Footer;
+import com.icc.web.views.components.Navbar;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -22,19 +26,18 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Route("admin/users")
 @PageTitle("User Management")
 @RolesAllowed(Role.ADMIN)
-public class UserManagementView extends VerticalLayout {
+public class UserManagementView extends Composite<VerticalLayout> {
 
     private final UserInfoService userInfoService;
     private Grid<UserInfo> grid;
@@ -50,31 +53,68 @@ public class UserManagementView extends VerticalLayout {
 
     public UserManagementView(UserInfoService userInfoService) {
         this.userInfoService = userInfoService;
+        VerticalLayout layout = this.getContent();
+        Style layoutStyle = layout.getStyle();
+        layoutStyle.set("width", "100%");
+        layoutStyle.set("height", "100%");
+        layoutStyle.set("padding", "0");
+        layoutStyle.set("margin", "0");
 
-        setSizeFull();
-        setPadding(true);
-        setSpacing(true);
+        Navbar navbar = new Navbar();
+        Div pageSection = pageSection();
+        Footer footer = new Footer();
 
-        var horizontalLayout = new HorizontalLayout();
-        var createUserBtn = new Button("Create User", VaadinIcon.PLUS.create());
+        layout.add(navbar, pageSection, footer);
 
-        var formDialog = createUserDialog();
+        layout.setFlexGrow(1, pageSection);
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+    }
+
+    private Div pageSection() {
+        Div pageContainer = new Div();
+        Style pageContainerStyle = pageContainer.getStyle();
+
+        pageContainerStyle.set("display", "flex");
+        pageContainerStyle.set("width", "95%");
+        pageContainerStyle.set("flex-direction", "column");
+        pageContainerStyle.set("flex-grow", "1");
+        pageContainerStyle.set("padding", "20px");
+        pageContainerStyle.set("align-items", "center");
+        pageContainerStyle.set("justify-content", "center");
+
+        HorizontalLayout header = new HorizontalLayout();
+        Style headerStyle = header.getStyle();
+
+        headerStyle.set("display", "flex");
+        headerStyle.set("width", "100%");
+        headerStyle.set("align-items", "center");
+        headerStyle.set("justify-content", "space-between");
+        headerStyle.set("padding", "20px 0");
+
+        H2 title = new H2("User Management");
+        title.getStyle().set("color", "var(--lumo-primary-text-color)");
+
+        Button createUserBtn = new Button("Create User", VaadinIcon.PLUS.create());
+        createUserBtn.setIconAfterText(true);
+        Dialog formDialog = createUserDialog();
+
         createUserBtn.addClickListener(click -> formDialog.open());
 
-        horizontalLayout.setWidthFull();
-        horizontalLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
-        horizontalLayout.setAlignItems(Alignment.CENTER);
-        horizontalLayout.add(new H2("User Management"), createUserBtn);
+        header.add(title, createUserBtn);
 
         setupBinder();
         setupGrid();
 
-        add(horizontalLayout, grid);
-        expand(grid);
+        pageContainer.add(header, grid);
+
+        grid.setSizeFull();
+
+        return pageContainer;
     }
 
     private void setupBinder() {
-        List<Component> fields = Arrays.asList(username, name, email, password, confirmPassword, role);
+        List<Component> fields =
+                Arrays.asList(username, name, email, password, confirmPassword, role);
         fields.forEach(field -> field.getElement().getStyle().set("width", "100%"));
 
         role.setLabel("Role");
@@ -83,11 +123,14 @@ public class UserManagementView extends VerticalLayout {
 
         binder.forField(username)
                 .asRequired("Username is required")
-                .withValidator(username -> !username.contains(" "), "Username must not contain spaces")
-                .withValidator(username -> {
-                    UserInfo existing = userInfoService.findByUsername(username);
-                    return existing == null;
-                }, "Username already exists")
+                .withValidator(
+                        username -> !username.contains(" "), "Username must not contain spaces")
+                .withValidator(
+                        username -> {
+                            UserInfo existing = userInfoService.findByUsername(username);
+                            return existing == null;
+                        },
+                        "Username already exists")
                 .bind(UserInfo::getUsername, UserInfo::setUsername);
 
         binder.forField(name)
@@ -100,26 +143,32 @@ public class UserManagementView extends VerticalLayout {
 
         binder.forField(password)
                 .asRequired("Password is required")
-                .withValidator(password -> password.length() >= 6, "Password must be at least 6 characters long")
+                .withValidator(
+                        password -> password.length() >= 6,
+                        "Password must be at least 6 characters long")
                 .bind(UserInfo::getPassword, UserInfo::setPassword);
 
-        password.addValueChangeListener(event -> {
-            if (!password.getValue().equals(confirmPassword.getValue())) {
-                confirmPassword.setErrorMessage("Passwords do not match");
-                confirmPassword.setInvalid(true);
-            } else {
-                confirmPassword.setInvalid(false);
-            }
-        });
+        // Setup password confirmation validation
+        password.addValueChangeListener(
+                event -> {
+                    if (!password.getValue().equals(confirmPassword.getValue())) {
+                        confirmPassword.setErrorMessage("Passwords do not match");
+                        confirmPassword.setInvalid(true);
+                    } else {
+                        confirmPassword.setInvalid(false);
+                    }
+                });
 
-        confirmPassword.addValueChangeListener(event -> {
-            if (!confirmPassword.getValue().equals(password.getValue())) {
-                confirmPassword.setErrorMessage("Passwords do not match");
-                confirmPassword.setInvalid(true);
-            } else {
-                confirmPassword.setInvalid(false);
-            }
-        });
+        confirmPassword.addValueChangeListener(
+                event -> {
+                    if (!confirmPassword.getValue().equals(password.getValue())) {
+                        confirmPassword.setErrorMessage("Passwords do not match");
+                        confirmPassword.setInvalid(true);
+                    } else {
+                        confirmPassword.setInvalid(false);
+                    }
+                });
+
 
         binder.forField(role)
                 .asRequired("Role is required")
@@ -137,33 +186,41 @@ public class UserManagementView extends VerticalLayout {
                 .setHeader("Status")
                 .setAutoWidth(true);
 
-        grid.addComponentColumn(user -> {
-            HorizontalLayout actions = new HorizontalLayout();
+        grid.addComponentColumn(
+                        user -> {
+                            HorizontalLayout actions = new HorizontalLayout();
 
-            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-            boolean isSelf = user.getUsername().equals(currentUsername);
-            boolean isAdmin = user.getUsername().equals("admin");
+                            // Can't delete the current user or the admin user
+                            String currentUsername =
+                                    SecurityContextHolder.getContext()
+                                            .getAuthentication()
+                                            .getName();
+                            boolean isSelf = user.getUsername().equals(currentUsername);
+                            boolean isAdmin = user.getUsername().equals("admin");
 
-            Button editBtn = new Button(new Icon(VaadinIcon.EDIT), click -> openEditDialog(user));
-            editBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
+                            Button deleteBtn =
+                                    new Button(
+                                            new Icon(VaadinIcon.TRASH),
+                                            click -> confirmDelete(user));
+                            deleteBtn.addThemeVariants(
+                                    ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_SMALL);
+                            deleteBtn.setEnabled(!isSelf && !isAdmin);
 
-            Button deleteBtn = new Button(new Icon(VaadinIcon.TRASH), click -> confirmDelete(user));
-            deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_SMALL);
-            deleteBtn.setEnabled(!isSelf && !isAdmin);
+                            Button toggleActiveBtn =
+                                    new Button(
+                                            user.isActive()
+                                                    ? VaadinIcon.BAN.create()
+                                                    : VaadinIcon.CHECK.create(),
+                                            click -> toggleUserActive(user));
+                            toggleActiveBtn.addThemeVariants(
+                                    ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
+                            toggleActiveBtn.setEnabled(!isSelf && !isAdmin);
 
-            Button toggleActiveBtn = new Button(
-                    user.isActive() ? VaadinIcon.BAN.create() : VaadinIcon.CHECK.create(),
-                    click -> toggleUserActive(user)
-            );
-            toggleActiveBtn.addThemeVariants(
-                    user.isActive() ? ButtonVariant.LUMO_ERROR : ButtonVariant.LUMO_SUCCESS,
-                    ButtonVariant.LUMO_SMALL
-            );
-            toggleActiveBtn.setEnabled(!isSelf && !isAdmin);
-
-            actions.add(editBtn, deleteBtn, toggleActiveBtn);
-            return actions;
-        }).setHeader("Actions").setAutoWidth(true);
+                            actions.add(deleteBtn, toggleActiveBtn);
+                            return actions;
+                        })
+                .setHeader("Actions")
+                .setAutoWidth(true);
 
         grid.setItems(query -> {
             int offset = query.getOffset();
@@ -193,9 +250,7 @@ public class UserManagementView extends VerticalLayout {
 
         var formLayout = new FormLayout();
         formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1),
-                new FormLayout.ResponsiveStep("500px", 2)
-        );
+                new FormLayout.ResponsiveStep("0", 1), new FormLayout.ResponsiveStep("500px", 2));
 
         formLayout.add(username, name, email, password, confirmPassword, role);
 
@@ -206,38 +261,43 @@ public class UserManagementView extends VerticalLayout {
         formLayout.setColspan(confirmPassword, 1);
         formLayout.setColspan(role, 2);
 
-        dialog.getElement().getStyle()
+        dialog.getElement()
+                .getStyle()
                 .set("min-width", "300px")
                 .set("max-width", "100%")
                 .set("width", "600px");
 
         var cancelBtn = new Button("Cancel");
-        cancelBtn.addClickListener(click -> {
-            dialog.close();
-            clearForm();
-        });
+        cancelBtn.addClickListener(
+                click -> {
+                    dialog.close();
+                    clearForm();
+                });
 
         var submitBtn = new Button("Create");
         submitBtn.getStyle().setBackgroundColor("#58bc82").setColor("white");
 
-        submitBtn.addClickListener(click -> {
-            if (password.getValue().equals(confirmPassword.getValue())) {
-                UserInfo userInfo = new UserInfo();
-                if (binder.writeBeanIfValid(userInfo)) {
-                    createUser(userInfo, dialog);
-                }
-            } else {
-                Notification.show("Passwords do not match",
-                                3000, Notification.Position.BOTTOM_END)
-                        .addThemeVariants(NotificationVariant.LUMO_ERROR);
-            }
-        });
+        submitBtn.addClickListener(
+                click -> {
+                    if (password.getValue().equals(confirmPassword.getValue())) {
+                        UserInfo userInfo = new UserInfo();
+                        if (binder.writeBeanIfValid(userInfo)) {
+                            createUser(userInfo, dialog);
+                        }
+                    } else {
+                        Notification.show(
+                                        "Passwords do not match",
+                                        3000,
+                                        Notification.Position.BOTTOM_END)
+                                .addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    }
+                });
 
         var buttonGroup = new HorizontalLayout();
         buttonGroup.setWidthFull();
         buttonGroup.getStyle().setPaddingTop("10px");
         buttonGroup.setSpacing(true);
-        buttonGroup.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        buttonGroup.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
         buttonGroup.add(cancelBtn, submitBtn);
 
         mainLayout.add(formLayout, buttonGroup);
@@ -395,15 +455,16 @@ public class UserManagementView extends VerticalLayout {
     private void createUser(UserInfo user, Dialog dialog) {
         try {
             userInfoService.save(user);
-            Notification.show("User created successfully",
-                            3000, Notification.Position.BOTTOM_END)
+            Notification.show("User created successfully", 3000, Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             dialog.close();
             refreshGrid();
             clearForm();
         } catch (Exception e) {
-            Notification.show("Error creating user: " + e.getMessage(),
-                            3000, Notification.Position.BOTTOM_END)
+            Notification.show(
+                            "Error creating user: " + e.getMessage(),
+                            3000,
+                            Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
@@ -424,18 +485,24 @@ public class UserManagementView extends VerticalLayout {
 
         VerticalLayout content = new VerticalLayout();
         content.add("Are you sure you want to delete user: " + user.getUsername() + "?");
-        content.setPadding(true);
 
         HorizontalLayout buttons = new HorizontalLayout();
         Button cancelButton = new Button("Cancel", e -> confirmDialog.close());
-        Button deleteButton = new Button("Delete", e -> {
-            deleteUser(user);
-            confirmDialog.close();
-        });
+        Button deleteButton =
+                new Button(
+                        "Delete",
+                        e -> {
+                            deleteUser(user);
+                            confirmDialog.close();
+                        });
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         buttons.add(cancelButton, deleteButton);
+        buttons.setWidthFull();
+        buttons.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+
         content.add(buttons);
+        content.setWidthFull();
 
         confirmDialog.add(content);
         confirmDialog.open();
@@ -444,13 +511,14 @@ public class UserManagementView extends VerticalLayout {
     private void deleteUser(UserInfo user) {
         try {
             userInfoService.deleteById(user.getId());
-            Notification.show("User deleted",
-                            3000, Notification.Position.BOTTOM_END)
+            Notification.show("User deleted", 3000, Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             refreshGrid();
         } catch (Exception e) {
-            Notification.show("Error deleting user: " + e.getMessage(),
-                            3000, Notification.Position.BOTTOM_END)
+            Notification.show(
+                            "Error deleting user: " + e.getMessage(),
+                            3000,
+                            Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
@@ -461,13 +529,14 @@ public class UserManagementView extends VerticalLayout {
             user.setActive(!user.isActive());
             userInfoService.save(user);
             String status = user.isActive() ? "activated" : "deactivated";
-            Notification.show("User " + status,
-                            3000, Notification.Position.BOTTOM_END)
+            Notification.show("User " + status, 3000, Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             refreshGrid();
         } catch (Exception e) {
-            Notification.show("Error updating user: " + e.getMessage(),
-                            3000, Notification.Position.BOTTOM_END)
+            Notification.show(
+                            "Error updating user: " + e.getMessage(),
+                            3000,
+                            Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }

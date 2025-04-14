@@ -1,6 +1,8 @@
 package com.icc.web.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 
 @Entity
@@ -25,9 +27,11 @@ public class UserInfo {
 
     private String password;
 
-    @Builder.Default
-    private boolean active = true;
+    @Builder.Default private boolean active = true;
 
     private String role;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Event> events = new ArrayList<>();
 }

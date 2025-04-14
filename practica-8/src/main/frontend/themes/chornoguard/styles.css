@@ -1,0 +1,122 @@
+@import url('./views/index-view.css');    html {
+      --white: #ffffff;
+      --black: #000000;
+      --gray: #eeeded;
+      --translucent-white: #ffffff98;
+      --lumo-border-radius-s: calc(var(--lumo-size-m) / 6);
+      --lumo-border-radius-m: calc(var(--lumo-size-m) / 2);
+      --lumo-border-radius-l: var(--lumo-size-m);
+      --lumo-primary-color: rgb(0, 141, 125);
+      --lumo-primary-color-50pct: rgba(0, 141, 125, 0.5);
+      --lumo-primary-color-10pct: rgba(0, 141, 125, 0.1);
+      --lumo-primary-text-color: rgb(0, 141, 125);
+      --lumo-base-color: rgb(251, 251, 251);
+      --lumo-shade: hsl(214, 33%, 13%);
+      --lumo-shade-5pct: hsla(214, 33%, 13%, 0.05);
+      --lumo-shade-10pct: hsla(214, 33%, 13%, 0.1);
+      --lumo-shade-20pct: hsla(214, 33%, 13%, 0.2);
+      --lumo-shade-30pct: hsla(214, 33%, 13%, 0.3);
+      --lumo-shade-40pct: hsla(214, 33%, 13%, 0.4);
+      --lumo-shade-50pct: hsla(214, 33%, 13%, 0.5);
+      --lumo-shade-60pct: hsla(214, 33%, 13%, 0.6);
+      --lumo-shade-70pct: hsla(214, 33%, 13%, 0.7);
+      --lumo-shade-80pct: hsla(214, 33%, 13%, 0.8);
+      --lumo-shade-90pct: hsla(214, 33%, 13%, 0.9);
+
+    }
+
+    [theme~="dark"] {
+      --white: #ffffff;
+      --black: #000000;
+      --lumo-primary-color: rgb(0, 141, 125);
+      --lumo-primary-color-50pct: rgba(0, 141, 125, 0.5);
+      --lumo-primary-color-10pct: rgba(0, 141, 125, 0.1);
+      --lumo-base-color: hsla(214, 10%, 9%, 0.94);
+
+    }
+
+vaadin-grid {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  border: 1px solid var(--lumo-shade-20pct);
+  border-radius: var(--lumo-border-radius-m);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: var(--lumo-base-color);
+}
+
+vaadin-grid::part(header-cell) {
+  background-color: var(--lumo-primary-color);
+  color: var(--white);
+  padding: 12px 16px;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 2px solid var(--lumo-primary-color-50pct);
+}
+
+vaadin-grid::part(body-cell) {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--lumo-shade-20pct);
+  background-color: var(--white);
+  color: var(--lumo-shade);
+}
+
+vaadin-grid::part(row:nth-child(odd)) {
+  background-color: var(--lumo-base-color);
+}
+vaadin-grid::part(row:nth-child(even)) {
+  background-color: var(--white);
+}
+
+vaadin-grid::part(row):hover {
+  background-color: var(--lumo-primary-color-10pct);
+}
+
+vaadin-grid .actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+vaadin-grid .actions button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--lumo-border-radius-s);
+  transition: background-color 0.3s ease;
+}
+
+vaadin-grid .actions button:hover {
+  background-color: var(--lumo-primary-color-10pct);
+}
+
+.radial-bg-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: -1; /* Esto manda el fondo detrás del contenido */
+  top: 0;
+  left: 0;
+}
+
+.radial-bg-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 16px 16px;
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 70%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 70%, transparent 100%);
+}
+
+.nav-link {
+  color: var(--white);
+  text-decoration: none;
+  transition: margin-top 0.3s ease;
+}
+
+.nav-link:hover {
+  margin-top: -5px;
+}
