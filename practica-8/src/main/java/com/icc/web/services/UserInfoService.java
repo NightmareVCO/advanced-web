@@ -2,10 +2,9 @@ package com.icc.web.services;
 
 import com.icc.web.model.UserInfo;
 import com.icc.web.repositories.UserInfoRepository;
+import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserInfoService {
