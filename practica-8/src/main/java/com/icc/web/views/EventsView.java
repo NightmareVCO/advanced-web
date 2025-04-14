@@ -42,8 +42,8 @@ import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
 
-@Route("admin/events")
-@RolesAllowed(Role.ADMIN)
+@Route("events")
+@RolesAllowed({Role.USER, Role.ADMIN})
 @PageTitle("Home | Chrono Guard")
 public class EventsView extends Composite<VerticalLayout> {
     private final EventService eventService;

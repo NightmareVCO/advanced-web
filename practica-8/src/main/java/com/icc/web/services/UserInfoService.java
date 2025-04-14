@@ -40,4 +40,10 @@ public class UserInfoService {
     public List<UserInfo> findAll() {
         return userRepository.findAll();
     }
+
+    public void updateWithoutPassword(UserInfo userInfo) {
+        UserInfo existingUser = userRepository.findById(userInfo.getId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userInfo.setPassword(existingUser.getPassword());
+        userRepository.save(userInfo);
+    }
 }
