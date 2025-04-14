@@ -2,10 +2,9 @@ package com.icc.web.services;
 
 import com.icc.web.model.UserInfo;
 import com.icc.web.repositories.UserInfoRepository;
-
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +19,7 @@ public class UserInfoService {
     }
 
     public void save(UserInfo userInfo) {
-        if (userInfo.getPassword() != null && !userInfo.getPassword().startsWith("$2a$")) {
-            userInfo.setPassword(encoder.encode(userInfo.getPassword()));
-        }
+        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
         userRepository.save(userInfo);
     }
 
@@ -44,6 +41,10 @@ public class UserInfoService {
 
     public List<UserInfo> findAll() {
         return userRepository.findAll();
+    }
+
+    public Page<UserInfo> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     public void updateWithoutPassword(UserInfo userInfo) {
