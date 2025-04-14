@@ -7,8 +7,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.html.Paragraph;
+import jakarta.annotation.security.PermitAll;
 
 @Route("")
+@PermitAll
 @PageTitle("Home | Chrono Guard")
 public class LandingView extends VerticalLayout {
     public LandingView() {
