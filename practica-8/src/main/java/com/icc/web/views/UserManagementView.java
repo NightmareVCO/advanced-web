@@ -121,7 +121,6 @@ public class UserManagementView extends Composite<VerticalLayout> {
         role.setItems(Role.ADMIN, Role.USER);
         role.setValue(Role.USER);
 
-        // Username validation
         binder.forField(username)
                 .asRequired("Username is required")
                 .withValidator(
@@ -134,17 +133,14 @@ public class UserManagementView extends Composite<VerticalLayout> {
                         "Username already exists")
                 .bind(UserInfo::getUsername, UserInfo::setUsername);
 
-        // Name validation
         binder.forField(name)
                 .asRequired("Name is required")
                 .bind(UserInfo::getName, UserInfo::setName);
 
-        // Email validation
         binder.forField(email)
                 .asRequired("Email is required")
                 .bind(UserInfo::getEmail, UserInfo::setEmail);
 
-        // Password validation
         binder.forField(password)
                 .asRequired("Password is required")
                 .withValidator(
@@ -173,7 +169,7 @@ public class UserManagementView extends Composite<VerticalLayout> {
                     }
                 });
 
-        // Role validation
+
         binder.forField(role)
                 .asRequired("Role is required")
                 .bind(UserInfo::getRole, UserInfo::setRole);
@@ -186,7 +182,9 @@ public class UserManagementView extends Composite<VerticalLayout> {
         grid.addColumn(UserInfo::getUsername).setHeader("Username").setAutoWidth(true);
         grid.addColumn(UserInfo::getEmail).setHeader("Email").setAutoWidth(true);
         grid.addColumn(UserInfo::getRole).setHeader("Role").setAutoWidth(true);
-        grid.addColumn(UserInfo::isActive).setHeader("Status").setAutoWidth(true);
+        grid.addColumn(user -> user.isActive() ? "Active" : "Inactive")
+                .setHeader("Status")
+                .setAutoWidth(true);
 
         grid.addComponentColumn(
                         user -> {
@@ -224,7 +222,20 @@ public class UserManagementView extends Composite<VerticalLayout> {
                 .setHeader("Actions")
                 .setAutoWidth(true);
 
-        refreshGrid();
+        grid.setItems(query -> {
+            int offset = query.getOffset();
+            int limit = query.getLimit();
+
+            org.springframework.data.domain.PageRequest pageRequest =
+                    org.springframework.data.domain.PageRequest.of(offset / limit, limit);
+
+            org.springframework.data.domain.Page<UserInfo> page = userInfoService.findAll(pageRequest);
+
+            return page.stream();
+        }, query -> {
+            return (int) userInfoService.findAll().size();
+        });
+
         grid.setSizeFull();
     }
 
@@ -293,6 +304,152 @@ public class UserManagementView extends Composite<VerticalLayout> {
         dialog.add(mainLayout);
 
         return dialog;
+    }
+
+    private void openEditDialog(UserInfo user) {
+        var dialog = new Dialog();
+        dialog.setHeaderTitle("Edit User: " + user.getUsername());
+
+        // Create a copy of the user to avoid modifying the original directly
+        UserInfo editedUser = new UserInfo();
+        editedUser.setId(user.getId());
+        editedUser.setUsername(user.getUsername());
+        editedUser.setName(user.getName());
+        editedUser.setEmail(user.getEmail());
+        editedUser.setRole(user.getRole());
+        editedUser.setActive(user.isActive());
+        // Don't copy password - will be set only if changed
+
+        var mainLayout = new VerticalLayout();
+        mainLayout.setSpacing(false);
+        mainLayout.setPadding(false);
+        mainLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+
+        var formLayout = new FormLayout();
+        formLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1),
+                new FormLayout.ResponsiveStep("500px", 2)
+        );
+
+        // Username field (read-only)
+        TextField usernameField = new TextField("Username");
+        usernameField.setValue(user.getUsername());
+        usernameField.setReadOnly(true);
+
+        // Name field
+        TextField nameField = new TextField("Name");
+        nameField.setValue(user.getName());
+
+        // Email field
+        EmailField emailField = new EmailField("Email");
+        emailField.setValue(user.getEmail());
+
+        // Role field
+        Select<String> roleField = new Select<>();
+        roleField.setLabel("Role");
+        roleField.setItems(Role.ADMIN, Role.USER);
+        roleField.setValue(user.getRole());
+
+        // Password fields (optional for editing)
+        PasswordField passwordField = new PasswordField("New Password (leave blank to keep current)");
+        PasswordField confirmPasswordField = new PasswordField("Confirm New Password");
+
+        // Add validation for password confirmation
+        passwordField.addValueChangeListener(event -> {
+            if (!passwordField.isEmpty() && !passwordField.getValue().equals(confirmPasswordField.getValue())) {
+                confirmPasswordField.setErrorMessage("Passwords do not match");
+                confirmPasswordField.setInvalid(true);
+            } else {
+                confirmPasswordField.setInvalid(false);
+            }
+        });
+
+        confirmPasswordField.addValueChangeListener(event -> {
+            if (!passwordField.isEmpty() && !passwordField.getValue().equals(confirmPasswordField.getValue())) {
+                confirmPasswordField.setErrorMessage("Passwords do not match");
+                confirmPasswordField.setInvalid(true);
+            } else {
+                confirmPasswordField.setInvalid(false);
+            }
+        });
+
+        formLayout.add(usernameField, nameField, emailField, roleField, passwordField, confirmPasswordField);
+
+        formLayout.setColspan(usernameField, 2);
+        formLayout.setColspan(nameField, 2);
+        formLayout.setColspan(emailField, 2);
+        formLayout.setColspan(roleField, 2);
+        formLayout.setColspan(passwordField, 1);
+        formLayout.setColspan(confirmPasswordField, 1);
+
+        dialog.getElement().getStyle()
+                .set("min-width", "300px")
+                .set("max-width", "100%")
+                .set("width", "600px");
+
+        var cancelBtn = new Button("Cancel");
+        cancelBtn.addClickListener(click -> dialog.close());
+
+        var saveBtn = new Button("Save");
+        saveBtn.getStyle().setBackgroundColor("#58bc82").setColor("white");
+        saveBtn.addClickListener(click -> {
+            // Validate passwords match if a new password was entered
+            if (!passwordField.isEmpty() && !passwordField.getValue().equals(confirmPasswordField.getValue())) {
+                Notification.show("Passwords do not match",
+                                3000, Notification.Position.BOTTOM_END)
+                        .addThemeVariants(NotificationVariant.LUMO_ERROR);
+                return;
+            }
+
+            // Update user object
+            editedUser.setName(nameField.getValue());
+            editedUser.setEmail(emailField.getValue());
+            editedUser.setRole(roleField.getValue());
+
+            // Only set password if a new one was provided
+            if (!passwordField.isEmpty()) {
+                editedUser.setPassword(passwordField.getValue());
+            } else {
+                // Keep existing password (set to null to prevent re-encoding)
+                editedUser.setPassword(null);
+            }
+
+            updateUser(editedUser, dialog);
+        });
+
+        var buttonGroup = new HorizontalLayout();
+        buttonGroup.setWidthFull();
+        buttonGroup.getStyle().setPaddingTop("10px");
+        buttonGroup.setSpacing(true);
+        buttonGroup.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        buttonGroup.add(cancelBtn, saveBtn);
+
+        mainLayout.add(formLayout, buttonGroup);
+        dialog.add(mainLayout);
+        dialog.open();
+    }
+
+    private void updateUser(UserInfo editedUser, Dialog dialog) {
+        try {
+            // Get the original user to preserve password if not changed
+            UserInfo originalUser = userInfoService.findByUsername(editedUser.getUsername());
+
+            // If password is null, keep the original password
+            if (editedUser.getPassword() == null) {
+                editedUser.setPassword(originalUser.getPassword());
+            }
+
+            userInfoService.save(editedUser);
+            Notification.show("User updated successfully",
+                            3000, Notification.Position.BOTTOM_END)
+                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            dialog.close();
+            refreshGrid();
+        } catch (Exception e) {
+            Notification.show("Error updating user: " + e.getMessage(),
+                            3000, Notification.Position.BOTTOM_END)
+                    .addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
     }
 
     private void createUser(UserInfo user, Dialog dialog) {
@@ -366,6 +523,7 @@ public class UserManagementView extends Composite<VerticalLayout> {
         }
     }
 
+
     private void toggleUserActive(UserInfo user) {
         try {
             user.setActive(!user.isActive());
@@ -384,6 +542,6 @@ public class UserManagementView extends Composite<VerticalLayout> {
     }
 
     private void refreshGrid() {
-        grid.setItems(userInfoService.findAll());
+        grid.getDataProvider().refreshAll();
     }
 }
