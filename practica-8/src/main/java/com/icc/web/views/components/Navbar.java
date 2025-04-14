@@ -76,10 +76,6 @@ public class Navbar extends Composite<HorizontalLayout> {
         homeLink.addClassName("nav-link");
         homeLink.setRoute(IndexView.class);
 
-        featureLink.setText("About Us");
-        featureLink.addClassName("nav-link");
-        featureLink.setRoute(IndexView.class);
-
         aboutLink.setText("Users");
         aboutLink.addClassName("nav-link");
         aboutLink.setRoute(UserManagementView.class);
