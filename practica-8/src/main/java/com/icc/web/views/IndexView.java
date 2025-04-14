@@ -39,10 +39,12 @@ public class IndexView extends Composite<VerticalLayout> {
 
     private Div pageSection() {
         Div pageContainer = new Div();
-        pageContainer.getStyle().set("display", "flex");
-        pageContainer.getStyle().set("flex-grow", "1");
-        pageContainer.getStyle().set("align-items", "center");
-        pageContainer.getStyle().set("justify-content", "space-between");
+        Style pageContainerStyle = pageContainer.getStyle();
+        
+        pageContainerStyle.set("display", "flex");
+        pageContainerStyle.set("flex-grow", "1");
+        pageContainerStyle.set("align-items", "center");
+        pageContainerStyle.set("justify-content", "space-between");
 
         VerticalLayout productExplanationContainer = new VerticalLayout();
         VerticalLayout productImageContainer = new VerticalLayout();
@@ -51,6 +53,7 @@ public class IndexView extends Composite<VerticalLayout> {
         brandImage.setWidth("350px");
 
         Paragraph description = new Paragraph();
+        Style descriptionStyle = description.getStyle();
         description
                 .getElement()
                 .setProperty(
@@ -67,24 +70,28 @@ public class IndexView extends Composite<VerticalLayout> {
                             + " the ability to drag and drop events directly on the calendar. Fully"
                             + " containerized with Docker, it’s ready for deployment in any"
                             + " enterprise environment.");
-        description.getStyle().set("width", "850px");
-        description.getStyle().set("font-size", "var(--lumo-font-size-m)");
-        description.getStyle().set("color", "var(--lumo-secondary-text-color)");
+        descriptionStyle.set("width", "850px");
+        descriptionStyle.set("font-size", "var(--lumo-font-size-m)");
+        descriptionStyle.set("color", "var(--lumo-secondary-text-color)");
 
         Image productImage = new Image("/images/calendar.svg", "Chrono Guard Product");
         productImage.setWidth("650px");
 
         productExplanationContainer.add(brandImage, description);
-        productExplanationContainer.getStyle().set("display", "flex");
-        productExplanationContainer.getStyle().set("flex-direction", "column");
-        productExplanationContainer.getStyle().set("align-items", "center");
-        productExplanationContainer.getStyle().set("justify-content", "center");
-        productExplanationContainer.getStyle().set("gap", "20px");
+        Style productExplanationStyle = productExplanationContainer.getStyle();
+
+        productExplanationStyle.set("display", "flex");
+        productExplanationStyle.set("flex-direction", "column");
+        productExplanationStyle.set("align-items", "center");
+        productExplanationStyle.set("justify-content", "center");
+        productExplanationStyle.set("gap", "20px");
 
         productImageContainer.add(productImage);
-        productImageContainer.getStyle().set("display", "flex");
-        productImageContainer.getStyle().set("align-items", "start");
-        productImageContainer.getStyle().set("justify-content", "center");
+        Style productImageStyle = productImageContainer.getStyle();
+
+        productImageStyle.set("display", "flex");
+        productImageStyle.set("align-items", "start");
+        productImageStyle.set("justify-content", "center");
 
         pageContainer.add(productExplanationContainer, productImage);
 
