@@ -10,15 +10,18 @@ import com.vaadin.flow.server.StreamResource;
 public class AppTitle extends Div {
     public AppTitle(String size) {
         Div container = new Div();
-        container.getStyle()
+        container
+                .getStyle()
                 .set("display", "flex")
                 .set("align-items", "center")
                 .set("justify-content", "center");
 
-        StreamResource logoResource = new StreamResource("logo.png",
-                () -> getClass().getResourceAsStream("/static/logo.png"));
+        StreamResource logoResource =
+                new StreamResource(
+                        "logo.png", () -> getClass().getResourceAsStream("/static/logo.png"));
         Image logo = new Image(logoResource, "Logo");
-        int sizeFixed = Integer.parseInt(size.replaceAll("[^0-9]", "")) + 15; // Making the logo bigger
+        int sizeFixed =
+                Integer.parseInt(size.replaceAll("[^0-9]", "")) + 15; // Making the logo bigger
         logo.setWidth(sizeFixed + "px");
         logo.setHeight(sizeFixed + "px");
 
