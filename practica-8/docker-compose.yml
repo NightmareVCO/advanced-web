@@ -19,6 +19,21 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+  app:
+    container_name: chronoguard
+    image: nightmarevco/chronoguard:app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
 volumes:
   db-data: {}
