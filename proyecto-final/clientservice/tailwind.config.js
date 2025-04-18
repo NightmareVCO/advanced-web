@@ -13,6 +13,8 @@ module.exports = {
 		extend: {
 			backgroundImage: {
 				'hero-background': "url('/images/hero-cover-1.webp')",
+				'hero-background-2': "url('/images/hero-cover-2.webp')",
+				'hero-background-3': "url('/images/hero-cover-3.webp')",
 			},
 			flex: {
 				2: '2 2 0%',
