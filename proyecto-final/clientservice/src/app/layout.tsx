@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 import { Onest } from 'next/font/google';
 
 import '@/styles/globals.css';
+import MiniGridBackground from '@/components/backgrounds/MiniGridBackground';
+import Banner from '@components/banner/Banner';
+import Footer from '@components/navigation/footer/Footer';
 import Navbar from '@components/navigation/navbar/Navbar';
+import { NAVBAR_ITEMS } from '@lib/constants/navbar.constants';
 import { Providers } from './providers';
 
 const onest = Onest({
@@ -23,11 +27,19 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={onest.className}>
+			<body
+				className={`${onest.className} flex flex-col min-h-screen antialiased scroll-smooth`}
+			>
 				<Providers>
-					<Navbar />
-					<main>{children}</main>
-					{/* <Footer /> */}
+					<MiniGridBackground />
+					<header>
+						<Navbar navbarItems={NAVBAR_ITEMS} />
+						<Banner />
+					</header>
+					<main className="flex-grow">{children}</main>
+					<footer className="relative z-10">
+						<Footer footerItems={NAVBAR_ITEMS} />
+					</footer>
 				</Providers>
 			</body>
 		</html>
