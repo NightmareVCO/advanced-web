@@ -4,7 +4,15 @@ import { Icon } from '@iconify/react';
 import { Colors } from '@lib/constants/colors.constants';
 import { motion } from 'framer-motion';
 
-export default function ScrollDownAnimation() {
+type ScrollDownAnimationProps = {
+	distanceToReduceScroll?: number;
+	distanceToIncreaseScroll?: number;
+};
+
+export default function ScrollDownAnimation({
+	distanceToReduceScroll = 0,
+	distanceToIncreaseScroll = 0,
+}: ScrollDownAnimationProps) {
 	return (
 		<motion.div
 			initial={{ y: 0 }}
@@ -16,7 +24,13 @@ export default function ScrollDownAnimation() {
 			}}
 			className="p-2 mt-1 rounded-full shadow-2xl cursor-pointer bg-primary backdrop-blur-sm"
 			onClick={() => {
-				window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+				window.scrollBy({
+					top:
+						window.innerHeight -
+						distanceToReduceScroll +
+						distanceToIncreaseScroll,
+					behavior: 'smooth',
+				});
 			}}
 		>
 			<Icon icon="lucide:arrow-down-to-dot" color={Colors.WHITE} width={30} />
