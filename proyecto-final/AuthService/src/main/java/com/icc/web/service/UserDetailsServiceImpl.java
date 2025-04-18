@@ -1,0 +1,44 @@
+package com.icc.web.service;
+
+import com.icc.web.model.UserDetailsImpl;
+import com.icc.web.model.UserInfo;
+import com.icc.web.repository.UserInfoRepository;
+import com.icc.web.util.constants.Role;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    private final UserInfoRepository userInfoRepository;
+
+    public UserDetailsServiceImpl(
+            UserInfoRepository userInfoRepository, BCryptPasswordEncoder encoder) {
+        this.userInfoRepository = userInfoRepository;
+
+        if (userInfoRepository.count() == 0) {
+            UserInfo admin =
+                    UserInfo.builder()
+                            .name("Admin")
+                            .lastname("Admin")
+                            .username("admin")
+                            .email("admin@admin.com")
+                            .password(encoder.encode("admin"))
+                            .active(true)
+                            .role(Role.ADMIN)
+                            .build();
+            userInfoRepository.save(admin);
+        }
+    }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserInfo user = userInfoRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return new UserDetailsImpl(user);
+    }
+}
