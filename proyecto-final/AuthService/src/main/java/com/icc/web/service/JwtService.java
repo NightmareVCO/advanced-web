@@ -1,22 +1,27 @@
 package com.icc.web.service;
 
+import com.icc.web.dto.AuthResponseDTO;
+import com.icc.web.model.UserInfo;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
-
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 
+@RequiredArgsConstructor
 @Service
 public class JwtService {
+
+    private final UserInfoService userService;
 
     @Value("${security.jwt.secret-key}")
     private String secretKey;
@@ -24,32 +29,49 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+    private static final String ISSUER = "BOOKHIVE-JWT";
+
+    public AuthResponseDTO generateToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        Optional<UserInfo> user = userService.getUserByUsername(username);
+        if (user.isEmpty()) {
+            return null;
+        }
+
+        String userId = String.valueOf(user.get().getId());
+        claims.put("username", username);
+        claims.put("roles", String.join(",", user.get().getRole()));
+        claims.put("userId", userId);
+
+        return createToken(claims, username, userId);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
+    private AuthResponseDTO createToken(Map<String, Object> claims, String username, String id) {
+        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(jwtExpiration);
+        Date expirationDate = Date.from(localDateTime.toInstant(ZoneOffset.ofHours(-4)));
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        extraClaims.put("role", userDetails.getAuthorities().toArray()[0].toString());
-        return buildToken(extraClaims, userDetails, jwtExpiration);
-    }
-
-    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+        String jwt = Jwts.builder()
+                .id(id)
+                .claims(claims)
+                .issuer(ISSUER)
+                .subject(username)
+                .signWith(key)
+                .issuedAt(new Date())
+                .expiration(expirationDate)
                 .compact();
+
+        return new AuthResponseDTO(jwt);
+    }
+
+    public Optional<Claims> getClaims(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        try {
+            return Optional.ofNullable(Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -57,37 +79,18 @@ public class JwtService {
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    public Object isValidToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
-                    .build()
-                    .parseClaimsJws(token);
+    public boolean isTokenExpired(String token) {
+        Optional<Claims> claims = this.getClaims(token);
+        if (claims.isEmpty()) {
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
         }
+
+        Date expirationDate = claims.get().getExpiration();
+        return expirationDate.before(new Date());
+    }
+
+    public String extractUsername(String token) {
+        return getClaims(token).map(Claims::getSubject).orElse(null);
     }
 
     public String getToken(HttpServletRequest request) {
@@ -97,4 +100,5 @@ public class JwtService {
         }
         return null;
     }
+
 }

@@ -5,11 +5,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
+import org.bson.types.ObjectId;
 
 @Value
 public class UserDTO {
 
-    Long id;
+    ObjectId id;
 
     @NotBlank(message = "First name is mandatory")
     @NotNull

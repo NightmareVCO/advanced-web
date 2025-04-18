@@ -1,10 +1,11 @@
 package com.icc.web.dto;
 
 import lombok.Value;
+import org.bson.types.ObjectId;
 
 @Value
 public class UserResponseDTO {
-    String id;
+    ObjectId id;
     String name;
     String lastname;
     String username;

@@ -18,4 +18,7 @@ public interface UserInfoRepository extends MongoRepository<UserInfo, ObjectId> 
     boolean existsByUsernameIgnoreCase(String username);
 
     void deleteByUsername(String username);
+
+    UserInfo findByEmail(String email);
+
 }

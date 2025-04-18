@@ -2,45 +2,56 @@ package com.icc.web.service;
 
 import com.icc.web.model.UserInfo;
 import com.icc.web.repository.UserInfoRepository;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserInfoService {
     private final UserInfoRepository userInfoRepository;
-    private final BCryptPasswordEncoder encoder;
 
-    public UserInfoService(UserInfoRepository userInfoRepository, BCryptPasswordEncoder encoder) {
-        this.userInfoRepository = userInfoRepository;
-        this.encoder = encoder;
-    }
-
-    public void save (UserInfo userInfo) {
-        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
-        userInfoRepository.save(userInfo);
-    }
-
-    public UserInfo findByUsername(String username) {
-        return userInfoRepository.findByUsername(username);
-    }
-
-    public boolean existsByUsername(String username) {
-        return userInfoRepository.existsByUsernameIgnoreCase(username);
-    }
-
-    public void deleteByUsername(String username) {
-        userInfoRepository.deleteByUsername(username);
-    }
-
-    public void deleteById(ObjectId id) {
-        userInfoRepository.deleteById(id);
-    }
-
-    public List<UserInfo> findAll() {
+    public List<UserInfo> getAllUsers() {
         return userInfoRepository.findAll();
     }
 
+    public Optional<UserInfo> getUserById(ObjectId id) {
+        return userInfoRepository.findById(id);
+    }
+
+    public Optional<UserInfo> getUserByUsername(String username) {
+        return Optional.ofNullable(userInfoRepository.findByUsername(username));
+    }
+
+    public Optional<UserInfo> getUserByEmail(String email) {
+        return Optional.ofNullable(userInfoRepository.findByEmail(email));
+    }
+
+    public boolean existsByUsername(String username) {
+        return this.getUserByUsername(username).isPresent();
+    }
+
+    public boolean existsByEmail(String email) {
+        return this.getUserByEmail(email).isPresent();
+    }
+
+    public Optional<UserInfo> saveUser(UserInfo userInfo) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+
+        return Optional.of(userInfoRepository.save(userInfo));
+    }
+
+    public Optional<UserInfo> deleteUser(ObjectId id) {
+        Optional<UserInfo> userInfo = this.getUserById(id);
+        if (userInfo.isPresent()) {
+            userInfoRepository.deleteById(id);
+        }
+        return userInfo;
+    }
 }
