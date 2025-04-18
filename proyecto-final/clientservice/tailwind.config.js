@@ -10,7 +10,33 @@ module.exports = {
 		'./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
 	],
 	theme: {
-		extend: {},
+		extend: {
+			backgroundImage: {
+				'hero-background': "url('/images/hero-cover-1.webp')",
+			},
+			flex: {
+				2: '2 2 0%',
+				3: '3 3 0%',
+				4: '4 4 0%',
+				5: '5 5 0%',
+				6: '6 6 0%',
+			},
+		},
+		keyframes: {
+			'scrolling-banner': {
+				from: { transform: 'translateX(0)' },
+				to: { transform: 'translateX(calc(-50% - var(--gap)/2))' },
+			},
+			'scrolling-banner-vertical': {
+				from: { transform: 'translateY(0)' },
+				to: { transform: 'translateY(calc(-50% - var(--gap)/2))' },
+			},
+		},
+		animation: {
+			'scrolling-banner': 'scrolling-banner var(--duration) linear infinite',
+			'scrolling-banner-vertical':
+				'scrolling-banner-vertical var(--duration) linear infinite',
+		},
 	},
 	darkMode: 'class',
 	plugins: [
