@@ -1,7 +1,7 @@
 'use client';
 
-import FAQs from '@components/faqs/FAQs';
 import { FAQs as FAQsData } from '@/lib/data/faq.data';
+import FAQs from '@components/faqs/FAQs';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
