@@ -1,8 +1,9 @@
-import FAQsSection from '@components/sections/homePage/FAQsSection';
+import ScrollDownAnimation from '@components/navigation/ScrollDownAnimation';
+import ScrollUpAnimation from '@components/navigation/ScrollUpAnimation';
 import CategoriesSection from '@components/sections/homePage/CategoriesSection';
 import ExploreSection from '@components/sections/homePage/ExploreSection';
+import FAQsSection from '@components/sections/homePage/FAQsSection';
 import HeroSection from '@components/sections/homePage/HeroSection';
-import ScrollDownAnimation from '@components/sections/homePage/ScrollDownAnimation';
 import TestimonialSection from '@components/sections/homePage/TestimonialSection';
 
 export default function HomePage() {
@@ -20,17 +21,25 @@ export default function HomePage() {
 					<ExploreSection />
 				</section>
 
+				<ScrollDownAnimation distanceToReduceScroll={380} />
+
 				<section>
 					<CategoriesSection />
 				</section>
+
+				<ScrollDownAnimation distanceToReduceScroll={220} />
 
 				<section>
 					<FAQsSection />
 				</section>
 
+				<ScrollDownAnimation distanceToReduceScroll={200} />
+
 				<section>
 					<TestimonialSection />
 				</section>
+
+				<ScrollUpAnimation />
 			</div>
 		</main>
 	);
