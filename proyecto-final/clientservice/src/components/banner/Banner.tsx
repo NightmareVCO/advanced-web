@@ -3,10 +3,46 @@
 import { Button, Link } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { NavbarLinks } from '@lib/constants/navbar.constants';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const BANNER_STORAGE_KEY = 'book-hive-banner-state';
 
 export default function Banner() {
-	const [visible, setVisible] = useState(true);
+	const [visible, setVisible] = useState(false);
+
+	useEffect(() => {
+		const storedBannerState = sessionStorage.getItem(BANNER_STORAGE_KEY);
+
+		if (!storedBannerState) {
+			setVisible(true);
+			return;
+		}
+
+		try {
+			const { hidden, expiresAt } = JSON.parse(storedBannerState);
+			const currentTime = new Date().getTime();
+
+			if (hidden && currentTime < expiresAt) {
+				setVisible(false);
+			} else {
+				sessionStorage.removeItem(BANNER_STORAGE_KEY);
+				setVisible(true);
+			}
+		} catch (error) {
+			sessionStorage.removeItem(BANNER_STORAGE_KEY);
+			setVisible(true);
+		}
+	}, []);
+
+	const handleClose = () => {
+		const expiresAt = new Date().getTime() + 24 * 60 * 60 * 1000;
+		sessionStorage.setItem(
+			BANNER_STORAGE_KEY,
+			JSON.stringify({ hidden: true, expiresAt }),
+		);
+		setVisible(false);
+	};
+
 	if (!visible) return null;
 
 	return (
@@ -47,7 +83,7 @@ export default function Banner() {
 					className="-m-1"
 					size="sm"
 					variant="light"
-					onPress={() => setVisible(false)}
+					onPress={handleClose}
 				>
 					<Icon
 						aria-hidden="true"
