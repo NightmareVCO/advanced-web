@@ -14,7 +14,11 @@ import {
 	NavbarBrand,
 	NavbarContent,
 	NavbarItem,
+	NavbarMenu,
+	NavbarMenuItem,
+	NavbarMenuToggle,
 } from '@heroui/react';
+import { useState } from 'react';
 import { type NavbarLink, NavbarLinks } from '@lib/constants/navbar.constants';
 
 // export const SearchIcon = ({
@@ -58,11 +62,19 @@ type NavbarProps = {
 };
 
 export default function Navbar({ navbarItems }: NavbarProps) {
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 	return (
-		<HeroNavbar isBordered>
+		<HeroNavbar isBordered onMenuOpenChange={setIsMenuOpen}>
 			<NavbarContent justify="start">
+				<NavbarMenuToggle
+					aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+					className="sm:hidden"
+				/>
 				<NavbarBrand>
-					<BookHiveBranIcon width={80} height={100} />
+					<Link href={NavbarLinks.HOME}>
+						<BookHiveBranIcon width={80} height={100} />
+					</Link>
 				</NavbarBrand>
 			</NavbarContent>
 
@@ -124,6 +136,32 @@ export default function Navbar({ navbarItems }: NavbarProps) {
 					</DropdownMenu>
 				</Dropdown> */}
 			</NavbarContent>
+
+			<NavbarMenu>
+				{navbarItems?.map((item, index) => (
+					<NavbarMenuItem key={`${item.label}-${index}`}>
+						<Link
+							className="w-full"
+							color="foreground"
+							href={item.href}
+							size="lg"
+						>
+							{item.icon}
+							{item.label}
+						</Link>
+					</NavbarMenuItem>
+				))}
+				<NavbarMenuItem>
+					<Link
+						className="w-full"
+						color="primary"
+						href={NavbarLinks.LOGIN}
+						size="lg"
+					>
+						LogIn
+					</Link>
+				</NavbarMenuItem>
+			</NavbarMenu>
 		</HeroNavbar>
 	);
 }

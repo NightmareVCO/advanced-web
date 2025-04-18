@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
 import { Accordion, AccordionItem } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import type { FAQ } from '@lib/data/faq.data';
+import React from 'react';
 
 type FAQsProps = {
 	FAQs: FAQ[];
@@ -18,7 +18,7 @@ export default function FAQs({ FAQs }: FAQsProps) {
 					keepContentMounted
 					className="gap-3"
 					itemClasses={{
-						base: 'px-6 !bg-white transition hover:!bg-primary-100 shadow-lg data-[open=true]:!bg-primary-400',
+						base: 'px-6 !bg-white transition hover:!bg-primary-100 shadow-lg border data-[open=true]:!bg-primary-400',
 						title: 'font-medium data-[open=true]:text-white',
 						trigger: 'py-4 md:py-6',
 						content: 'pt-0 pb-6 text-base text-white',
