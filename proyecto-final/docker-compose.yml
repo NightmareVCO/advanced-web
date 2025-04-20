@@ -1,0 +1,28 @@
+services:
+  catalog_db:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - catalog_db_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bookhive
+      MONGO_INITDB_ROOT_PASSWORD: securepassword
+
+  catalog_db_studio:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: bookhive
+      ME_CONFIG_MONGODB_ADMINPASSWORD: securepassword
+      ME_CONFIG_MONGODB_URL: mongodb://bookhive:securepassword@catalog_db:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - catalog_db
+
+
+volumes:
+  catalog_db_data: {}
