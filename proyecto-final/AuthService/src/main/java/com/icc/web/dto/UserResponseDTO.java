@@ -6,8 +6,8 @@ import org.bson.types.ObjectId;
 @Value
 public class UserResponseDTO {
     ObjectId id;
-    String name;
-    String lastname;
+    String firstName;
+    String lastName;
     String username;
     String email;
     String role;

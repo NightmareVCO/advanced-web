@@ -1,17 +1,13 @@
 package com.icc.web.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Value;
-import org.bson.types.ObjectId;
 
 @Value
 public class UserDTO {
-
-    ObjectId id;
-
     @NotBlank(message = "First name is mandatory")
     @NotNull
     String firstName;
@@ -30,8 +26,8 @@ public class UserDTO {
     String email;
 
     @NotBlank(message = "Password is mandatory")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     @NotNull
-    @Min(value = 8, message = "Password must be at least 8 characters long")
     String password;
 
     @NotBlank(message = "Role is mandatory")
@@ -39,6 +35,9 @@ public class UserDTO {
     String role;
 
     public static boolean validateNoNull(UserDTO userDTO) {
-        return userDTO.firstName == null || userDTO.lastName == null || userDTO.username == null || userDTO.email == null;
+        return userDTO.firstName == null
+                || userDTO.lastName == null
+                || userDTO.username == null
+                || userDTO.email == null;
     }
 }
