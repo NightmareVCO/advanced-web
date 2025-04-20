@@ -2,71 +2,129 @@ package com.icc.web.controller;
 
 import com.icc.web.dto.UserDTO;
 import com.icc.web.dto.UserResponseDTO;
+import com.icc.web.exception.ConflictException;
+import com.icc.web.exception.InternalServerError;
+import com.icc.web.exception.ResourceNotFoundException;
 import com.icc.web.mapper.UserMapper;
 import com.icc.web.model.UserInfo;
 import com.icc.web.service.UserInfoService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/users/")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserInfoService userInfoService;
-    private final UserMapper userMapper;
 
     @GetMapping
+    @RolesAllowed("ADMIN")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<UserResponseDTO> users = userMapper.usersToResponseDtos(userInfoService.getAllUsers());
-        return ResponseEntity.ok(users);
+
+        List<UserInfo> users = userInfoService.getAllUsers();
+        List<UserResponseDTO> userResponseDTOs = UserMapper.INSTANCE.usersToResponseDtos(users);
+
+        return new ResponseEntity<>(userResponseDTOs, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable ObjectId id) {
-        Optional<UserResponseDTO> user = userInfoService.getUserById(id)
-                .map(userMapper::userToResponseDto);
-        return user.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        Optional<UserInfo> optUser = userInfoService.getUserById(id);
+        if (optUser.isEmpty()) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        UserInfo user = optUser.get();
+        UserResponseDTO userResponseDTO = UserMapper.INSTANCE.userToResponseDto(user);
+
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
     }
 
     @PostMapping
+    @RolesAllowed("ADMIN")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
-        if (userInfoService.existsByUsername(userDTO.getUsername()) || userInfoService.existsByEmail(userDTO.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        String username = userDTO.getUsername();
+        boolean userByUsernameExists = userInfoService.existsByUsername(username);
+        if (userByUsernameExists) {
+            throw new ConflictException("Username already exists");
         }
-        Optional<UserResponseDTO> savedUser = userInfoService.saveUser(userMapper.dtoToUserDTO(userDTO))
-                .map(userMapper::userToResponseDto);
-        return savedUser.map(user -> ResponseEntity.status(HttpStatus.CREATED).body(user))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+
+        String email = userDTO.getEmail();
+        boolean userByEmailExists = userInfoService.existsByEmail(email);
+        if (userByEmailExists) {
+            throw new ConflictException("Email already exists");
+        }
+
+        UserInfo newUserData = UserMapper.INSTANCE.dtoToUser(userDTO);
+
+        Optional<UserInfo> optNewCreatedUser = userInfoService.saveUser(newUserData);
+        if (optNewCreatedUser.isEmpty()) {
+            throw new InternalServerError("User could not be created");
+        }
+
+        UserInfo newCreatedUser = optNewCreatedUser.get();
+        UserResponseDTO userResponseDTO = UserMapper.INSTANCE.userToResponseDto(newCreatedUser);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable ObjectId id, @Valid @RequestBody UserDTO userDTO) {
-        Optional<UserResponseDTO> updatedUser = userInfoService.getUserById(id)
-                .map(existingUser -> {
-                    UserInfo updatedInfo = userMapper.dtoToUserDTO(userDTO);
-                    updatedInfo.setId(id);
-                    return userInfoService.saveUser(updatedInfo).map(userMapper::userToResponseDto);
-                })
-                .orElse(Optional.empty());
-        return updatedUser.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @PutMapping("{id}")
+    public ResponseEntity<UserResponseDTO> updateUser(
+            @PathVariable ObjectId id, @Valid @RequestBody UserDTO userDTO) {
+        String username = userDTO.getUsername();
+        boolean userByUsernameExists = userInfoService.existsByUsername(username);
+        if (userByUsernameExists) {
+            throw new ConflictException("Username already exists");
+        }
+
+        String email = userDTO.getEmail();
+        boolean userByEmailExists = userInfoService.existsByEmail(email);
+        if (userByEmailExists) {
+            throw new ConflictException("Email already exists");
+        }
+
+        boolean userExists = userInfoService.existsById(id);
+        if (!userExists) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        UserInfo updatedUserData = UserMapper.INSTANCE.dtoToUser(userDTO);
+        updatedUserData.setId(id);
+
+        Optional<UserInfo> optUpdatedUser = userInfoService.saveUser(updatedUserData);
+        if (optUpdatedUser.isEmpty()) {
+            throw new InternalServerError("User could not be updated");
+        }
+
+        UserInfo updatedUser = optUpdatedUser.get();
+        UserResponseDTO userResponseDTO = UserMapper.INSTANCE.userToResponseDto(updatedUser);
+
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable ObjectId id) {
-        Optional<UserInfo> user = userInfoService.deleteUser(id);
-        if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    @DeleteMapping("{id}")
+    @RolesAllowed("ADMIN")
+    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable ObjectId id) {
+        boolean userExists = userInfoService.existsById(id);
+        if (!userExists) {
+            throw new ResourceNotFoundException("User not found");
         }
-        return ResponseEntity.noContent().build();
+
+        Optional<UserInfo> optDeletedUser = userInfoService.deleteUser(id);
+        if (optDeletedUser.isEmpty()) {
+            throw new InternalServerError("User could not be deleted");
+        }
+
+        UserInfo deletedUser = optDeletedUser.get();
+        UserResponseDTO deletedUserResponseDTO = UserMapper.INSTANCE.userToResponseDto(deletedUser);
+
+        return new ResponseEntity<>(deletedUserResponseDTO, HttpStatus.OK);
     }
 }
