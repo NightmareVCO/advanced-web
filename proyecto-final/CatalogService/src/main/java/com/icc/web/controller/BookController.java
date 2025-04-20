@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/books")
+@RequestMapping("/api/v1/books/")
 @RequiredArgsConstructor
 public class BookController {
 
@@ -25,13 +25,13 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Book> getBook(@PathVariable ObjectId id) {
         Book book = bookService.getBookBtId(id);
         return ResponseEntity.ok(book);
     }
 
-    @GetMapping("/search")
+    @GetMapping("search")
     public ResponseEntity<List<Book>> searchBooks(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String author,
