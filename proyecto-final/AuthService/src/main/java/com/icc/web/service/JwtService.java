@@ -6,16 +6,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import javax.crypto.SecretKey;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -52,15 +51,16 @@ public class JwtService {
 
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
-        String jwt = Jwts.builder()
-                .id(id)
-                .claims(claims)
-                .issuer(ISSUER)
-                .subject(username)
-                .signWith(key)
-                .issuedAt(new Date())
-                .expiration(expirationDate)
-                .compact();
+        String jwt =
+                Jwts.builder()
+                        .id(id)
+                        .claims(claims)
+                        .issuer(ISSUER)
+                        .subject(username)
+                        .signWith(key)
+                        .issuedAt(new Date())
+                        .expiration(expirationDate)
+                        .compact();
 
         return new AuthResponseDTO(jwt);
     }
@@ -68,7 +68,8 @@ public class JwtService {
     public Optional<Claims> getClaims(String token) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         try {
-            return Optional.ofNullable(Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload());
+            return Optional.ofNullable(
+                    Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload());
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -100,5 +101,4 @@ public class JwtService {
         }
         return null;
     }
-
 }

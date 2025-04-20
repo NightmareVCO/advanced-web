@@ -22,13 +22,12 @@ public class UserInfo {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
 
-    private String name;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String username;
     private String email;
     private String password;
     private String role;
 
-    @Builder.Default
-    private boolean active = true;
+    @Builder.Default private boolean active = true;
 }

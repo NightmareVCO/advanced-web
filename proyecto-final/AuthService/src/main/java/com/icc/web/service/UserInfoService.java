@@ -2,14 +2,13 @@ package com.icc.web.service;
 
 import com.icc.web.model.UserInfo;
 import com.icc.web.repository.UserInfoRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +29,10 @@ public class UserInfoService {
 
     public Optional<UserInfo> getUserByEmail(String email) {
         return Optional.ofNullable(userInfoRepository.findByEmail(email));
+    }
+
+    public boolean existsById(ObjectId id) {
+        return userInfoRepository.existsById(id);
     }
 
     public boolean existsByUsername(String username) {

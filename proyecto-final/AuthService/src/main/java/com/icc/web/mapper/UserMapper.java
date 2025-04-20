@@ -1,13 +1,11 @@
 package com.icc.web.mapper;
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-
 import com.icc.web.dto.UserDTO;
 import com.icc.web.dto.UserResponseDTO;
 import com.icc.web.model.UserInfo;
+import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface UserMapper {
@@ -15,7 +13,7 @@ public interface UserMapper {
 
     UserDTO userToDto(UserInfo user);
 
-    UserInfo dtoToUserDTO(UserDTO userDTO);
+    UserInfo dtoToUser(UserDTO userDTO);
 
     UserInfo responseDtoToUser(UserResponseDTO userResponseDTO);
 
