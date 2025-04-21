@@ -57,4 +57,9 @@ public class UserInfoService {
         }
         return userInfo;
     }
+
+    public boolean checkPassword(String receivedPassword, String storedPassword) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(receivedPassword, storedPassword);
+    }
 }
