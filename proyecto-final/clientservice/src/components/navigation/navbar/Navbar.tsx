@@ -18,8 +18,8 @@ import {
 	NavbarMenuItem,
 	NavbarMenuToggle,
 } from '@heroui/react';
-import { useState } from 'react';
 import { type NavbarLink, NavbarLinks } from '@lib/constants/navbar.constants';
+import { useState } from 'react';
 
 // export const SearchIcon = ({
 // 	size = 24,
