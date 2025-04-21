@@ -294,3 +294,5 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/maven,java,intellij,windows,macos,react,nextjs,gradle
+
+**/.next/
