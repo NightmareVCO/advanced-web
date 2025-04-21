@@ -2,15 +2,14 @@ package com.icc.web.model;
 
 import java.util.Collection;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-
-    private final UserInfo userInfo;
+    private final transient UserInfo userInfo;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
