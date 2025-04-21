@@ -1,5 +1,7 @@
 package com.icc.web.controller;
 
+import com.icc.web.annotation.AdminRoute;
+import com.icc.web.annotation.GatewayValidation;
 import com.icc.web.dto.UserDTO;
 import com.icc.web.dto.UserResponseDTO;
 import com.icc.web.exception.ConflictException;
@@ -8,7 +10,6 @@ import com.icc.web.exception.ResourceNotFoundException;
 import com.icc.web.mapper.UserMapper;
 import com.icc.web.model.UserInfo;
 import com.icc.web.service.UserInfoService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -19,19 +20,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users/")
+@GatewayValidation
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/users/")
 public class UserController {
     private final UserInfoService userInfoService;
 
     @GetMapping
-    @RolesAllowed("ADMIN")
+    @AdminRoute
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
 
         List<UserInfo> users = userInfoService.getAllUsers();
         List<UserResponseDTO> userResponseDTOs = UserMapper.INSTANCE.usersToResponseDtos(users);
 
         return new ResponseEntity<>(userResponseDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("exists-by-id/{id}")
+    public ResponseEntity<Boolean> existsById(@PathVariable ObjectId id) {
+        boolean userExists = userInfoService.existsById(id);
+        return new ResponseEntity<>(userExists, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
@@ -48,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping
-    @RolesAllowed("ADMIN")
+    @AdminRoute
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         String username = userDTO.getUsername();
         boolean userByUsernameExists = userInfoService.existsByUsername(username);
@@ -110,7 +118,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    @RolesAllowed("ADMIN")
+    @AdminRoute
     public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable ObjectId id) {
         boolean userExists = userInfoService.existsById(id);
         if (!userExists) {
