@@ -1,5 +1,6 @@
 package com.icc.web.controller;
 
+import com.icc.web.annotation.GatewayValidation;
 import com.icc.web.model.Book;
 import com.icc.web.service.BookService;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@GatewayValidation
 @RequestMapping("/api/v1/books/")
 @RequiredArgsConstructor
 public class BookController {
