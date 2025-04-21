@@ -2,7 +2,7 @@ package com.icc.web.config;
 
 import com.icc.web.filter.GatewaySecretHeaderFilter;
 import com.icc.web.filter.JwtWebFilter;
-import com.icc.web.filter.PublicRouteValidator.RouteValidator;
+import com.icc.web.filter.PublicRouteValidator;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ public class SecurityConfig {
 
     private final JwtWebFilter jwtWebFilter;
     private final GatewaySecretHeaderFilter gatewaySecretHeaderFilter;
-    private final RouteValidator routeValidator;
+    private final PublicRouteValidator publicRouteValidator;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -28,7 +28,7 @@ public class SecurityConfig {
                         exchanges ->
                                 exchanges
                                         .pathMatchers(
-                                            routeValidator.getPublicPatterns())
+                                                publicRouteValidator.getPublicPatterns())
                                         .permitAll()
                                         .anyExchange()
                                         .authenticated())

@@ -35,6 +35,12 @@ public class UserInfoService {
         return userInfoRepository.existsById(id);
     }
 
+    public String userExistByRole(ObjectId id) {
+        return this.getUserById(id)
+                .map(UserInfo::getRole)
+                .orElse(null);
+    }
+
     public boolean existsByUsername(String username) {
         return this.getUserByUsername(username).isPresent();
     }

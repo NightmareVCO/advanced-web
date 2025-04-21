@@ -1,13 +1,19 @@
 package com.icc.web.client;
 
-import com.icc.web.config.FeignConfig;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-@FeignClient(name = "authservice", path = "/api/v1/users/", configuration = FeignConfig.class)
-public interface AuthClient {
+@Component
+@RequiredArgsConstructor
+public class AuthClient {
+    private final WebClient authWebClient;
 
-    @GetMapping("/exists-by-id/{id}")
-    boolean userExistsById(@PathVariable("id") String id);
+    public Mono<String> userExistByRole(String userId) {
+        return authWebClient.get()
+                .uri("/role-by-id/{id}", userId)
+                .retrieve()
+                .bodyToMono(String.class);
+    }
 }
