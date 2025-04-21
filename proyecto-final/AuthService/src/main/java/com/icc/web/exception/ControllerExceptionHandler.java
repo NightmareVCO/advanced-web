@@ -80,4 +80,14 @@ public class ControllerExceptionHandler {
                 ex.getMessage(),
                 request.getDescription(false));
     }
+
+    @ExceptionHandler(SecurityException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorMessage securityException(SecurityException ex, WebRequest request) {
+        return new ErrorMessage(
+                HttpStatus.FORBIDDEN.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+    }
 }
