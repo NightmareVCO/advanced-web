@@ -100,7 +100,7 @@
 			<artifactId>mapstruct-processor</artifactId>
 			<version>${org.mapstruct.version}</version>
 			<scope>provided</scope>
-    </dependency>
+    	</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
