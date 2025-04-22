@@ -6,6 +6,8 @@ import io.jsonwebtoken.Claims;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtWebFilter implements WebFilter {
 
@@ -28,39 +31,30 @@ public class JwtWebFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        String path = request.getURI().getPath();
-        System.out.println("Processing request for path: " + path);
-
         boolean isPublicRoute = routeValidator.isPublicRoute(request);
-        System.out.println("Is public route: " + isPublicRoute);
 
         if (isPublicRoute) {
-            System.out.println("tamo aqui?");
             return chain.filter(exchange);
         }
 
         Optional<String> optToken = jwtService.getToken(request);
         if (optToken.isEmpty()) {
-            System.out.println("token is missing");
             return unauthorized(exchange);
         }
 
         String token = optToken.get();
         if (token.isBlank()) {
-            System.out.println("token is blank");
             return unauthorized(exchange);
         }
 
         Optional<Claims> optClaims = jwtService.getClaims(token);
         if (optClaims.isEmpty()) {
-            System.out.println("Claims are missing");
             return unauthorized(exchange);
         }
 
         Claims claims = optClaims.get();
         String userId = String.valueOf(claims.get("userId"));
         if (userId == null || userId.isBlank()) {
-            System.out.println("User ID is missing or blank");
             return unauthorized(exchange);
         }
 
@@ -72,7 +66,6 @@ public class JwtWebFilter implements WebFilter {
         return authClient.userExistByRole(userId)  // Use AuthClient instead of WebClient directly
                 .flatMap(role -> {
                     if (role == null || role.trim().isEmpty()) {
-                        System.out.println("User role is missing or blank");
                         return unauthorized(exchange);
                     }
 
@@ -99,7 +92,7 @@ public class JwtWebFilter implements WebFilter {
                                             Mono.just(context)));
                 })
                 .onErrorResume(e -> {
-                    System.out.println("Auth client error: " + e.getMessage());
+                    log.error("Error validating user existence", e);
                     return unauthorized(exchange);
                 });    }
 
