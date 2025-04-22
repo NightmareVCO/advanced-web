@@ -16,17 +16,17 @@ public class RoleValidationAspect {
 
     @Pointcut(
             "execution(* com.icc.web.controller..*(..)) &&"
-                    + " @annotation(com.icc.web.annotation.RoleValidation)")
+                    + " @annotation(com.icc.web.annotation.AdminRoute)")
     public void adminRouteMethods() {}
 
     @Before("adminRouteMethods()")
     public void validateAdminRole() {
-        String roles = request.getHeader("X-User-Roles");
-        if (roles == null) {
-            throw new SecurityException("Access denied: No allowed origin");
+        String role = request.getHeader("X-User-Role");
+        if (role == null || role.isEmpty()) {
+            throw new SecurityException("Access denied: No role header found");
         }
 
-        boolean isAdminRolePresent = roles.contains("ADMIN");
+        boolean isAdminRolePresent = role.equals("ADMIN");
         if (!isAdminRolePresent) {
             throw new SecurityException("Access denied: User does not have permission");
         }

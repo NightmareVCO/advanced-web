@@ -29,7 +29,6 @@ public class UserController {
     @GetMapping
     @AdminRoute
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-
         List<UserInfo> users = userInfoService.getAllUsers();
         List<UserResponseDTO> userResponseDTOs = UserMapper.INSTANCE.usersToResponseDtos(users);
 
