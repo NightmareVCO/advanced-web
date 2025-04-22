@@ -17,20 +17,26 @@ public class AdminGenerator implements ApplicationRunner {
 
     @Override
     public void run(org.springframework.boot.ApplicationArguments args) {
-        String adminUsername = "admin";
-        String adminEmail = "admin@example.com";
-
-        boolean adminExists = userInfoService.existsByUsername(adminUsername)
-                || userInfoService.existsByEmail(adminEmail);
+        String username = "admin";
+        String email = "admin@example.com";
+        String firstName = "Admin";
+        String lastName = "Admin";
+        String password = "admin";
+        String role = "ADMIN";
+        boolean active = true;
+        boolean adminExists = userInfoService.existsByUsername(username)
+                || userInfoService.existsByEmail(email);
 
         if (!adminExists) {
             UserInfo adminUser = UserInfo.builder()
                     .id(new ObjectId())
-                    .username(adminUsername)
-                    .email(adminEmail)
-                    .password("admin")
-                    .role("ADMIN")
-                    .active(true)
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .username(username)
+                    .email(email)
+                    .password(password)
+                    .role(role)
+                    .active(active)
                     .build();
 
             userInfoService.saveUser(adminUser);
