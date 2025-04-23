@@ -19,6 +19,9 @@ public class ReviewDTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is mandatory")
+    private String title;
+
     @NotBlank(message = "Book ID is mandatory")
     private String bookId;
 

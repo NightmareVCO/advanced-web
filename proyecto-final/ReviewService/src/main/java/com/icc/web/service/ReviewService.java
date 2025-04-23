@@ -7,46 +7,35 @@ import com.icc.web.repository.ReviewRepository;
 
 import lombok.AllArgsConstructor;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final ReviewMapper reviewMapper;
 
-    public List<ReviewDTO> getAllReviews() {
-        return reviewMapper.reviewsToDtos(reviewRepository.findAll());
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();
     }
 
-    public List<ReviewDTO> getReviewsByBookId(String bookId) {
-        return reviewMapper.reviewsToDtos(reviewRepository.findByBookId(bookId));
+    public List<Review> getReviewsByBookId(String bookId) {
+        return reviewRepository.findByBookId(bookId);
     }
 
-    public List<ReviewDTO> getReviewsByUserId(String userId) {
-        return reviewMapper.reviewsToDtos(reviewRepository.findByUserId(userId));
+    public List<Review> getReviewsByUserId(String userId) {
+        return reviewRepository.findByUserId(userId);
     }
 
-    public Optional<ReviewDTO> getReviewById(Long id) {
-        return reviewRepository.findById(id)
-                .map(reviewMapper::reviewToDto);
+    public Optional<Review> getReviewById(Long id) {
+        return reviewRepository.findById(id);
     }
 
-    public ReviewDTO saveReview(ReviewDTO reviewDTO) {
-        Review review = reviewMapper.dtoToReview(reviewDTO);
-        review = reviewRepository.save(review);
-        return reviewMapper.reviewToDto(review);
-    }
-
-    public Optional<ReviewDTO> updateReview(ReviewDTO reviewDTO) {
-        if (reviewDTO.getId() == null || !reviewRepository.existsById(reviewDTO.getId())) {
-            return Optional.empty();
-        }
-        Review updatedReview = reviewRepository.save(reviewMapper.dtoToReview(reviewDTO));
-        return Optional.of(reviewMapper.reviewToDto(updatedReview));
+    public Review saveReview(Review review) {
+        return reviewRepository.save(review);
     }
 
     public void deleteReview(Long id) {

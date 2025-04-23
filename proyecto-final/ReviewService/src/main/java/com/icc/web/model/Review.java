@@ -17,6 +17,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
     private String bookId;
     private String userId;
     private String comment;

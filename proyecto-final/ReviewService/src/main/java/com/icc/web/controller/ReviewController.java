@@ -2,8 +2,8 @@ package com.icc.web.controller;
 
 import com.icc.web.annotation.GatewayValidation;
 import com.icc.web.dto.ReviewDTO;
-import com.icc.web.exception.InternalServerError;
 import com.icc.web.exception.ResourceNotFoundException;
+import com.icc.web.model.Review;
 import com.icc.web.service.ReviewService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -21,14 +21,14 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping
-    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
-        List<ReviewDTO> reviews = reviewService.getAllReviews();
+    public ResponseEntity<List<Review>> getAllReviews() {
+        List<Review> reviews = reviewService.getAllReviews();
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
-        Optional<ReviewDTO> review = reviewService.getReviewById(id);
+    public ResponseEntity<Review> getReviewById(@PathVariable Long id) {
+        Optional<Review> review = reviewService.getReviewById(id);
         if (review.isEmpty()) {
             throw new ResourceNotFoundException("Review not found");
         }
@@ -36,14 +36,14 @@ public class ReviewController {
     }
 
     @GetMapping("book/{bookId}")
-    public ResponseEntity<List<ReviewDTO>> getReviewsByBookId(@PathVariable String bookId) {
-        List<ReviewDTO> reviews = reviewService.getReviewsByBookId(bookId);
+    public ResponseEntity<List<Review>> getReviewsByBookId(@PathVariable String bookId) {
+        List<Review> reviews = reviewService.getReviewsByBookId(bookId);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<List<ReviewDTO>> getReviewsByUserId(@PathVariable String userId) {
-        List<ReviewDTO> reviews = reviewService.getReviewsByUserId(userId);
+    public ResponseEntity<List<Review>> getReviewsByUserId(@PathVariable String userId) {
+        List<Review> reviews = reviewService.getReviewsByUserId(userId);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
@@ -60,14 +60,14 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<ReviewDTO> createReview(@Valid @RequestBody ReviewDTO reviewDTO) {
-        ReviewDTO createdReview = reviewService.saveReview(reviewDTO);
+    public ResponseEntity<Review> createReview(@Valid @RequestBody Review review) {
+        Review createdReview = reviewService.saveReview(review);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
-        Optional<ReviewDTO> review = reviewService.getReviewById(id);
+        Optional<Review> review = reviewService.getReviewById(id);
         if (review.isEmpty()) {
             throw new ResourceNotFoundException("Review not found");
         }
