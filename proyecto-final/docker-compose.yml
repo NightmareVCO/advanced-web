@@ -47,7 +47,7 @@ services:
     depends_on:
       - auth_db
 
-  postgres_db:
+  review_db:
     image: postgres
     restart: always
     ports:
@@ -55,9 +55,9 @@ services:
     volumes:
       - review_db_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: bookhive
-      POSTGRES_PASSWORD: securepassword
-      POSTGRES_DB: bookhive
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: review
     deploy:
       resources:
         limits:
@@ -67,7 +67,7 @@ services:
           cpus: '0.25'
           memory: 256M
 
-  postgres_db_studio:
+  review_db_studio:
     image: dpage/pgadmin4
     restart: always
     ports:
@@ -76,7 +76,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@bookhive.com
       PGADMIN_DEFAULT_PASSWORD: securepassword
     depends_on:
-      - postgres_db
+      - review_db
 
 volumes:
   catalog_db_data: {}
