@@ -90,4 +90,14 @@ public class ControllerExceptionHandler {
                 ex.getMessage(),
                 request.getDescription(false));
     }
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage validationException(ValidationException ex, WebRequest request) {
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+    }
 }
