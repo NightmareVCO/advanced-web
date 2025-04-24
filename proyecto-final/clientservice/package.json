@@ -1,0 +1,35 @@
+{
+	"name": "clientservice",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"biome": "biome check --write"
+	},
+	"dependencies": {
+		"@heroui/react": "^2.7.6",
+		"framer-motion": "^12.7.3",
+		"jose": "^6.0.10",
+		"next": "15.3.0",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"recharts": "^2.15.2",
+		"use-debounce": "^10.0.4",
+		"usehooks-ts": "^3.1.1",
+		"zustand": "^5.0.3"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@iconify/react": "^5.2.1",
+		"@types/node": "^20",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"autoprefixer": "^10.4.21",
+		"postcss": "^8.5.3",
+		"tailwindcss": "3",
+		"typescript": "^5"
+	}
+}
