@@ -78,6 +78,22 @@ services:
     depends_on:
       - review_db
 
+  zipkin:
+    image: openzipkin/zipkin
+    restart: always
+    ports:
+      - 9411:9411
+    environment:
+      - STORAGE_TYPE=mem
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
 volumes:
   catalog_db_data: {}
   auth_db_data: {}
