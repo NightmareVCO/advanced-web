@@ -1,26 +1,32 @@
 'use client';
 
-import {
-	Button,
-	Checkbox,
-	Divider,
-	Form,
-	Input,
-	Link,
-	User,
-} from '@heroui/react';
+import { logIn } from '@/lib/actions/login.action';
+import { Button, Form, Input, Link, User } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { NavbarLinks } from '@lib/constants/navbar.constants';
-import React from 'react';
+import React, { useActionState, useTransition } from 'react';
 
 export default function Component() {
 	const [isVisible, setIsVisible] = React.useState(false);
 
 	const toggleVisibility = () => setIsVisible(!isVisible);
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		console.log('handleSubmit');
+	const [_, startTransition] = useTransition();
+
+	const [{ errors }, formAction, pending] = useActionState(logIn, {
+		errors: {
+			username: '',
+			password: '',
+		},
+	});
+
+	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const formData = new FormData(e.currentTarget);
+
+		startTransition(async () => {
+			formAction(formData);
+		});
 	};
 
 	return (
@@ -40,15 +46,18 @@ export default function Component() {
 					<Form
 						className="flex flex-col w-full gap-3"
 						validationBehavior="native"
-						onSubmit={handleSubmit}
+						validationErrors={errors}
+						onSubmit={onSubmit}
 					>
 						<Input
 							isRequired
-							label="Email Address"
-							name="email"
-							placeholder="Enter your email"
-							type="email"
+							label="Username"
+							name="username"
+							placeholder="Enter your username"
+							type="text"
 							variant="flat"
+							isInvalid={!!errors.username}
+							errorMessage={errors.username}
 						/>
 						<Input
 							isRequired
@@ -72,19 +81,9 @@ export default function Component() {
 							placeholder="Enter your password"
 							type={isVisible ? 'text' : 'password'}
 							variant="flat"
+							isInvalid={!!errors.password}
+							errorMessage={errors.password}
 						/>
-						<div className="flex items-center justify-between w-full px-1 py-2">
-							<Checkbox
-								className="data[selected=true]:text-white"
-								name="remember"
-								size="sm"
-							>
-								Remember for 15 days
-							</Checkbox>
-							{/* <Link className="text-default-800" href="#" size="sm">
-								Forgot password?
-							</Link> */}
-						</div>
 						<Button className="w-full text-white" color="primary" type="submit">
 							Log In
 						</Button>
