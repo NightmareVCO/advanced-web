@@ -13,15 +13,15 @@ export const slides: Slide[] = [
 		title: 'Fiction Books',
 		description: 'Starting at RD$500!',
 		img: '/images/hero-cover-1.webp',
-		url: '/tienda/productos?category=Fiction',
+		url: '/catalog?genre=fiction+narrative#books',
 		bg: 'bg-gradient-to-r from-secondary to-primary',
 	},
 	{
 		id: 2,
-		title: 'Self-Help & Personal Growth',
+		title: 'Classics & Self-Help',
 		description: 'From just RD$650!',
 		img: '/images/hero-cover-2.webp',
-		url: '/tienda/productos?category=Self-Help',
+		url: '/catalog?genre=fiction+narrative#books',
 		bg: 'bg-gradient-to-r from-primary via-primary/70 to-primary',
 	},
 	{
@@ -29,7 +29,7 @@ export const slides: Slide[] = [
 		title: 'Fantasy & Adventure',
 		description: 'Explore from RD$750!',
 		img: '/images/hero-cover-3.webp',
-		url: '/tienda/productos?category=Fantasy',
+		url: '/catalog?genre=fantasy#books',
 		bg: 'bg-gradient-to-r from-secondary to-primary',
 	},
 ];
