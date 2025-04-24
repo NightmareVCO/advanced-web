@@ -5,6 +5,7 @@ import type { RangeFilter, RangeValue } from '@lib/data/filter.data';
 
 import { Divider, Input, Slider } from '@heroui/react';
 import { cn } from '@heroui/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 export type PriceSliderAnimation = 'opacity' | 'height';
@@ -26,10 +27,8 @@ function scaleValue(
 	const [fromMin, fromMax] = fromRange;
 	const [toMin, toMax] = toRange;
 
-	// Scaling factor to map the value from one range to another
 	const scale = (toMax - toMin) / (fromMax - fromMin);
 
-	// Applying the scaling factor to the value and adjusting by the minimum of the target range
 	return (value - fromMin) * scale + toMin;
 }
 
@@ -44,8 +43,7 @@ const PriceSliderPip: React.FC<PriceSliderPipProps> = ({
 }) => {
 	const rand = React.useMemo(() => Math.floor(Math.random() * 100), []);
 
-	// biome-ignore lint/style/useTemplate: <explanation>
-	const height = clampValue(rand, 30, 100) + '%';
+	const height = `${clampValue(rand, 30, 100)}%`;
 
 	const pip = React.useMemo(() => {
 		if (animation === 'height') {
@@ -78,10 +76,19 @@ const PriceSliderPip: React.FC<PriceSliderPipProps> = ({
 
 const PriceSlider = React.forwardRef<HTMLDivElement, PriceSliderProps>(
 	({ range, animation, className, ...props }, ref) => {
-		const defaultValue = React.useMemo<RangeValue>(
-			() => range?.defaultValue || [0, 1000],
-			[range?.defaultValue],
-		);
+		const searchParams = useSearchParams();
+		const router = useRouter();
+
+		const urlMinPrice = Number.parseInt(searchParams.get('minPrice') || '');
+		const urlMaxPrice = Number.parseInt(searchParams.get('maxPrice') || '');
+
+		const defaultValue = React.useMemo<RangeValue>(() => {
+			const min = Number.isNaN(urlMinPrice) ? (range?.min ?? 0) : urlMinPrice;
+			const max = Number.isNaN(urlMaxPrice)
+				? (range?.max ?? 1000)
+				: urlMaxPrice;
+			return [min, max];
+		}, [urlMinPrice, urlMaxPrice, range]);
 
 		const [value, setValue] = React.useState<RangeValue>(defaultValue);
 
@@ -123,11 +130,15 @@ const PriceSlider = React.forwardRef<HTMLDivElement, PriceSliderProps>(
 
 				if (!Number.isNaN(newValue)) {
 					const clampedValue = clampValue(newValue, minValue, value[1]);
-
 					setValue([clampedValue, value[1]]);
+					const params = new URLSearchParams(
+						Array.from(searchParams.entries()),
+					);
+					params.set('minPrice', clampedValue.toString());
+					router.push(`?${params.toString()}`, { scroll: false });
 				}
 			},
-			[value, range?.min, defaultValue],
+			[value, range?.min, defaultValue, searchParams, router],
 		);
 
 		const onMaxInputValueChange = React.useCallback(
@@ -137,9 +148,14 @@ const PriceSlider = React.forwardRef<HTMLDivElement, PriceSliderProps>(
 
 				if (!Number.isNaN(newValue) && newValue <= maxValue) {
 					setValue([value[0], newValue]);
+					const params = new URLSearchParams(
+						Array.from(searchParams.entries()),
+					);
+					params.set('maxPrice', newValue.toString());
+					router.push(`?${params.toString()}`, { scroll: false });
 				}
 			},
-			[value, range?.max, defaultValue],
+			[value, range?.max, defaultValue, searchParams, router],
 		);
 
 		return (
@@ -159,6 +175,14 @@ const PriceSlider = React.forwardRef<HTMLDivElement, PriceSliderProps>(
 						value={value}
 						onChange={(value) => {
 							setValue(value as RangeValue);
+							const params = new URLSearchParams(
+								Array.from(searchParams.entries()),
+							);
+							// @ts-ignore
+							params.set('minPrice', value[0].toString());
+							// @ts-ignore
+							params.set('maxPrice', value[1].toString());
+							router.push(`?${params.toString()}`, { scroll: false });
 						}}
 					/>
 				</div>

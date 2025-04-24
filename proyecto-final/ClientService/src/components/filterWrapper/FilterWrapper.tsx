@@ -1,9 +1,9 @@
 'use client';
 
+import SortInput from '@components/input/SortInput';
 import {
 	Accordion,
 	AccordionItem,
-	Button,
 	Checkbox,
 	CheckboxGroup,
 	Divider,
@@ -14,12 +14,11 @@ import {
 	Tabs,
 } from '@heroui/react';
 import { cn } from '@heroui/react';
-import { Icon } from '@iconify/react';
-import React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import { type Filter, FilterTypeEnum } from '@lib/data/filter.data';
 
-import ColorRadioItem from '@components/filterWrapper/components/colorsRadio/ColorsRadio';
 import PriceSlider from '@components/filterWrapper/components/priceSlider/PriceSlider';
 import RatingRadioGroup from '@components/filterWrapper/components/ratingRadio/RatingRadio';
 import TagGroupItem from '@components/filterWrapper/components/tagGroup/TagGroup';
@@ -45,115 +44,141 @@ const FiltersWrapper = React.forwardRef<HTMLDivElement, FiltersWrapperProps>(
 		},
 		ref,
 	) => {
-		const renderFilter = React.useCallback((filter: Filter) => {
-			switch (filter.type) {
-				case FilterTypeEnum.Tabs:
-					return (
-						<Tabs fullWidth aria-label={filter.title}>
-							{filter.options?.map((option) => (
-								<Tab key={option.value} title={option.title} />
-							))}
-						</Tabs>
-					);
-				case FilterTypeEnum.PriceRange:
-					return <PriceSlider aria-label={filter.title} range={filter.range} />;
+		const searchParams = useSearchParams();
 
-				case FilterTypeEnum.Rating:
-					return <RatingRadioGroup value={''} />;
+		const genreFromUrl =
+			searchParams.get('genre')?.split(',').filter(Boolean) || [];
+		const [selectedGenres, setSelectedGenres] =
+			useState<string[]>(genreFromUrl);
 
-				case FilterTypeEnum.TagGroup:
-					return (
-						<CheckboxGroup
-							aria-label="Select amenities"
-							className="gap-1"
-							orientation="horizontal"
-						>
-							{/* @ts-ignore */}
-							{filter.options?.map((option) => (
-								<TagGroupItem
-									key={option.value}
-									icon={option.icon}
-									value={option.value}
-								>
-									{option.title}
-								</TagGroupItem>
-							))}
-						</CheckboxGroup>
-					);
-				case FilterTypeEnum.Toggle:
-					return (
-						<div className="flex flex-col -mx-4">
-							{/* @ts-ignore */}
-							{filter.options?.map((option) => (
-								<Switch
-									key={option.value}
-									classNames={{
-										base: cn(
-											'inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center',
-											'justify-between cursor-pointer rounded-lg gap-2 -mr-2 px-4 py-3',
-										),
-										wrapper: 'mr-0',
-									}}
-									value={option.value}
-								>
-									<div className="flex flex-col gap-1">
-										<p className="text-medium">{option.title}</p>
-										<p className="text-tiny text-default-400">
-											{option.description}
-										</p>
-									</div>
-								</Switch>
-							))}
-						</div>
-					);
-				case FilterTypeEnum.CheckboxGroup:
-					return (
-						<Accordion
-							className="px-0"
-							defaultExpandedKeys={filter?.defaultOpen ? ['options'] : []}
-						>
-							<AccordionItem
-								key="options"
-								classNames={{
-									title: 'text-medium font-medium leading-8 text-default-600',
-									trigger: 'p-0',
-									content: 'px-1',
-								}}
-								title={filter.title}
-							>
-								<CheckboxGroup aria-label={filter.title}>
-									{/* @ts-ignore */}
-									{filter.options?.map((option) => (
-										<Checkbox key={option.value} value={option.value}>
-											{option.title}
-										</Checkbox>
-									))}
-								</CheckboxGroup>
-							</AccordionItem>
-						</Accordion>
-					);
-				case FilterTypeEnum.Color:
-					return (
-						<RadioGroup
-							aria-label={filter.title}
-							classNames={{
-								wrapper: 'gap-2',
-							}}
-							orientation="horizontal"
-						>
-							{/* @ts-ignore */}
-							{filter.options?.map((option) => (
-								<ColorRadioItem
-									key={option.value}
-									color={option.color}
-									tooltip={option.title}
-									value={option.value}
-								/>
-							))}
-						</RadioGroup>
-					);
+		const router = useRouter();
+
+		const updateGenreInUrl = (selectedGenres: string[]) => {
+			const params = new URLSearchParams(Array.from(searchParams.entries()));
+
+			if (selectedGenres.length > 0) {
+				params.set('genre', selectedGenres.join(','));
+			} else {
+				params.delete('genre');
 			}
-		}, []);
+
+			router.push(`?${params.toString()}`, { scroll: false });
+		};
+
+		const handleCheckboxChange = (value: string) => {
+			setSelectedGenres((prevSelected) => {
+				if (prevSelected.includes(value)) {
+					return prevSelected.filter((genre) => genre !== value);
+				}
+				return [...prevSelected, value];
+			});
+		};
+
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+		const renderFilter = useCallback(
+			(filter: Filter) => {
+				switch (filter.type) {
+					case FilterTypeEnum.Tabs:
+						return (
+							<Tabs fullWidth aria-label={filter.title}>
+								{filter.options?.map((option) => (
+									<Tab key={option.value} title={option.title} />
+								))}
+							</Tabs>
+						);
+					case FilterTypeEnum.PriceRange:
+						return (
+							<div className="flex flex-col gap-y-6">
+								<PriceSlider aria-label={filter.title} range={filter.range} />
+								<SortInput />
+							</div>
+						);
+					case FilterTypeEnum.Rating:
+						return <RatingRadioGroup value={''} />;
+					case FilterTypeEnum.TagGroup:
+						return (
+							<CheckboxGroup
+								aria-label="Select amenities"
+								className="gap-1"
+								orientation="horizontal"
+							>
+								{filter.options?.map((option) => (
+									<TagGroupItem
+										key={option.value}
+										icon={option.icon}
+										value={option.value}
+									>
+										{option.title}
+									</TagGroupItem>
+								))}
+							</CheckboxGroup>
+						);
+					case FilterTypeEnum.Toggle:
+						return (
+							<div className="flex flex-col -mx-4">
+								{filter.options?.map((option) => (
+									<Switch
+										key={option.value}
+										classNames={{
+											base: cn(
+												'inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center',
+												'justify-between cursor-pointer rounded-lg gap-2 -mr-2 px-4 py-3',
+											),
+											wrapper: 'mr-0',
+										}}
+										value={option.value}
+									>
+										<div className="flex flex-col gap-1">
+											<p className="text-medium">{option.title}</p>
+											<p className="text-tiny text-default-400">
+												{option.description}
+											</p>
+										</div>
+									</Switch>
+								))}
+							</div>
+						);
+					case FilterTypeEnum.CheckboxGroup:
+						return (
+							<Accordion
+								className="px-0"
+								defaultExpandedKeys={filter?.defaultOpen ? ['options'] : []}
+							>
+								<AccordionItem
+									key="options"
+									classNames={{
+										title: 'text-medium font-medium leading-8 text-default-600',
+										trigger: 'p-0',
+										content: 'px-1',
+									}}
+									title={filter.title}
+								>
+									<CheckboxGroup
+										aria-label={filter.title}
+										defaultValue={selectedGenres}
+									>
+										{filter.options?.map((option) => (
+											<Checkbox
+												key={option.value}
+												value={option.value}
+												onChange={() => handleCheckboxChange(option.value)}
+											>
+												{option.title}
+											</Checkbox>
+										))}
+									</CheckboxGroup>
+								</AccordionItem>
+							</Accordion>
+						);
+				}
+			},
+			[selectedGenres],
+		);
+
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+		useEffect(() => {
+			updateGenreInUrl(selectedGenres);
+		}, [selectedGenres]);
 
 		return (
 			<div
@@ -181,7 +206,7 @@ const FiltersWrapper = React.forwardRef<HTMLDivElement, FiltersWrapperProps>(
 					<div className="flex flex-col gap-6">
 						{items.map((filter) => (
 							<div key={filter.title} className="flex flex-col gap-3">
-								{filter.type !== FilterTypeEnum.CheckboxGroup ? (
+								{filter.type !== FilterTypeEnum.CheckboxGroup && (
 									<div>
 										<h3 className="font-medium leading-8 text-medium text-default-600">
 											{filter.title}
@@ -190,36 +215,12 @@ const FiltersWrapper = React.forwardRef<HTMLDivElement, FiltersWrapperProps>(
 											{filter.description}
 										</p>
 									</div>
-								) : null}
+								)}
 								{renderFilter(filter)}
 							</div>
 						))}
 					</div>
 				</ScrollShadow>
-
-				{showActions && (
-					<>
-						<Divider className="my-6 bg-default-100" />
-
-						<div className="flex flex-col gap-2 mt-auto">
-							<Button
-								color="primary"
-								startContent={
-									<Icon
-										className="text-primary-foreground [&>g]:stroke-[3px]"
-										icon="solar:magnifer-linear"
-										width={16}
-									/>
-								}
-							>
-								Show 300+ stays
-							</Button>
-							<Button className="text-default-500" variant="flat">
-								Clear all filters
-							</Button>
-						</div>
-					</>
-				)}
 			</div>
 		);
 	},
