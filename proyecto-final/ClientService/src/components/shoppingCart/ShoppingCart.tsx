@@ -63,7 +63,7 @@ export default function ShoppingCart() {
 					<DropdownItem
 						key="cart"
 						isReadOnly
-						className='data-[hover="true"]:bg-white'
+						className="data-[hover=true]:bg-white"
 					>
 						<p className="text-lg text-center">Shopping Cart</p>
 						{/* <Divider /> */}
@@ -73,7 +73,7 @@ export default function ShoppingCart() {
 							<DropdownItem
 								key="skeleton"
 								isReadOnly
-								className='data-[hover="true"]:bg-white'
+								className="data-[hover=true]:bg-white"
 							>
 								<CartSkeleton quantity={shoppingCart.counter} />
 							</DropdownItem>
@@ -138,7 +138,7 @@ export default function ShoppingCart() {
 							<DropdownItem
 								key="empty"
 								isReadOnly
-								className='data-[hover="true"]:bg-white'
+								className="data-[hover=true]:bg-white"
 							>
 								<div>
 									<p>Your shopping is empty</p>
@@ -150,7 +150,7 @@ export default function ShoppingCart() {
 					<DropdownItem
 						key="price"
 						isReadOnly
-						className='data-[hover="true"]:bg-white'
+						className="data-[hover=true]:bg-white"
 					>
 						<Divider />
 						<div className="flex flex-col items-center justify-between w-full mt-3 gap-y-1">
@@ -166,13 +166,13 @@ export default function ShoppingCart() {
 					<DropdownItem
 						key="clearCart"
 						isReadOnly
-						className='data-[hover="true"]:bg-white'
+						className="data-[hover=true]:bg-white"
 					>
 						<div className="flex items-center justify-between">
 							<Button
 								variant="bordered"
 								color="danger"
-								size="md"
+								size="sm"
 								// onPress={() =>
 								// 	clearCart({
 								// 		userId: user.id,
@@ -180,9 +180,9 @@ export default function ShoppingCart() {
 								// 	})
 								// }
 							>
-								<span className="text-base ">Empty Shopping Cart</span>
+								<span className="text-base ">Empty Cart</span>
 							</Button>
-							<Button color="primary" size="md">
+							<Button color="primary" size="sm">
 								<Link href="/checkout">
 									<span className="text-base text-white">Checkout</span>
 								</Link>
