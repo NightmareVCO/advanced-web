@@ -30,8 +30,6 @@ public class UserDTO {
     @NotNull
     String password;
 
-    @NotBlank(message = "Role is mandatory")
-    @NotNull
     String role;
 
     public static boolean validateNoNull(UserDTO userDTO) {

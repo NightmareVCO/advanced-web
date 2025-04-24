@@ -29,17 +29,19 @@ public class UserController {
     @GetMapping
     @AdminRoute
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-
         List<UserInfo> users = userInfoService.getAllUsers();
         List<UserResponseDTO> userResponseDTOs = UserMapper.INSTANCE.usersToResponseDtos(users);
 
         return new ResponseEntity<>(userResponseDTOs, HttpStatus.OK);
     }
 
-    @GetMapping("exists-by-id/{id}")
-    public ResponseEntity<Boolean> existsById(@PathVariable ObjectId id) {
-        boolean userExists = userInfoService.existsById(id);
-        return new ResponseEntity<>(userExists, HttpStatus.OK);
+    @GetMapping("role-by-id/{id}")
+    public ResponseEntity<String> userExistByRole(@PathVariable ObjectId id) {
+        String role = userInfoService.userExistByRole(id);
+        if (role == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+        return new ResponseEntity<>(role, HttpStatus.OK);
     }
 
     @GetMapping("{id}")

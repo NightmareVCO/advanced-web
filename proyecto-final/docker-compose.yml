@@ -47,6 +47,37 @@ services:
     depends_on:
       - auth_db
 
+  review_db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - review_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: review
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    
+  review_db_studio:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 8083:80
+   environment:
+      PGADMIN_DEFAULT_EMAIL: admin@bookhive.com
+      PGADMIN_DEFAULT_PASSWORD: securepassword
+    depends_on:
+      - review_db
+      
   cart_db:
     image: postgres
     restart: always
@@ -66,7 +97,7 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-
+      
   cart_db_studio:
     image: dpage/pgadmin4
     restart: always
@@ -76,10 +107,26 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@bookhive.com
       PGADMIN_DEFAULT_PASSWORD: securepassword
     depends_on:
-      - cart_db
+      - review_db
 
+  zipkin:
+    image: openzipkin/zipkin
+    restart: always
+    ports:
+      - 9411:9411
+    environment:
+      - STORAGE_TYPE=mem
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
 volumes:
   catalog_db_data: {}
   auth_db_data: {}
+  review_db_data: {}
   cart_db_data: {}
