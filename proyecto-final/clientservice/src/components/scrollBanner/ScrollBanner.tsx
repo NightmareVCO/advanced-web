@@ -21,7 +21,7 @@ const ScrollingBanner = React.forwardRef<HTMLDivElement, ScrollingBannerProps>(
 			className,
 			isReverse,
 			isVertical = false,
-			gap = '1rem',
+			gap = '1.5rem',
 			showShadow = true,
 			shouldPauseOnHover = true,
 			duration = 40,
@@ -34,7 +34,7 @@ const ScrollingBanner = React.forwardRef<HTMLDivElement, ScrollingBannerProps>(
 		const shadowProps: ScrollShadowProps = {
 			isEnabled: showShadow,
 			offset: -20,
-			size: 50,
+			size: 40,
 			orientation: isVertical ? 'vertical' : 'horizontal',
 			visibility: 'both',
 			...props,
