@@ -29,7 +29,7 @@ public class EmailService {
         String htmlContent = buildRegistrationEmailHtml(userName, mainPageUrl);
 
         CreateEmailOptions params = CreateEmailOptions.builder()
-                .from("welcome@bookhive.vladimircuriel.com")
+                .from("welcome@bookhive.steven-mateo.systems")
                 .to(userEmail)
                 .subject("Welcome to Our Application!")
                 .html(htmlContent)
@@ -138,7 +138,7 @@ public class EmailService {
         String htmlContent = buildPurchaseConfirmationEmailHtml(userName, books, total, mainPageUrl);
 
         CreateEmailOptions params = CreateEmailOptions.builder()
-                .from("orders@bookhive.vladimircuriel.com")
+                .from("orders@bookhive.steven-mateo.systems")
                 .to(userEmail)
                 .subject("Your Purchase Confirmation")
                 .html(htmlContent)
