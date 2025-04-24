@@ -14,28 +14,29 @@ export default function HomePage() {
 				<HeroSection />
 			</section>
 
-			<div className="container flex flex-col items-center justify-center w-full mx-auto ">
+			<div className="container flex flex-col items-center justify-center w-full mx-auto mb-6 gap-y-8 ">
 				<ScrollDownAnimation />
 
-				<section>
+				{/* <div className="container flex flex-col items-center justify-center w-full py-6 mx-auto mb-6 "></div> */}
+				<section className="bg-white border rounded-md shadow-md">
 					<ExploreSection />
 				</section>
 
 				<ScrollDownAnimation distanceToReduceScroll={380} />
 
-				<section>
+				<section className="bg-white border rounded-md shadow-md max-w-7xl">
 					<CategoriesSection />
 				</section>
 
 				<ScrollDownAnimation distanceToReduceScroll={220} />
 
-				<section>
+				<section className="bg-white border rounded-md shadow-md">
 					<FAQsSection />
 				</section>
 
 				<ScrollDownAnimation distanceToReduceScroll={200} />
 
-				<section>
+				<section className="bg-white border rounded-md shadow-md max-w-7xl">
 					<TestimonialSection />
 				</section>
 
