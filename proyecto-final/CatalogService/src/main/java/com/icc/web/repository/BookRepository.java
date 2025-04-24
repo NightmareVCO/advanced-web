@@ -1,13 +1,14 @@
 package com.icc.web.repository;
 
 import com.icc.web.model.Book;
+import com.icc.web.repository.custom.BookRepositoryCustom;
 import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BookRepository extends MongoRepository<Book, ObjectId> {
+public interface BookRepository extends MongoRepository<Book, ObjectId>, BookRepositoryCustom {
     List<Book> findByTitleContainingIgnoreCase(String title);
 
     List<Book> findByAuthorContainingIgnoreCase(String author);
