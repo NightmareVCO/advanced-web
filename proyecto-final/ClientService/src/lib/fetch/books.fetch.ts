@@ -1,4 +1,4 @@
-import type { Product } from '@/lib/data/products.data';
+import type { Product } from '@lib/data/products.data';
 import { API_URL, type ErrorResponse } from '@lib/constants/api.constants';
 import { EndpointEnum } from '@lib/constants/endpoints.constants';
 import { buildCatalogQueryString } from '@lib/utils/query.utils';
@@ -38,7 +38,7 @@ export const getBooks = async (
 		const response = await fetch(`${CATALOG_URL}?${queryString}`, {
 			method: 'GET',
 			headers: HEADERS,
-			cache: 'force-cache',
+			cache: 'no-cache',
 		});
 
 		if (!response.ok) {
@@ -63,8 +63,10 @@ export const getBookById = async ({
 		const response = await fetch(`${BOOK_URL}${id}`, {
 			method: 'GET',
 			headers: HEADERS,
-			cache: 'force-cache',
+			cache: 'no-cache',
 		});
+
+		console.log('Response:', response);
 
 		if (!response.ok) {
 			return null;
