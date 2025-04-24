@@ -3,16 +3,16 @@
 import { cn } from '@heroui/react';
 import React from 'react';
 
-import products from '@lib/data/products.template.data';
-
+import type { Product } from '@/lib/data/products.data';
 import ProductListItem from '@components/products/ProductsList';
 
 export type ProductGridProps = React.HTMLAttributes<HTMLDivElement> & {
 	itemClassName?: string;
+	products: Product[];
 };
 
 const ProductsGrid = React.forwardRef<HTMLDivElement, ProductGridProps>(
-	({ itemClassName, className, ...props }, ref) => {
+	({ itemClassName, products, className, ...props }, ref) => {
 		return (
 			<div
 				ref={ref}
@@ -30,6 +30,11 @@ const ProductsGrid = React.forwardRef<HTMLDivElement, ProductGridProps>(
 						className={cn('w-full snap-start', itemClassName)}
 					/>
 				))}
+				{products.length === 0 && (
+					<div className="flex items-center justify-center w-full h-full col-span-4">
+						<p className="text-default-500">No books found</p>
+					</div>
+				)}
 			</div>
 		);
 	},
