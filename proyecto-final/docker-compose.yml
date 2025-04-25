@@ -72,7 +72,7 @@ services:
     restart: always
     ports:
       - 8083:80
-   environment:
+    environment:
       PGADMIN_DEFAULT_EMAIL: admin@bookhive.com
       PGADMIN_DEFAULT_PASSWORD: securepassword
     depends_on:
