@@ -1,7 +1,8 @@
 package com.icc.web.controller;
 
 import com.icc.web.annotation.GatewayValidation;
-import com.icc.web.dto.BookSearchResult;
+import com.icc.web.dto.BookSearchResultDto;
+import com.icc.web.dto.BooksDto;
 import com.icc.web.exception.ResourceNotFoundException;
 import com.icc.web.model.Book;
 import com.icc.web.service.BookService;
@@ -14,7 +15,9 @@ import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,8 +48,19 @@ public class BookController {
         return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
+    @PostMapping("ids")
+    public ResponseEntity<List<Book>> getBooksByIds(@RequestBody BooksDto booksDto) {
+        List<String> rawBooksIds= booksDto.getBooksIds();
+        List<ObjectId> booksIds = rawBooksIds.stream()
+                                              .map(ObjectId::new)
+                                              .toList();
+
+        List<Book> books = bookService.getBooksByIds(booksIds);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
     @GetMapping("search")
-    public ResponseEntity<BookSearchResult> searchBooks(
+    public ResponseEntity<BookSearchResultDto> searchBooks(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String genre,
@@ -54,7 +68,7 @@ public class BookController {
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false, defaultValue = "1") Integer page) {
-        BookSearchResult booksResult = bookService.searchBooks(title, author, genre, sort, minPrice, maxPrice, page);
+                BookSearchResultDto booksResult = bookService.searchBooks(title, author, genre, sort, minPrice, maxPrice, page);
         return new ResponseEntity<>(booksResult, HttpStatus.OK);
     }
 }

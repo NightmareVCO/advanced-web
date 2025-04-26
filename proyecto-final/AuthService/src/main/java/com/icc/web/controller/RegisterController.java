@@ -4,12 +4,16 @@ import com.icc.web.annotation.GatewayValidation;
 import com.icc.web.dto.AuthResponseDTO;
 import com.icc.web.dto.UserDTO;
 import com.icc.web.exception.BadRequestException;
+import com.icc.web.exception.InternalServerError;
+import com.icc.web.mapper.UserMapper;
 import com.icc.web.model.UserInfo;
 import com.icc.web.service.JwtService;
 import com.icc.web.service.UserInfoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
+
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,28 +29,23 @@ public class RegisterController {
 
     @PostMapping
     public ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody UserDTO userDTO) {
-        if (userInfoService.existsByUsername(userDTO.getUsername())) {
+        String username = userDTO.getUsername();
+        if (userInfoService.existsByUsername(username)) {
             throw new BadRequestException("Username already exists");
         }
 
-        if (userInfoService.existsByEmail(userDTO.getEmail())) {
+        String email = userDTO.getEmail();
+        if (userInfoService.existsByEmail(email)) {
             throw new BadRequestException("Email already exists");
         }
 
-        UserInfo newUser = UserInfo.builder()
-                .id(new ObjectId())
-                .username(userDTO.getUsername())
-                .email(userDTO.getEmail())
-                .password(userDTO.getPassword())
-                .firstName(userDTO.getFirstName())
-                .lastName(userDTO.getLastName())
-                .role("USER")
-                .active(true)
-                .build();
+        UserInfo newUserData = UserMapper.INSTANCE.dtoToUser(userDTO);
+        Optional<UserInfo> optNewCreatedUser = userInfoService.saveUser(newUserData);
+        if (optNewCreatedUser.isEmpty()) {
+            throw new InternalServerError("User could not be created");
+        }
 
-        userInfoService.saveUser(newUser);
-
-        String token = jwtService.generateToken(userDTO.getUsername()).getToken();
+        String token = jwtService.generateToken(username).getToken();
         AuthResponseDTO authResponseDTO = new AuthResponseDTO(token);
 
         return new ResponseEntity<>(authResponseDTO, HttpStatus.CREATED);

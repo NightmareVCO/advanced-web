@@ -4,12 +4,12 @@ import java.util.List;
 import lombok.Value;
 
 @Value
-public class CartItemResponseDTO {
-    String id;
+public class OrderItemResponseDTO {
     String bookId;
     String bookName;
     String bookCover;
     String bookAuthor;
     List<String> bookGenres;
     String bookDescription;
+    double bookPrice;
 }

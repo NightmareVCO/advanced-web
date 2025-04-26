@@ -9,7 +9,7 @@ import java.util.List;
 
 @Value
 @Builder
-public class BookSearchResult {
+public class BookSearchResultDto {
     private int total;
     private int page;
     private int pageSize;

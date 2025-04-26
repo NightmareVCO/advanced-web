@@ -1,12 +1,13 @@
 package com.icc.web.dto;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
+import lombok.Value;
+
+@Value
 public class OrderResponseDTO {
-
-    @NotEmpty OderItemDTO[] items;
-
-    @Min(0)
+    String id;
+    OrderItemResponseDTO[] items;
     double totalPrice;
+    LocalDateTime createDate;
 }

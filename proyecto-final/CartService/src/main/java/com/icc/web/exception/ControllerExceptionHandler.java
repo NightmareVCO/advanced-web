@@ -51,15 +51,15 @@ public class ControllerExceptionHandler {
     //             request.getDescription(false));
     // }
 
-    // @ExceptionHandler(UnauthorizedException.class)
-    // @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    // public ErrorMessage unauthorizedException(UnauthorizedException ex, WebRequest request) {
-    //     return new ErrorMessage(
-    //             HttpStatus.UNAUTHORIZED.value(),
-    //             new Date(),
-    //             ex.getMessage(),
-    //             request.getDescription(false));
-    // }
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ErrorMessage unauthorizedException(UnauthorizedException ex, WebRequest request) {
+        return new ErrorMessage(
+                HttpStatus.UNAUTHORIZED.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+    }
 
     // @ExceptionHandler(BadRequestException.class)
     // @ResponseStatus(value = HttpStatus.BAD_REQUEST)

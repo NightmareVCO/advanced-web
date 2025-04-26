@@ -1,6 +1,6 @@
 package com.icc.web.service;
 
-import com.icc.web.dto.BookSearchResult;
+import com.icc.web.dto.BookSearchResultDto;
 import com.icc.web.model.Book;
 import com.icc.web.repository.BookRepository;
 import java.util.List;
@@ -19,6 +19,10 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public List<Book> getBooksByIds(List<ObjectId> ids) {
+        return bookRepository.findAllById(ids);
+    }
+
     public void addBooks(List<Book> books) {
         bookRepository.saveAll(books);
     }
@@ -27,7 +31,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public BookSearchResult searchBooks(
+    public BookSearchResultDto searchBooks(
             String title,
             String author,
             String genreString,

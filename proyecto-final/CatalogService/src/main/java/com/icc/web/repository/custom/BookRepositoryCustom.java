@@ -1,9 +1,9 @@
 package com.icc.web.repository.custom;
 
-import com.icc.web.dto.BookSearchResult;
+import com.icc.web.dto.BookSearchResultDto;
 
 public interface BookRepositoryCustom {
-    BookSearchResult searchBooks(
+    BookSearchResultDto searchBooks(
             String title,
             String author,
             String genreString,
