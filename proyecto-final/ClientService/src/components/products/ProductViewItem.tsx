@@ -13,7 +13,6 @@ export type ProductViewInfoProps = Omit<
 	React.HTMLAttributes<HTMLDivElement>,
 	'id'
 > & {
-	isPopular?: boolean;
 	isLoading?: boolean;
 	removeWrapper?: boolean;
 	rating?: number;
@@ -150,29 +149,6 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 							</p>
 						</div>
 					</div>
-					{/* <Accordion
-						className="mt-2 -mx-1"
-						itemClasses={{
-							title: 'text-default-400',
-							content: 'pt-0 pb-6 text-base text-default-500',
-						}}
-						items={details}
-						selectionMode="multiple"
-					>
-						{details
-							? details.map(({ title, items }) => (
-									<AccordionItem key={title} title={title}>
-										<ul className="list-disc list-inside">
-											{items.map((item) => (
-												<li key={item} className="text-default-500">
-													{item}
-												</li>
-											))}
-										</ul>
-									</AccordionItem>
-								))
-							: []}
-					</Accordion> */}
 					<div className="flex gap-2 mt-2">
 						{user && (
 							<Button
