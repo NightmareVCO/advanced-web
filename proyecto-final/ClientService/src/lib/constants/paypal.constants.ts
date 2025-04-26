@@ -1,0 +1,9 @@
+export const PAYPAL_CLIENT_CLIENT_ID =
+	process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ||
+	'AUhjy5VMhiamCacZxC0hpx8RpXGeBDGGJorsoZ-ELzxQB1_UbWUcvJUcVXwQH0H5EM8xtPIHlPfa-0Tz';
+export const PAYPAL_SERVER_CLIENT_ID =
+	process.env.NEXT_PAYPAL_CLIENT_ID ||
+	'AUhjy5VMhiamCacZxC0hpx8RpXGeBDGGJorsoZ-ELzxQB1_UbWUcvJUcVXwQH0H5EM8xtPIHlPfa-0Tz';
+export const PAYPAL_SERVER_SECRET_KEY =
+	process.env.NEXT_PUBLIC_PAYPAL_SECRET_KEY ||
+	'EAqav-4nHC1vFhkj_Ng92Wve6xrzwE_1edLathojYpNlMwyOSvdOE2mGqlNiiCmolNEkGF7_g4GrQs_x';
