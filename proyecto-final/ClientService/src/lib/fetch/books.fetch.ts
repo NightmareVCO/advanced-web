@@ -72,7 +72,7 @@ export const getBookById = async ({
 			return null;
 		}
 
-		return response.json();
+		return await response.json();
 	} catch (error) {
 		console.error('Error fetching book:', error);
 		return null;
