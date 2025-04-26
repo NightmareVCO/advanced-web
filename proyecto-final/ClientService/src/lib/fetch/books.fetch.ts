@@ -1,6 +1,6 @@
-import type { Product } from '@lib/data/products.data';
 import { API_URL, type ErrorResponse } from '@lib/constants/api.constants';
 import { EndpointEnum } from '@lib/constants/endpoints.constants';
+import type { Product } from '@lib/data/products.data';
 import { buildCatalogQueryString } from '@lib/utils/query.utils';
 
 const CATALOG_ENDPOINT = EndpointEnum.Books;
@@ -75,6 +75,32 @@ export const getBookById = async ({
 		return response.json();
 	} catch (error) {
 		console.error('Error fetching book:', error);
+		return null;
+	}
+};
+
+type GetBooksByIdsProperties = {
+	ids: string[];
+};
+
+export const getBooksByIds = async ({
+	ids,
+}: GetBooksByIdsProperties): Promise<Product[] | null> => {
+	try {
+		const response = await fetch(`${BOOK_URL}ids`, {
+			method: 'POST',
+			headers: HEADERS,
+			cache: 'no-cache',
+			body: JSON.stringify({ booksIds: ids }),
+		});
+
+		if (!response.ok) {
+			return null;
+		}
+
+		return response.json();
+	} catch (error) {
+		console.error('Error fetching books:', error);
 		return null;
 	}
 };

@@ -1,11 +1,13 @@
 'use client';
 
-import { Button, Image, Link } from '@heroui/react';
+import { Button, Image, Link, Tooltip } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import type { Product } from '@lib/data/products.data';
+import { useAuthStore } from '@lib/stores/useAuthStore';
+import { useShoppingCart } from '@lib/stores/useShoppingCart';
 
 export type ProductViewInfoProps = Omit<
 	React.HTMLAttributes<HTMLDivElement>,
@@ -33,6 +35,15 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 		},
 		ref,
 	) => {
+		const user = useAuthStore((state) => state.user);
+		const shoppingCart = useShoppingCart();
+
+		useEffect(() => {
+			if (shoppingCart.user?.id !== user?.id && user) {
+				shoppingCart.setUser(user);
+			}
+		}, [user, shoppingCart]);
+
 		return (
 			<div
 				ref={ref}
@@ -127,7 +138,7 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 					</div>
 					<div className="mt-4">
 						<p className="sr-only">Author name</p>
-						<p className="line-clamp-3 text-medium text-default-900">
+						<p className="font-medium line-clamp-3 text-medium text-default-900">
 							{author}
 						</p>
 					</div>
@@ -163,15 +174,38 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 							: []}
 					</Accordion> */}
 					<div className="flex gap-2 mt-2">
-						<Button
-							fullWidth
-							className="font-medium text-white text-medium"
-							color="primary"
-							size="lg"
-							startContent={<Icon icon="lucide:shopping-cart" width={24} />}
-						>
-							Add to cart
-						</Button>
+						{user && (
+							<Button
+								fullWidth
+								className="font-medium text-white text-medium"
+								color="primary"
+								size="lg"
+								startContent={<Icon icon="lucide:shopping-cart" width={24} />}
+								isDisabled={!user}
+								onPress={() => {
+									if (!user) return null;
+
+									shoppingCart.addItem({
+										bookId: id,
+									});
+								}}
+							>
+								Add to cart
+							</Button>
+						)}
+						{!user && (
+							<Tooltip content="You need to be logged in to add items to the cart">
+								<Button
+									fullWidth
+									className="font-medium text-white text-medium"
+									color="primary"
+									size="lg"
+									startContent={<Icon icon="lucide:shopping-cart" width={24} />}
+								>
+									Add to cart
+								</Button>
+							</Tooltip>
+						)}
 					</div>
 				</div>
 			</div>

@@ -45,7 +45,7 @@ export default function Slider({ slides }: SliderProps) {
 							<h1 className="text-5xl font-semibold text-white lg:text-6xl 2xl:text-8xl">
 								{slide.title}
 							</h1>
-							<Button radius="none" color="primary" size="lg">
+							<Button color="primary" size="lg">
 								<Link href={slide.url}>
 									<span className="text-xl text-white">
 										{sliderInfo.buttonText}

@@ -8,6 +8,7 @@ export type UserSession = {
 	roles: string[];
 	isAdmin: boolean;
 	expiresIn: Date;
+	token: string;
 };
 
 export const getUserSession = async (
@@ -26,6 +27,7 @@ export const getUserSession = async (
 			roles: [payload.roles as string],
 			isAdmin: payload.roles === 'ADMIN',
 			expiresIn: new Date((payload.exp as number) * 1000),
+			token: jwt,
 		};
 
 		return userSession;

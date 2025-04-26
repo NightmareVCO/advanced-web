@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 import { NavbarLinks } from '@lib/constants/navbar.constants';
 import React, { useActionState, useTransition } from 'react';
 
-export default function Component() {
+export default function LogInPage() {
 	const [isVisible, setIsVisible] = React.useState(false);
 
 	const toggleVisibility = () => setIsVisible(!isVisible);
@@ -84,7 +84,13 @@ export default function Component() {
 							isInvalid={!!errors.password}
 							errorMessage={errors.password}
 						/>
-						<Button className="w-full text-white" color="primary" type="submit">
+						<Button
+							isDisabled={pending}
+							isLoading={pending}
+							className="w-full text-white"
+							color="primary"
+							type="submit"
+						>
 							Log In
 						</Button>
 					</Form>

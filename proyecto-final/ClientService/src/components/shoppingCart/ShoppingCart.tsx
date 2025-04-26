@@ -11,9 +11,10 @@ import {
 	DropdownTrigger,
 	Image,
 	Link,
+	cn,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { useShoppingCart } from '@lib/stores/useShoppingCart';
+import { type CartItem, useShoppingCart } from '@lib/stores/useShoppingCart';
 
 import { useAuthStore } from '@/lib/stores/useAuthStore';
 import { useEffect } from 'react';
@@ -28,11 +29,12 @@ export default function ShoppingCart() {
 	useEffect(() => {
 		if (shoppingCart.user?.id !== user?.id) {
 			shoppingCart.setUser(user);
+			shoppingCart.getCart();
 		}
 	}, [user, shoppingCart]);
 
 	return (
-		<section className="items-center justify-center hidden cursor-pointer md:flex">
+		<section className="items-center justify-center hidden border shadow-2xl cursor-pointer md:flex">
 			<Dropdown shadow="lg" placement="bottom-end">
 				<Badge
 					className="items-center justify-center hidden text-white md:flex"
@@ -77,64 +79,63 @@ export default function ShoppingCart() {
 							>
 								<CartSkeleton quantity={shoppingCart.counter} />
 							</DropdownItem>
-						) : (
-							// ) : shoppingCart && cart?.totalPricePerItem?.length > 0 ? (
-							// 	cart.totalPricePerItem.map((item: any) => (
-							// 		<DropdownItem isReadOnly className="mt-3" key={item.id}>
-							// 			<div className="flex items-center justify-between gap-x-4">
-							// 				<Link href={`/tienda/productos/${item.product.id}`}>
-							// 					<Image
-							// 						src={
-							// 							item.product.productImage[0].url ||
-							// 							'/placeholder.webp'
-							// 						}
-							// 						alt={item.product.name || 'Imagen del producto'}
-							// 						width={80}
-							// 						height={80}
-							// 						className="rounded-lg"
-							// 					/>
-							// 				</Link>
-							// 				<div className="flex flex-col items-start justify-start w-full h-full min-w-20 min-h-20 flex-2">
-							// 					<div className="flex items-center justify-between w-full">
-							// 						<h3 className="text-base font-medium">
-							// 							{item.product.name || 'Nombre del producto'}
-							// 						</h3>
-							// 						<p>RD$ {item.totalPrice}</p>
-							// 					</div>
-							// 					<div>
-							// 						<p className="text-default-400">
-							// 							{item.quantity <= item.product.stock ? (
-							// 								modalCartInfo.available
-							// 							) : (
-							// 								<span className="text-red-400">
-							// 									{modalCartInfo.outStock}
-							// 								</span>
-							// 							)}
-							// 						</p>
-							// 					</div>
+						) : shoppingCart && shoppingCart.cart.length > 0 ? (
+							shoppingCart.cart.map((item: CartItem) => (
+								<DropdownItem isReadOnly className="mt-3" key={item.cartItemId}>
+									<div className="flex items-center justify-between gap-x-4">
+										<Link href={`/catalog/book/${item.book.id}`}>
+											<div
+												className={cn(
+													'relative aspect-[2/3] size-28 overflow-hidden shadow-md rounded-tr-xl rounded-br-xl flex z-10',
+												)}
+											>
+												<div className="w-3 bg-gradient-to-r from-amber-950/70 to-amber-950/50 rounded-l-md shrink-0" />
 
-							// 					<div className="flex items-center justify-between w-full mt-3">
-							// 						<p className="text-default-400">
-							// 							{modalCartInfo.quantity}: {item.quantity}
-							// 						</p>
-							// 						<button
-							// 							className="text-red-400"
-							// 							onClick={() =>
-							// 								removeItem({
-							// 									userId: user.id,
-							// 									cartId: user.shoppingCart.id,
-							// 									itemId: item.id,
-							// 								})
-							// 							}
-							// 						>
-							// 							{modalCartInfo.delete}
-							// 						</button>
-							// 					</div>
-							// 				</div>
-							// 			</div>
-							// 		</DropdownItem>
-							// 	))
-							// ) : (
+												<div className="relative z-20 flex-1 pb-3 overflow-hidden shadow-sm">
+													<Image
+														removeWrapper
+														alt={item.book.title}
+														className={cn(
+															'object-cover object-center w-full h-full',
+															'rounded-tl-none rounded-bl-none',
+														)}
+														src={item.book.cover}
+													/>
+
+													<div className="absolute inset-0 z-30 pointer-events-none bg-gradient-to-t from-black/10 via-transparent to-white/10" />
+
+													<div className="absolute bottom-0 left-0 right-0 z-40 h-4">
+														<div className="w-full h-full shadow-md rounded-br-md bg-gradient-to-t from-slate-300 to-slate-200/10" />
+													</div>
+												</div>
+											</div>
+										</Link>
+										<div className="flex flex-col items-start justify-start w-full h-full min-w-20 min-h-20 flex-2">
+											<div className="flex items-center justify-between w-full">
+												<h3 className="text-base font-medium">
+													{item.book.title}
+												</h3>
+												<p>$ {item.book.price}</p>
+											</div>
+
+											<div className="flex items-center justify-end w-full">
+												<button
+													type="button"
+													className="text-red-700"
+													onClick={() =>
+														shoppingCart.removeItem({
+															cartItemId: item.cartItemId,
+														})
+													}
+												>
+													Delete item
+												</button>
+											</div>
+										</div>
+									</div>
+								</DropdownItem>
+							))
+						) : (
 							<DropdownItem
 								key="empty"
 								isReadOnly
@@ -146,7 +147,6 @@ export default function ShoppingCart() {
 							</DropdownItem>
 						)}
 					</DropdownSection>
-					{/* subbtotal */}
 					<DropdownItem
 						key="price"
 						isReadOnly
@@ -157,7 +157,7 @@ export default function ShoppingCart() {
 							<div className="flex items-center justify-between w-full">
 								<h3 className="text-base text-default-700">Subtotal price:</h3>
 								<p className="text-lg font-medium">
-									$ {shoppingCart.totalPrice}
+									$ {Math.max(0, shoppingCart.totalPrice).toFixed(2)}
 								</p>
 							</div>
 						</div>
@@ -173,17 +173,12 @@ export default function ShoppingCart() {
 								variant="bordered"
 								color="danger"
 								size="sm"
-								// onPress={() =>
-								// 	clearCart({
-								// 		userId: user.id,
-								// 		cartId: user.shoppingCart.id,
-								// 	})
-								// }
+								onPress={() => shoppingCart.clearCart()}
 							>
 								<span className="text-base ">Empty Cart</span>
 							</Button>
 							<Button color="primary" size="sm">
-								<Link href="/checkout">
+								<Link href="/checkout/payment">
 									<span className="text-base text-white">Checkout</span>
 								</Link>
 							</Button>
