@@ -1,11 +1,10 @@
 'use client';
 
-import { PayPalIcon } from '@/components/icons/PaypalIcon';
-import ModelOrderConfirmation from '@/components/modal/ModalOrderConfirmation';
-import PaymentMethodRadio from '@/components/ui/paymentRadio/PaymentMethodRadio';
-import { createOrderInServer } from '@/lib/actions/orders.action';
-import { createOrderInPayPal } from '@/lib/actions/paypal.action';
+import { PayPalIcon } from '@components/icons/PaypalIcon';
+import ModelOrderConfirmation from '@components/modal/ModalOrderConfirmation';
 import OrderSummary from '@components/orders/OderSummary';
+import HeaderSection from '@components/sections/paymentPage/HeaderSection';
+import PaymentMethodRadio from '@components/ui/paymentRadio/PaymentMethodRadio';
 import {
 	Accordion,
 	AccordionItem,
@@ -20,6 +19,8 @@ import {
 	useDisclosure,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import { createOrderInServer } from '@lib/actions/orders.action';
+import { createOrderInPayPal } from '@lib/actions/paypal.action';
 import { PAYPAL_CLIENT_CLIENT_ID } from '@lib/constants/paypal.constants';
 import { useAuthStore } from '@lib/stores/useAuthStore';
 import { useShoppingCart } from '@lib/stores/useShoppingCart';
@@ -226,6 +227,7 @@ export default function PaymentPage() {
 				)}
 				{!isLoading && shoppingCart.cart.length === 0 && (
 					<div className="container flex flex-col items-center justify-center w-full p-4 mx-auto my-6 border shadow-lg bg-background rounded-medium max-w-7xl">
+						<HeaderSection />
 						<h2 className="mt-3 text-3xl font-bold text-center text-primary">
 							Your cart is empty
 						</h2>
@@ -236,11 +238,11 @@ export default function PaymentPage() {
 				)}
 				{!isLoading && shoppingCart.cart.length > 0 && (
 					<div className="container flex-col items-center justify-center w-full p-4 mx-auto my-6 border shadow-lg bg-background rounded-medium max-w-7xl">
+						<HeaderSection />
+						<Spacer y={2} />
 						<h2 className="mt-3 text-3xl font-bold text-center text-primary">
 							Complete your order!
 						</h2>
-						<Spacer y={2} />
-						<Divider />
 						<div className="flex flex-col items-center w-full gap-4 px-4">
 							<div className="flex-none w-full">
 								<div className="flex flex-col flex-1 h-full p-4">
