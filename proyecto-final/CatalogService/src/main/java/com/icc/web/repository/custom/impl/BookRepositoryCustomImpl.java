@@ -1,6 +1,6 @@
 package com.icc.web.repository.custom.impl;
 
-import com.icc.web.dto.BookSearchResult;
+import com.icc.web.dto.BookSearchResultDto;
 import com.icc.web.model.Book;
 import com.icc.web.repository.custom.BookRepositoryCustom;
 import java.util.*;
@@ -22,7 +22,7 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
     private static final int PAGE_SIZE = 16;
 
     @Override
-    public BookSearchResult searchBooks(
+    public BookSearchResultDto searchBooks(
             String title,
             String author,
             String genreString,
@@ -80,7 +80,7 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
 
         List<Book> results = mongoTemplate.find(query, Book.class);
 
-        return BookSearchResult.builder()
+        return BookSearchResultDto.builder()
                 .books(results)
                 .total((int) total)
                 .page(currentPage)
