@@ -7,6 +7,7 @@ import { Divider, Input, Slider } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 export type PriceSliderAnimation = 'opacity' | 'height';
 
@@ -158,6 +159,13 @@ const PriceSlider = React.forwardRef<HTMLDivElement, PriceSliderProps>(
 			[value, range?.max, defaultValue, searchParams, router],
 		);
 
+		const updatePriceQuery = useDebouncedCallback((newValue: RangeValue) => {
+			const params = new URLSearchParams(Array.from(searchParams.entries()));
+			params.set('minPrice', newValue[0].toString());
+			params.set('maxPrice', newValue[1].toString());
+			router.push(`?${params.toString()}`, { scroll: false });
+		}, 500);
+
 		return (
 			<div className={cn('flex flex-col gap-3', className)}>
 				<div className="flex flex-col gap-1">
@@ -175,14 +183,7 @@ const PriceSlider = React.forwardRef<HTMLDivElement, PriceSliderProps>(
 						value={value}
 						onChange={(value) => {
 							setValue(value as RangeValue);
-							const params = new URLSearchParams(
-								Array.from(searchParams.entries()),
-							);
-							// @ts-ignore
-							params.set('minPrice', value[0].toString());
-							// @ts-ignore
-							params.set('maxPrice', value[1].toString());
-							router.push(`?${params.toString()}`, { scroll: false });
+							updatePriceQuery(value as RangeValue);
 						}}
 					/>
 				</div>
