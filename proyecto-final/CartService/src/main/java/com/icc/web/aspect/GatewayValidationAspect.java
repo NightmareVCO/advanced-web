@@ -1,6 +1,6 @@
 package com.icc.web.aspect;
 
-import com.icc.web.exception.SecurityException;
+import com.icc.web.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,12 +27,12 @@ public class GatewayValidationAspect {
     public void validateGatewaySecret() {
         String receivedSecret = request.getHeader("X-Gateway-Secret");
         if (receivedSecret == null) {
-            throw new SecurityException("Access denied: No allowed origin");
+            throw new UnauthorizedException("Access denied: No allowed origin");
         }
 
         boolean isGatewaySecretCorrect = gatewaySecret.equals(receivedSecret);
         if (!isGatewaySecretCorrect) {
-            throw new SecurityException("Access denied: No allowed origin");
+            throw new UnauthorizedException("Access denied: No allowed origin");
         }
     }
 }
