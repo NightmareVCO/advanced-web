@@ -35,8 +35,13 @@ public class JwtService {
 
         String userId = String.valueOf(user.get().getId());
 
+        
+        String roles = String.join(",", user.get().getRole());
+        String email = user.get().getEmail();
+
         claims.put("username", username);
-        claims.put("roles", String.join(",", user.get().getRole()));
+        claims.put("roles", roles);
+        claims.put("email", email);
         claims.put("userId", userId);
 
         return createToken(claims, username, userId);
