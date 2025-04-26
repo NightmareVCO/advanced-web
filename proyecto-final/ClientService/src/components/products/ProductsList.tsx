@@ -1,10 +1,14 @@
 'use client';
 
-import { Button, Image, Link } from '@heroui/react';
+import { Button, Image, Link, Tooltip } from '@heroui/react';
 import { cn } from '@heroui/react';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
-import type { Product } from '@/lib/data/products.data';
+import { Icon } from '@iconify/react';
+
+import type { Product } from '@lib/data/products.data';
+import { useAuthStore } from '@lib/stores/useAuthStore';
+import { useShoppingCart } from '@lib/stores/useShoppingCart';
 
 export type ProductListItemProps = Omit<
 	React.HTMLAttributes<HTMLDivElement>,
@@ -33,6 +37,16 @@ const ProductListItem = React.forwardRef<HTMLDivElement, ProductListItemProps>(
 			() => (Math.random() < 0.5 ? 'hover:-rotate-1' : 'hover:rotate-1'),
 			[],
 		);
+
+		const user = useAuthStore((state) => state.user);
+		const shoppingCart = useShoppingCart();
+
+		useEffect(() => {
+			if (shoppingCart.user?.id !== user?.id && user) {
+				shoppingCart.setUser(user);
+				shoppingCart.getCart();
+			}
+		}, [user, shoppingCart]);
 
 		return (
 			<div
@@ -99,15 +113,36 @@ const ProductListItem = React.forwardRef<HTMLDivElement, ProductListItemProps>(
 						<p className="font-medium text-medium text-primary">${price}</p>
 					</div>
 					<div className="flex gap-2">
-						<Button
-							fullWidth
-							className="font-medium text-white"
-							color="primary"
-							radius="lg"
-							variant="solid"
-						>
-							Add to cart
-						</Button>
+						{user && (
+							<Button
+								fullWidth
+								className="font-medium text-white text-medium"
+								color="primary"
+								startContent={<Icon icon="lucide:shopping-cart" width={20} />}
+								isDisabled={!user}
+								onPress={() => {
+									if (!user) return null;
+
+									shoppingCart.addItem({
+										bookId: id,
+									});
+								}}
+							>
+								Add to cart
+							</Button>
+						)}
+						{!user && (
+							<Tooltip content="You need to be logged in to add items to the cart">
+								<Button
+									fullWidth
+									className="font-medium text-white text-medium"
+									color="primary"
+									startContent={<Icon icon="lucide:shopping-cart" width={20} />}
+								>
+									Add to cart
+								</Button>
+							</Tooltip>
+						)}
 					</div>
 				</div>
 			</div>
