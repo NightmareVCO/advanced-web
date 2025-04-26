@@ -39,9 +39,6 @@ public class JReportService {
                 jasperReport = JasperCompileManager.compileReport(inputStream);
             }
 
-            // Load the logo for the report
-            Resource logoResource = resourceLoader.getResource("classpath:SVG image.svg");
-
             // Prepare parameters for the report
             Map<String, Object> parameters = new HashMap<>();
 
@@ -51,12 +48,7 @@ public class JReportService {
 
             // User information
             UserDTO user = order.getUserInfo();
-            parameters.put("userName", user.getName() + " " + user.getLastName());
             parameters.put("userEmail", user.getEmail());
-            parameters.put("status", "Completed");
-
-            // Add total price to parameters
-            parameters.put("totalPrice", String.format("%.2f", order.getTotalPrice()));
 
             // Prepare book data for the report
             List<Map<String, Object>> bookData = order.getBookInfo().stream()
@@ -65,17 +57,26 @@ public class JReportService {
                         bookMap.put("title", book.getTitle());
                         bookMap.put("author", book.getAuthor());
                         bookMap.put("price", book.getPrice());
-                        bookMap.put("quantity", 1); // Assuming 1 quantity per book
-                        bookMap.put("totalPrice", book.getPrice()); // Price * quantity
+                        bookMap.put("quantity", 1); // Quantity is always 1
+                        bookMap.put("totalPrice", book.getPrice()); // Price * Quantity
                         return bookMap;
                     })
                     .collect(Collectors.toList());
 
-            // Create data source from the books list
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(bookData);
+            // Create a JRBeanCollectionDataSource from the list
+            JRBeanCollectionDataSource bookDataSource = new JRBeanCollectionDataSource(bookData);
+
+            // Pass the books datasource as a parameter
+            parameters.put("bookDataSource", bookDataSource);
+
+            // Total Invoice (sum of all book prices)
+            double totalInvoice = order.getBookInfo().stream()
+                    .mapToDouble(book -> book.getPrice())
+                    .sum();
+            parameters.put("totalInvoice", String.format("%.2f", totalInvoice));
 
             // Fill the report
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, bookDataSource);
 
             // Export to PDF
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -93,4 +94,5 @@ public class JReportService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(date);
     }
+
 }
