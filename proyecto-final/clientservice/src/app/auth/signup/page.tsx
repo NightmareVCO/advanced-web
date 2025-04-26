@@ -1,26 +1,44 @@
 'use client';
 
-import {
-	Button,
-	Checkbox,
-	Divider,
-	Form,
-	Input,
-	Link,
-	User,
-} from '@heroui/react';
+import { register } from '@/lib/actions/register.action';
+import { Button, Checkbox, Form, Input, Link, User } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { NavbarLinks } from '@lib/constants/navbar.constants';
-import React from 'react';
+import { useActionState, useState, useTransition } from 'react';
 
-export default function Component() {
-	const [isVisible, setIsVisible] = React.useState(false);
+export default function SignUpPage() {
+	const [isVisible, setIsVisible] = useState(false);
+	const [passwordError, setPasswordError] = useState('');
 
 	const toggleVisibility = () => setIsVisible(!isVisible);
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		console.log('handleSubmit');
+	const [_, startTransition] = useTransition();
+
+	const [{ errors }, formAction, pending] = useActionState(register, {
+		errors: {
+			firstName: '',
+			lastName: '',
+			email: '',
+			username: '',
+			password: '',
+			confirmPassword: '',
+		},
+	});
+
+	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const formData = new FormData(e.currentTarget);
+		const password = formData.get('password') as string;
+		const confirmPassword = formData.get('confirmPassword') as string;
+
+		if (password !== confirmPassword) {
+			setPasswordError('Passwords do not match');
+			return;
+		}
+
+		startTransition(async () => {
+			formAction(formData);
+		});
 	};
 
 	return (
@@ -67,7 +85,9 @@ export default function Component() {
 					<Form
 						className="flex flex-col w-full gap-3"
 						validationBehavior="native"
-						onSubmit={handleSubmit}
+						// @ts-ignore
+						validationErrors={errors}
+						onSubmit={onSubmit}
 					>
 						{/* Name fields in a single row */}
 						<div className="flex w-full gap-2">
@@ -77,6 +97,8 @@ export default function Component() {
 								name="firstName"
 								placeholder="Enter your first name"
 								variant="flat"
+								isInvalid={!!errors.firstName}
+								errorMessage={errors.firstName}
 							/>
 							<Input
 								isRequired
@@ -84,6 +106,8 @@ export default function Component() {
 								name="lastName"
 								placeholder="Enter your last name"
 								variant="flat"
+								isInvalid={!!errors.lastName}
+								errorMessage={errors.lastName}
 							/>
 						</div>
 
@@ -94,6 +118,8 @@ export default function Component() {
 							placeholder="Enter your email"
 							type="email"
 							variant="flat"
+							isInvalid={!!errors.email}
+							errorMessage={errors.email}
 						/>
 
 						<Input
@@ -118,6 +144,8 @@ export default function Component() {
 							placeholder="Create a password"
 							type={isVisible ? 'text' : 'password'}
 							variant="flat"
+							isInvalid={!!errors.confirmPassword}
+							errorMessage={errors.confirmPassword}
 						/>
 
 						<Input
@@ -142,6 +170,8 @@ export default function Component() {
 							placeholder="Confirm your password"
 							type={isVisible ? 'text' : 'password'}
 							variant="flat"
+							isInvalid={!!passwordError || !!errors.confirmPassword}
+							errorMessage={passwordError || errors.confirmPassword}
 						/>
 
 						<Checkbox isRequired className="py-4" size="sm">
@@ -155,7 +185,13 @@ export default function Component() {
 							</Link>
 						</Checkbox>
 
-						<Button className="w-full text-white" color="primary" type="submit">
+						<Button
+							isDisabled={pending}
+							isLoading={pending}
+							className="w-full text-white"
+							color="primary"
+							type="submit"
+						>
 							Sign Up
 						</Button>
 					</Form>
