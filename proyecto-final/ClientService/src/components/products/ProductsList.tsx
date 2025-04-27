@@ -113,25 +113,28 @@ const ProductListItem = React.forwardRef<HTMLDivElement, ProductListItemProps>(
 						<p className="font-medium text-medium text-primary">${price}</p>
 					</div>
 					<div className="flex gap-2">
-						{user && (
-							<Button
-								fullWidth
-								className="font-medium text-white text-medium"
-								color="primary"
-								startContent={<Icon icon="lucide:shopping-cart" width={20} />}
-								isDisabled={!user}
-								onPress={() => {
-									if (!user) return null;
+						{/* {user && (
 
-									shoppingCart.addItem({
-										bookId: id,
-									});
-								}}
-							>
-								Add to cart
-							</Button>
-						)}
-						{!user && (
+						)} */}
+						<Button
+							fullWidth
+							className="font-medium text-white text-medium"
+							color="primary"
+							startContent={<Icon icon="lucide:shopping-cart" width={20} />}
+							isDisabled={!user}
+							as={Link}
+							href={`/catalog/book/${id}`}
+							// onPress={() => {
+							// 	if (!user) return null;
+
+							// 	shoppingCart.addItem({
+							// 		bookId: id,
+							// 	});
+							// }}
+						>
+							See Details
+						</Button>
+						{/* {!user && (
 							<Tooltip content="You need to be logged in to add items to the cart">
 								<Button
 									fullWidth
@@ -142,7 +145,7 @@ const ProductListItem = React.forwardRef<HTMLDivElement, ProductListItemProps>(
 									Add to cart
 								</Button>
 							</Tooltip>
-						)}
+						)} */}
 					</div>
 				</div>
 			</div>

@@ -32,7 +32,7 @@ const ProductsGridNoCart = React.forwardRef<HTMLDivElement, ProductGridProps>(
 				))}
 				{products.length === 0 && (
 					<div className="flex items-center justify-center w-full h-full col-span-4">
-						<p className="text-default-500">No books found</p>
+						<p className="text-default-500 text-center">No books found</p>
 					</div>
 				)}
 			</div>
