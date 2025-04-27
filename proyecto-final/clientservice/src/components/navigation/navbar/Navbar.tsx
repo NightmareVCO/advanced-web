@@ -85,12 +85,16 @@ export default function Navbar({ navbarItems }: NavbarProps) {
 									as="button"
 									className="transition-transform"
 									color="primary"
-									name="Jason Hughes"
+									name={user.username}
 									size="sm"
 									src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
 								/>
 							</DropdownTrigger>
-							<DropdownMenu aria-label="Profile Actions" variant="flat">
+							<DropdownMenu
+								aria-label="Profile Actions"
+								variant="flat"
+								disabledKeys={user.isAdmin ? [] : ['dashboard']}
+							>
 								<DropdownItem
 									key="user"
 									className="gap-2 h-14 data-[hover=true]:bg-white"
@@ -99,6 +103,10 @@ export default function Navbar({ navbarItems }: NavbarProps) {
 									<p className="font-semibold">Signed in as</p>
 									<p className="font-semibold">{user.username}</p>
 								</DropdownItem>
+								<DropdownItem key="dashboard" as={Link} href="/dashboard">
+									Dashboard
+								</DropdownItem>
+
 								<DropdownItem key="profile" as={Link} href="/profile">
 									My Books
 								</DropdownItem>
