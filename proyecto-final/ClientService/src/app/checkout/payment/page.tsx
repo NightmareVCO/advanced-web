@@ -192,6 +192,9 @@ export default function PaymentPage() {
 		const totalPrice = shoppingCart.totalPrice.toFixed(2);
 
 		const formData = new FormData();
+		formData.append('email', user?.email as string);
+		formData.append('firstName', user?.firstName as string);
+		formData.append('lastName', user?.lastName as string);
 		formData.append('userId', userId as string);
 		formData.append('userToken', userToken as string);
 		formData.append('items', JSON.stringify(items));
@@ -199,14 +202,14 @@ export default function PaymentPage() {
 
 		const res = await createOrderInServer(undefined, formData);
 
-		if (res?.errors) {
+		if ('errors' in res) {
 			console.error('Error creating order:', res.errors);
 			return;
 		}
 
 		onOpen();
 
-		setInterval(() => {
+		setTimeout(() => {
 			shoppingCart.clearCart();
 			router.push('/profile');
 		}, 6000);
