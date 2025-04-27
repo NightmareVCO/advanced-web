@@ -1,21 +1,21 @@
 import ProductViewInfo from '@components/products/ProductViewItem';
+import HeaderSection from '@components/sections/bookPage/HeaderSection';
 import ReviewsSection from '@components/sections/bookPage/ReviewsSection';
 import type { Product as Book } from '@lib/data/products.data';
 import { getBookById } from '@lib/fetch/books.fetch';
-import {
-	getBookReviews,
-	type ReviewResultWithUsers,
-	type ReviewResult,
-	type ReviewRating,
-} from '@lib/fetch/review.fetch';
-import HeaderSection from '@components/sections/bookPage/HeaderSection';
-import {
-	getUsersForCommentsById,
-	type UserForComments,
-} from '@lib/fetch/users.fetch';
-import { cookies } from 'next/headers';
-import { getUserSession, type UserSession } from '@lib/utils/auth.utils';
 import { getUserHasBook } from '@lib/fetch/orders.fetch';
+import {
+	type ReviewRating,
+	type ReviewResult,
+	type ReviewResultWithUsers,
+	getBookReviews,
+} from '@lib/fetch/review.fetch';
+import {
+	type UserForComments,
+	getUsersForCommentsById,
+} from '@lib/fetch/users.fetch';
+import { type UserSession, getUserSession } from '@lib/utils/auth.utils';
+import { cookies } from 'next/headers';
 
 export default async function BookDetailsView({
 	params,
