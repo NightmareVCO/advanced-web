@@ -1,9 +1,9 @@
 'use client';
 
-import type { ReviewWithUser } from '@lib/fetch/review.fetch';
 import { User } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import type { ReviewWithUser } from '@lib/fetch/review.fetch';
 import React from 'react';
 
 export type ReviewProps = React.HTMLAttributes<HTMLDivElement> & ReviewWithUser;
