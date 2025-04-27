@@ -27,7 +27,30 @@ export type Order = {
 
 type GetOrdersProperties = {
 	userToken: string;
-	userId: string;
+	userId?: string;
+};
+
+export const getAllOrders = async ({
+	userToken,
+}: GetOrdersProperties): Promise<Order[] | null> => {
+	try {
+		const response = await fetch(`${ORDERS_URL}`, {
+			method: 'GET',
+			headers: {
+				...HEADERS,
+				Authorization: `Bearer ${userToken}`,
+			},
+			cache: 'no-cache',
+		});
+		if (!response.ok) {
+			const errorResponse = (await response.json()) as ErrorResponse;
+			throw new Error(errorResponse.message);
+		}
+		return await response.json();
+	} catch (error) {
+		console.error('Error fetching all orders:', error);
+		return [] as Order[];
+	}
 };
 
 export const getOrders = async ({
@@ -65,14 +88,17 @@ export const getUserHasBook = async ({
 	userToken: string;
 }): Promise<boolean> => {
 	try {
-		const response = await fetch(`${ORDERS_URL}user/${userId}/has-book/${bookId}`, {
-			method: 'GET',
-			headers: {
-				...HEADERS,
-				Authorization: `Bearer ${userToken}`,
+		const response = await fetch(
+			`${ORDERS_URL}user/${userId}/has-book/${bookId}`,
+			{
+				method: 'GET',
+				headers: {
+					...HEADERS,
+					Authorization: `Bearer ${userToken}`,
+				},
+				cache: 'no-cache',
 			},
-			cache: 'no-cache',
-		});
+		);
 
 		if (!response.ok) {
 			const errorResponse = (await response.json()) as ErrorResponse;
