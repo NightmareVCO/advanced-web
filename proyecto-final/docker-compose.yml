@@ -1,129 +1,250 @@
 services:
+
+  config-service:
+    build:
+      context: ./ConfigService
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+
+  eureka-service:
+    build:
+      context: ./EurekaSerivce
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports: ["8761:8761"]
+    env_file:
+      - .env
+
+  auth-service:
+    build:
+      context: ./AuthService
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      MONGODB_AUTH_URI: ${MONGODB_AUTH_URI}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_EXPIRATION_TIME: ${JWT_EXPIRATION_TIME}
+      GATEWAY_SECRET_KEY: ${GATEWAY_SECRET_KEY}
+      ZIPKIN_URL: ${ZIPKIN_URL}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    depends_on: ["config-service", "eureka-service"]
+
+  cart-service:
+    build:
+      context: ./CartService
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      POSTGRES_CART_URI: ${POSTGRES_CART_URI}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      GATEWAY_SECRET_KEY: ${GATEWAY_SECRET_KEY}
+      ZIPKIN_URL: ${ZIPKIN_URL}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    depends_on: ["config-service", "eureka-service"]
+
+  gateway-service:
+    build:
+      context: ./GatewayService
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports: ["8080:8080"]
+    env_file:
+      - .env
+    environment:
+      GATEWAY_SECRET_KEY: ${GATEWAY_SECRET_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_EXPIRATION_TIME: ${JWT_EXPIRATION_TIME}
+      ZIPKIN_URL: ${ZIPKIN_URL}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    depends_on: ["config-service", "eureka-service"]
+
+  catalog-service:
+    build:
+      context: ./CatalogService
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      MONGODB_CATALOG_URI: ${MONGODB_CATALOG_URI}
+      MONGODB_CATALOG_DB: ${MONGODB_CATALOG_DB}
+      GATEWAY_SECRET_KEY: ${GATEWAY_SECRET_KEY}
+      ZIPKIN_URL: ${ZIPKIN_URL}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+      SHOULD_GENERATE_BOOKS: ${SHOULD_GENERATE_BOOKS}
+      AMOUTNTS_OF_BOOKS: ${AMOUTNTS_OF_BOOKS}
+    depends_on: ["config-service", "eureka-service"]
+
+  notification-service:
+    build:
+      context: ./NotificationService
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      GATEWAY_SECRET_KEY: ${GATEWAY_SECRET_KEY}
+      ZIPKIN_URL: ${ZIPKIN_URL}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+      RESEDN_API_KEY: ${RESEDN_API_KEY}
+      MAIN_PAGE_URL: ${MAIN_PAGE_URL}
+    depends_on: ["config-service", "eureka-service"]
+
+  client-service:
+    build:
+      context: ./ClientService
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      NEXT_PUBLIC_PAYPAL_CLIENT_ID: ${NEXT_PUBLIC_PAYPAL_CLIENT_ID}
+      NEXT_PAYPAL_CLIENT_ID: ${NEXT_PAYPAL_CLIENT_ID}
+      NEXT_PUBLIC_PAYPAL_SECRET_KEY: ${NEXT_PUBLIC_PAYPAL_SECRET_KEY}
+      NEXT_API_URL: ${NEXT_API_URL}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_JWT_SECRET_KEY: ${NEXT_JWT_SECRET_KEY}
+      NEXT_PUBLIC_JWT_SECRET: ${NEXT_PUBLIC_JWT_SECRET}
+
+  review-service:
+    build:
+      context: ./ReviewService
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      POSTGRES_REVIEW_URI: ${POSTGRES_REVIEW_URI}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      GATEWAY_SECRET_KEY: ${GATEWAY_SECRET_KEY}
+      ZIPKIN_URL: ${ZIPKIN_URL}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    depends_on: ["config-service", "eureka-service"]
+
   catalog_db:
     image: mongo
     restart: always
-    ports:
-      - 27017:27017
-    volumes:
-      - catalog_db_data:/data/db
+    # ports: ["27017:27017"]
+    volumes: ["catalog_db_data:/data/db"]
+    env_file:
+      - .env
     environment:
-      MONGO_INITDB_ROOT_USERNAME: bookhive
-      MONGO_INITDB_ROOT_PASSWORD: securepassword
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    deploy:
+      resources: { limits: { cpus: '0.50', memory: 512M }, reservations: { cpus: '0.25', memory: 256M } }
 
   catalog_db_studio:
     image: mongo-express
     restart: always
-    ports:
-      - 8081:8081
+    ports: ["8081:8081"]
+    env_file:
+      - .env
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: bookhive
-      ME_CONFIG_MONGODB_ADMINPASSWORD: securepassword
-      ME_CONFIG_MONGODB_URL: mongodb://bookhive:securepassword@catalog_db:27017/?authSource=admin
-      ME_CONFIG_BASICAUTH: false
-    depends_on:
-      - catalog_db
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${ME_CONFIG_MONGODB_ADMINUSERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${ME_CONFIG_MONGODB_ADMINPASSWORD}
+      ME_CONFIG_MONGODB_URL:          ${ME_CONFIG_MONGODB_CATALOG_URL}
+      ME_CONFIG_BASICAUTH:            ${ME_CONFIG_BASICAUTH}
+    depends_on: ["catalog_db"]
+    deploy:
+      resources: { limits: { cpus: '0.50', memory: 512M }, reservations: { cpus: '0.25', memory: 256M } }
 
   auth_db:
     image: mongo
     restart: always
-    ports:
-      - 27018:27017
-    volumes:
-      - auth_db_data:/data/db
+    # ports: ["27018:27017"]
+    volumes: ["auth_db_data:/data/db"]
+    env_file:
+      - .env
     environment:
-      MONGO_INITDB_ROOT_USERNAME: bookhive
-      MONGO_INITDB_ROOT_PASSWORD: securepassword
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    deploy:
+      resources: { limits: { cpus: '0.50', memory: 512M }, reservations: { cpus: '0.25', memory: 256M } }
 
   auth_db_studio:
     image: mongo-express
     restart: always
-    ports:
-      - 8082:8081
+    ports: ["8082:8081"]
+    env_file:
+      - .env
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: bookhive
-      ME_CONFIG_MONGODB_ADMINPASSWORD: securepassword
-      ME_CONFIG_MONGODB_URL: mongodb://bookhive:securepassword@auth_db:27017/?authSource=admin
-      ME_CONFIG_BASICAUTH: false
-    depends_on:
-      - auth_db
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${ME_CONFIG_MONGODB_ADMINUSERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${ME_CONFIG_MONGODB_ADMINPASSWORD}
+      ME_CONFIG_MONGODB_URL:          ${ME_CONFIG_MONGODB_AUTH_URL}
+      ME_CONFIG_BASICAUTH:            ${ME_CONFIG_BASICAUTH}
+    depends_on: ["auth_db"]
+    deploy:
+      resources: { limits: { cpus: '0.50', memory: 512M }, reservations: { cpus: '0.25', memory: 256M } }
 
   review_db:
     image: postgres
     restart: always
-    ports:
-      - 5432:5432
-    volumes:
-      - review_db_data:/var/lib/postgresql/data
+    # ports: ["5432:5432"]
+    volumes: ["review_db_data:/var/lib/postgresql/data"]
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: review
+      POSTGRES_USER:     ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB:       ${POSTGRES_REVIEW_DB}
     deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    
+      resources: { limits: { cpus: '0.50', memory: 512M }, reservations: { cpus: '0.25', memory: 256M } }
+
   review_db_studio:
     image: dpage/pgadmin4
     restart: always
-    ports:
-      - 8083:80
+    ports: ["8083:80"]
+    env_file:
+      - .env
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@bookhive.com
-      PGADMIN_DEFAULT_PASSWORD: securepassword
-    depends_on:
-      - review_db
-      
+      PGADMIN_DEFAULT_EMAIL:    ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on: ["review_db"]
+    deploy:
+      resources: { limits: { cpus: '0.50', memory: 512M }, reservations: { cpus: '0.25', memory: 256M } }
+
   cart_db:
     image: postgres
     restart: always
-    ports:
-      - 5433:5432
-    volumes:
-      - cart_db_data:/var/lib/postgresql/data
+    # ports: ["5433:5432"]
+    volumes: ["cart_db_data:/var/lib/postgresql/data"]
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: cart
+      POSTGRES_USER:     ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB:       ${POSTGRES_CART_DB}
     deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-      
+      resources: { limits: { cpus: '0.50', memory: 512M }, reservations: { cpus: '0.25', memory: 256M } }
+
   cart_db_studio:
     image: dpage/pgadmin4
     restart: always
-    ports:
-      - 8084:80
+    ports: ["8084:80"]
+    env_file:
+      - .env
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@bookhive.com
-      PGADMIN_DEFAULT_PASSWORD: securepassword
-    depends_on:
-      - review_db
+      PGADMIN_DEFAULT_EMAIL:    ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on: ["cart_db"]
 
   zipkin:
     image: openzipkin/zipkin
     restart: always
-    ports:
-      - 9411:9411
+    ports: ["9411:9411"]
     environment:
-      - STORAGE_TYPE=mem
+      STORAGE_TYPE: mem
     deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
+      resources: { limits: { cpus: '0.50', memory: 512M }, reservations: { cpus: '0.25', memory: 256M } }
 
 volumes:
   catalog_db_data: {}

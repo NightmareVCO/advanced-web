@@ -26,7 +26,7 @@ public class EmailService {
     private final JReportService jReportService;
 
     public EmailService(@Value("${resend.api.key}") String resendApiKey,
-                        @Value("${application.main-page-url:https://yourapp.com}") String mainPageUrl, JReportService jReportService) {
+                        @Value("${application.main-page-url:http://localhost:8080}") String mainPageUrl, JReportService jReportService) {
         this.resend = new Resend(resendApiKey);
         this.mainPageUrl = mainPageUrl;
         this.jReportService = jReportService;
