@@ -37,13 +37,12 @@ type CreateOrderDTO = {
 //     LocalDateTime createDate;
 // }
 
-
 type OderResponseDTO = {
 	id: string;
 	items: OrderBookDTO[];
 	totalPrice: number;
 	createDate: string;
-}
+};
 
 const manageError = (error: unknown) => {
 	if (error instanceof Error) {
@@ -141,7 +140,7 @@ export const createOrderInServer = async (
 			orderDate: orderResponse.createDate,
 		};
 
-		console.log({infoDTO});
+		console.log({ infoDTO });
 
 		await sendEmailPurchase(infoDTO);
 		return orderResponse;
@@ -161,7 +160,7 @@ type EmailBookDTO = {
 	author: string;
 	price: number;
 	cover: string;
-}
+};
 type InfoDTO = {
 	orderId: string;
 	userInfo: EmailUserDTO;
@@ -170,9 +169,7 @@ type InfoDTO = {
 	orderDate: string;
 };
 
-export const sendEmailPurchase= async (
- infoDTO: InfoDTO,
-) => {
+export const sendEmailPurchase = async (infoDTO: InfoDTO) => {
 	try {
 		const response = await fetch(`${EMAIL_URL}send-purchase`, {
 			method: 'POST',
