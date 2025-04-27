@@ -66,8 +66,6 @@ export const getBookById = async ({
 			cache: 'no-cache',
 		});
 
-		console.log('Response:', response);
-
 		if (!response.ok) {
 			return null;
 		}
