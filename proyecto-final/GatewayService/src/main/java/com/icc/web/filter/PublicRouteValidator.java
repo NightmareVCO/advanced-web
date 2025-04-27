@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 public class PublicRouteValidator {
 
     private static final List<String> PUBLIC_PATHS =
-            List.of("/api/v1/auth/", "/api/v1/books/", "/api/v1/books/search", "/api/v1/books/**", "/api/v1/reviews/",
-                    "/api/v1/auth/login/", "/api/v1/auth/register/", "/api/v1/email/send-purchase",
+            List.of("/api/v1/auth/", "/api/v1/books/", "/api/v1/books/search", "/api/v1/books/**", "/api/v1/reviews/", "/api/v1/reviews/book/**", "/api/v1/reviews/book/",
+                    "/api/v1/auth/login/", "/api/v1/auth/register/", "/api/v1/email/send-purchase", "/api/v1/users/for-comments/**", "/api/v1/users/for-comments/",
                     "/api/v1/email/send-registration", "/api/v1/books/ids");
 
     public boolean isPublicRoute(ServerHttpRequest request) {
@@ -20,5 +20,4 @@ public class PublicRouteValidator {
     public String[] getPublicPatterns() {
         return PUBLIC_PATHS.toArray(new String[0]);
     }
-
 }
