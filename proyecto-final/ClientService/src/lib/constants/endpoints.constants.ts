@@ -6,4 +6,6 @@ export enum EndpointEnum {
 	Email = '/api/v1/email/',
 	Cart = '/api/v1/cart/',
 	Orders = '/api/v1/orders/',
+	Reviews = '/api/v1/reviews/',
+	Users = '/api/v1/users/',
 }
