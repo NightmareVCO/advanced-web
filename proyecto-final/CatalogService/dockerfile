@@ -1,0 +1,16 @@
+FROM maven:3.9.4-eclipse-temurin-21 AS build
+
+COPY . /usr/src/app
+WORKDIR /usr/src/app
+
+RUN mvn clean package -Pproduction -DskipTests
+
+FROM eclipse-temurin:21-jre-alpine
+
+EXPOSE 8080
+ENV APP_PORT=8080
+
+RUN mkdir /app
+COPY --from=build /usr/src/app/target/*.jar /app/catalogservice.jar
+
+ENTRYPOINT ["java", "-Dvaadin.productionMode=true", "-jar", "/app/catalogservice.jar"]
