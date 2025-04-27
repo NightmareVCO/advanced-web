@@ -1,0 +1,103 @@
+<!-- Created with Jaspersoft Studio version 7.0.2.final using JasperReports Library version 7.0.2-31532122640f516c6d17238ae0e41a08113d5ac0  -->
+<jasperReport name="Purchase" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="a1f690a3-5977-4caa-9c7d-4ca9e1abc070">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="orderId" class="java.lang.String"/>
+	<parameter name="orderDate" class="java.lang.String"/>
+	<parameter name="userEmail" class="java.lang.String"/>
+	<parameter name="totalInvoice" class="java.lang.String"/>
+	<field name="title" class="java.lang.String"/>
+	<field name="author" class="java.lang.String"/>
+	<field name="price" class="java.lang.Double"/>
+	<field name="quantity" class="java.lang.Integer"/>
+	<field name="totalPrice" class="java.lang.Double"/>
+	<background splitType="Stretch"/>
+	<title height="119" splitType="Stretch">
+		<element kind="textField" uuid="3a60f5c1-df32-470c-8f54-7b3acfd50bd5" x="310" y="0" width="200" height="20" blankWhenNull="true">
+			<expression><![CDATA["Order ID: " + $P{orderId}]]></expression>
+		</element>
+		<element kind="textField" uuid="cfa16eb1-5e24-41f6-9943-42b6b1c01e21" x="310" y="20" width="200" height="20" blankWhenNull="true">
+			<expression><![CDATA["Date: " + $P{orderDate}]]></expression>
+		</element>
+		<element kind="textField" uuid="b9be1982-924a-4abb-8141-e5cb5003102c" x="310" y="40" width="250" height="20" blankWhenNull="true">
+			<expression><![CDATA["Customer Email: " + $P{userEmail}]]></expression>
+		</element>
+		<element kind="image" uuid="6b2a55cd-270e-43c6-9035-0dd9cd003bdc" x="0" y="0" width="269" height="69">
+			<expression><![CDATA["SVG image.svg"]]></expression>
+		</element>
+		<element kind="line" uuid="0abcb342-c252-4d37-bd66-1bfa25e2df68" x="0" y="70" width="556" height="1" forecolor="#D6631C" backcolor="#D6631C">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="fb158307-0ea9-4101-a5b3-27a0ac02042e" x="0" y="71" width="250" height="20" blankWhenNull="true">
+			<expression><![CDATA["Payment method: PayPal"]]></expression>
+		</element>
+		<element kind="textField" uuid="df05a44e-091c-4deb-b897-2ec1bac436b1" x="0" y="91" width="250" height="20" blankWhenNull="true">
+			<expression><![CDATA["Status: COMPLETED"]]></expression>
+		</element>
+	</title>
+	<columnHeader height="25" splitType="Stretch">
+		<element kind="staticText" uuid="0a2a38e9-0235-4c3a-9c85-1b7174a1230d" mode="Opaque" x="0" y="0" width="200" height="25" forecolor="#FFFFFF" backcolor="#D25508" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Title]]></text>
+		</element>
+		<element kind="staticText" uuid="dc20e46c-4c7f-4b86-9de1-33c655570df7" mode="Opaque" x="200" y="0" width="135" height="25" forecolor="#FFFFFF" backcolor="#D25508" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Author]]></text>
+		</element>
+		<element kind="staticText" uuid="85c03991-6c50-4b55-8cf1-05d03a976667" mode="Opaque" x="335" y="0" width="70" height="25" forecolor="#FFFFFF" backcolor="#D25508" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Price]]></text>
+		</element>
+		<element kind="staticText" uuid="05c19bca-15de-4b0f-a07e-0fcd3d206ee3" mode="Opaque" x="405" y="0" width="70" height="25" forecolor="#FFFFFF" backcolor="#D25508" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Quantity]]></text>
+		</element>
+		<element kind="staticText" uuid="1d8ba62c-b10c-45e9-af36-5b07e6ac0ced" mode="Opaque" x="475" y="0" width="80" height="25" forecolor="#FFFFFF" backcolor="#D25508" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Total]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<element kind="textField" uuid="d594e66f-4c2e-4b74-ba6a-f4dca1cd1d3c" x="0" y="0" width="200" height="25" blankWhenNull="true" vTextAlign="Middle">
+				<expression><![CDATA[$F{title}]]></expression>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="9066cd0f-83c5-41c8-8751-e41e3a422047" x="200" y="0" width="135" height="25" blankWhenNull="true" vTextAlign="Middle">
+				<expression><![CDATA[$F{author}]]></expression>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="811c4360-1651-4dc5-978c-416f01151706" x="335" y="0" width="70" height="25" pattern="$#,##0.00" blankWhenNull="true" hTextAlign="Right" vTextAlign="Middle">
+				<expression><![CDATA[$F{price}]]></expression>
+				<box rightPadding="5">
+					<pen lineWidth="0.25"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="62e9704a-25ce-4dcd-abd9-3ad1fcf2c761" x="405" y="0" width="70" height="25" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{quantity}]]></expression>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="f8b81ca4-9359-410e-99ce-5e352ba861a7" x="475" y="0" width="80" height="25" pattern="$#,##0.00" blankWhenNull="true" hTextAlign="Right" vTextAlign="Middle">
+				<expression><![CDATA[$F{totalPrice}]]></expression>
+				<box rightPadding="5">
+					<pen lineWidth="0.25"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+	<summary height="70" splitType="Stretch">
+		<element kind="staticText" uuid="3a29f7e6-bd81-47e3-8c24-8a170c42a01a" x="335" y="10" width="140" height="25" fontSize="12.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<text><![CDATA[Total Invoice:]]></text>
+		</element>
+		<element kind="textField" uuid="f84db234-a878-4a33-93b5-04388a877d27" x="475" y="10" width="80" height="25" blankWhenNull="true" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA["$" + $P{totalInvoice}]]></expression>
+			<box rightPadding="5">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="3d7975f2-8e31-4c99-9f78-4a2090551d74" x="0" y="40" width="555" height="30" italic="true" hTextAlign="Center">
+			<text><![CDATA[Thank you for shopping with BookHive!]]></text>
+		</element>
+	</summary>
+</jasperReport>

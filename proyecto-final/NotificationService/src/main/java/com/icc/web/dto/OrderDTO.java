@@ -10,11 +10,15 @@ import java.util.Date;
 import java.util.List;
 
 @Value
-public class UserPurchaseDTO {
+public class OrderDTO {
+
+    @NotNull(message = "El ID de la compra no puede ser nulo")
+    @Valid
+    String orderId;
 
     @NotNull(message = "La información del usuario no puede ser nula")
     @Valid
-    InfoDTO userInfo;
+    UserDTO userInfo;
 
     @NotEmpty(message = "La lista de libros no puede estar vacía")
     @Valid
@@ -24,5 +28,5 @@ public class UserPurchaseDTO {
     double totalPrice;
 
     @NotNull(message = "La fecha de compra no puede ser nula")
-    Date purchaseDate;
+    Date orderDate;
 }
