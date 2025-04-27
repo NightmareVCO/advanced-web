@@ -1,17 +1,17 @@
 'use client';
-import React from 'react';
+import ProductListItemNoCart from '@components/products/ProductListItemNoCart';
 import {
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
 	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
 	useDisclosure,
 } from '@heroui/react';
 import { cn } from '@heroui/react';
 import type { OrderItem } from '@lib/fetch/orders.fetch';
-import ProductListItemNoCart from '@components/products/ProductListItemNoCart';
+import React from 'react';
 
 export type OrderItemsModalProps = {
 	products: OrderItem[];
