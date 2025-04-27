@@ -1,8 +1,11 @@
 package com.icc.web.service;
 
+import com.icc.web.dto.BookSearchResultDto;
 import com.icc.web.model.Book;
 import com.icc.web.repository.BookRepository;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,10 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public List<Book> getBooksByIds(List<ObjectId> ids) {
+        return bookRepository.findAllById(ids);
+    }
+
     public void addBooks(List<Book> books) {
         bookRepository.saveAll(books);
     }
@@ -24,59 +31,18 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public List<Book> searchBooks(
-            String title, String author, List<String> genres, Double minPrice, Double maxPrice) {
-        List<Book> books = bookRepository.findAll();
-
-        if (title != null && !title.isBlank()) {
-            books =
-                    books.stream()
-                            .filter(
-                                    book ->
-                                            book.getTitle()
-                                                    .toLowerCase()
-                                                    .contains(title.toLowerCase()))
-                            .toList();
-        }
-
-        if (author != null && !author.isBlank()) {
-            books =
-                    books.stream()
-                            .filter(
-                                    book ->
-                                            book.getAuthor()
-                                                    .toLowerCase()
-                                                    .contains(author.toLowerCase()))
-                            .toList();
-        }
-
-        if (genres != null && !genres.isEmpty()) {
-            books =
-                    books.stream()
-                            .filter(
-                                    book ->
-                                            book.getGenres().stream()
-                                                    .anyMatch(
-                                                            genre ->
-                                                                    genres.stream()
-                                                                            .anyMatch(
-                                                                                    genre
-                                                                                            ::equalsIgnoreCase)))
-                            .toList();
-        }
-
-        if (minPrice != null) {
-            books = books.stream().filter(book -> book.getPrice() >= minPrice).toList();
-        }
-
-        if (maxPrice != null) {
-            books = books.stream().filter(book -> book.getPrice() <= maxPrice).toList();
-        }
-
-        return books;
+    public BookSearchResultDto searchBooks(
+            String title,
+            String author,
+            String genreString,
+            String sort,
+            Double minPrice,
+            Double maxPrice,
+            Integer page) {
+        return bookRepository.searchBooks(title, author, genreString, sort, minPrice, maxPrice, page);
     }
 
-    public Book getBookBtId(ObjectId id) {
-        return bookRepository.findById(id).orElse(null);
+    public Optional<Book> getBookBtId(ObjectId id) {
+        return bookRepository.findById(id);
     }
 }

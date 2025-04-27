@@ -1,17 +1,17 @@
 package com.icc.web.controller;
 
 import com.icc.web.annotation.GatewayValidation;
-import com.icc.web.client.CartClient;
+import com.icc.web.dto.BookReviewResponseDTO;
+import com.icc.web.dto.RatingResponseDTO;
 import com.icc.web.dto.ReviewDTO;
+import com.icc.web.dto.ReviewResponseDTO;
+import com.icc.web.exception.InternalServerError;
 import com.icc.web.exception.ResourceNotFoundException;
 import com.icc.web.mapper.ReviewMapper;
 import com.icc.web.model.Review;
 import com.icc.web.service.ReviewService;
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,60 +23,83 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/reviews/")
 public class ReviewController {
     private final ReviewService reviewService;
-    private final CartClient cartClient;
-    private final ReviewMapper reviewMapper = ReviewMapper.INSTANCE;
 
     @GetMapping
-    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
+    public ResponseEntity<List<ReviewResponseDTO>> getAllReviews() {
         List<Review> reviews = reviewService.getAllReviews();
-        return new ResponseEntity<>(reviewMapper.reviewsToDtos(reviews), HttpStatus.OK);
+
+        List<ReviewResponseDTO> reviewResponseDTOs = ReviewMapper.INSTANCE.reviewsToResponseDtos(reviews);
+
+        return new ResponseEntity<>(reviewResponseDTOs, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
-        Optional<Review> review = reviewService.getReviewById(id);
-        if (review.isEmpty()) {
+    public ResponseEntity<ReviewResponseDTO> getReviewById(@PathVariable Long id) {
+        Optional<Review> optReview = reviewService.getReviewById(id);
+        if (optReview.isEmpty()) {
             throw new ResourceNotFoundException("Review not found");
         }
-        return new ResponseEntity<>(reviewMapper.reviewToDto(review.get()), HttpStatus.OK);
+
+        Review review = optReview.get();
+        ReviewResponseDTO reviewResponseDTO = ReviewMapper.INSTANCE.reviewToResponseDto(review);
+
+        return new ResponseEntity<>(reviewResponseDTO, HttpStatus.OK);
     }
 
+    // @GetMapping("book/{bookId}")
+    // public ResponseEntity<List<ReviewResponseDTO>> getReviewsByBookId(@PathVariable String bookId) {
+    //     List<Review> reviews = reviewService.getReviewsByBookId(bookId);
+    //     List<ReviewResponseDTO> reviewResponseDTOs = ReviewMapper.INSTANCE.reviewsToResponseDtos(reviews);
+
+    //     return new ResponseEntity<>(reviewResponseDTOs, HttpStatus.OK);
+    // }
+
     @GetMapping("book/{bookId}")
-    public ResponseEntity<List<ReviewDTO>> getReviewsByBookId(@PathVariable String bookId) {
+        public ResponseEntity<BookReviewResponseDTO> getBookReview(@PathVariable String bookId) {
         List<Review> reviews = reviewService.getReviewsByBookId(bookId);
-        return new ResponseEntity<>(reviewMapper.reviewsToDtos(reviews), HttpStatus.OK);
+        List<ReviewResponseDTO> reviewResponseDTOs = ReviewMapper.INSTANCE.reviewsToResponseDtos(reviews);
+
+        RatingResponseDTO ratingResponseDTO = reviewService.getRatingForBook(bookId);
+
+        BookReviewResponseDTO response = new BookReviewResponseDTO(bookId, reviewResponseDTOs, ratingResponseDTO);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<List<ReviewDTO>> getReviewsByUserId(@PathVariable String userId) {
+    public ResponseEntity<List<ReviewResponseDTO>> getReviewsByUserId(@PathVariable String userId) {
         List<Review> reviews = reviewService.getReviewsByUserId(userId);
-        return new ResponseEntity<>(reviewMapper.reviewsToDtos(reviews), HttpStatus.OK);
+        List<ReviewResponseDTO> reviewResponseDTOs = ReviewMapper.INSTANCE.reviewsToResponseDtos(reviews);
+
+        return new ResponseEntity<>(reviewResponseDTOs, HttpStatus.OK);
     }
 
     @GetMapping("book/{bookId}/average")
     public ResponseEntity<Double> getAverageRatingForBook(@PathVariable String bookId) {
         Double averageRating = reviewService.getAverageRatingForBook(bookId);
+
         return new ResponseEntity<>(averageRating, HttpStatus.OK);
     }
 
     @GetMapping("book/{bookId}/count")
     public ResponseEntity<Long> countReviewsByBookId(@PathVariable String bookId) {
         Long count = reviewService.countReviewsByBookId(bookId);
+
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ReviewDTO> createReview(@Valid @RequestBody ReviewDTO reviewDTO) {
-        ResponseEntity<Boolean> validationResponse = cartClient.validatePurchase(
-                reviewDTO.getUserId(), reviewDTO.getBookId());
+    public ResponseEntity<ReviewResponseDTO> createReview(@RequestBody ReviewDTO reviewDTO) {
+        Review review = ReviewMapper.INSTANCE.dtoToReview(reviewDTO);
 
-        if (!Boolean.TRUE.equals(validationResponse.getBody())) {
-            throw new ValidationException("User has not purchased this book and cannot leave a review");
+        Review createdReview = reviewService.saveReview(review);
+        if (createdReview == null) {
+            throw new InternalServerError("Failed to create review");
         }
 
-        Review review = reviewMapper.dtoToReview(reviewDTO);
-        Review createdReview = reviewService.saveReview(review);
-        return new ResponseEntity<>(reviewMapper.reviewToDto(createdReview), HttpStatus.CREATED);
+        ReviewResponseDTO reviewResponseDTO = ReviewMapper.INSTANCE.reviewToResponseDto(createdReview);
+
+        return new ResponseEntity<>(reviewResponseDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("{id}")
@@ -93,12 +116,14 @@ public class ReviewController {
     @DeleteMapping("book/{bookId}")
     public ResponseEntity<Void> deleteReviewsByBookId(@PathVariable String bookId) {
         reviewService.deleteReviewsByBookId(bookId);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("user/{userId}")
     public ResponseEntity<Void> deleteReviewsByUserId(@PathVariable String userId) {
         reviewService.deleteReviewsByUserId(userId);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,6 +1,7 @@
 package com.icc.web.mapper;
 
 import com.icc.web.dto.UserDTO;
+import com.icc.web.dto.UserForCommentsResponseDTO;
 import com.icc.web.dto.UserResponseDTO;
 import com.icc.web.model.UserInfo;
 import java.util.List;
@@ -26,4 +27,8 @@ public interface UserMapper {
     List<UserResponseDTO> usersToResponseDtos(List<UserInfo> users);
 
     List<UserInfo> responseDtosToUsers(List<UserResponseDTO> userResponseDTOs);
+
+    UserForCommentsResponseDTO userToForCommentsDto(UserInfo user);
+
+    List<UserForCommentsResponseDTO> usersToForCommentsDtos(List<UserInfo> users);
 }

@@ -23,6 +23,10 @@ public class UserInfoService {
         return userInfoRepository.findById(id);
     }
 
+    public List<UserInfo> getUsersByIds(List<ObjectId> ids) {
+        return userInfoRepository.findAllById(ids);
+    }
+
     public Optional<UserInfo> getUserByUsername(String username) {
         return Optional.ofNullable(userInfoRepository.findByUsername(username));
     }

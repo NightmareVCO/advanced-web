@@ -63,7 +63,7 @@ public class JwtWebFilter implements WebFilter {
 
     private Mono<Void> validateUserExists(
             String userId, ServerWebExchange exchange, WebFilterChain chain) {
-        return authClient.userExistByRole(userId)  // Use AuthClient instead of WebClient directly
+        return authClient.userExistByRole(userId)
                 .flatMap(role -> {
                     if (role == null || role.trim().isEmpty()) {
                         return unauthorized(exchange);
@@ -73,7 +73,7 @@ public class JwtWebFilter implements WebFilter {
                             .mutate()
                             .headers(headers -> {
                                 headers.add("X-User-Role", role);
-                                headers.add("X-User-Id", userId);
+                                headers.set("X-User-Id", userId);
                             })
                             .build();
 

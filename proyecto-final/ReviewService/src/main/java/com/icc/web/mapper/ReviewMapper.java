@@ -1,11 +1,12 @@
 package com.icc.web.mapper;
 
 import com.icc.web.dto.ReviewDTO;
+import com.icc.web.dto.ReviewResponseDTO;
 import com.icc.web.model.Review;
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 @Mapper
 public interface ReviewMapper {
@@ -18,4 +19,10 @@ public interface ReviewMapper {
     List<ReviewDTO> reviewsToDtos(List<Review> reviews);
 
     List<Review> dtosToReviews(List<ReviewDTO> reviewDTOs);
+
+    List<ReviewResponseDTO> reviewsToResponseDtos(List<Review> reviews);
+
+    ReviewResponseDTO reviewToResponseDto(Review review);
+
+    Review responseDtoToReview(ReviewResponseDTO reviewResponseDTO);
 }

@@ -2,6 +2,7 @@ package com.icc.web.controller;
 
 import com.icc.web.dto.OrderDTO;
 import com.icc.web.service.EmailService;
+import com.icc.web.annotation.GatewayValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import com.icc.web.dto.UserDTO;
 import java.util.Map;
 
 @RestController
+@GatewayValidation
 @RequestMapping("/api/v1/email/")
 @RequiredArgsConstructor
 public class EmailController {
