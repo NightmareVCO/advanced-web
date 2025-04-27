@@ -151,7 +151,13 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 								className="font-medium text-white text-medium"
 								color="primary"
 								size="lg"
-								startContent={<Icon icon="lucide:lock" width={24} />}
+								startContent={
+									canBuy ? (
+										<Icon icon="lucide:lock" width={24} />
+									) : (
+										<Icon icon="lucide:shopping-cart" width={24} />
+									)
+								}
 								isDisabled={!user || canBuy}
 								onPress={() => {
 									if (!user) return null;
