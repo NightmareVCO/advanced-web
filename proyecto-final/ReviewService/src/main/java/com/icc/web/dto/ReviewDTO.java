@@ -1,24 +1,14 @@
 package com.icc.web.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Value;
+
+@Value
 public class ReviewDTO {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank(message = "Title is mandatory")
     private String title;
 
@@ -33,5 +23,5 @@ public class ReviewDTO {
     @NotNull(message = "Rating is mandatory")
     @Min(value = 0, message = "Rating must be between 0 and 5")
     @Max(value = 5, message = "Rating must be between 0 and 5")
-    private Double rating;
+    private int rating;
 }
