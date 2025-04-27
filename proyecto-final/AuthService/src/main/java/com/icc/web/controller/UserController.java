@@ -2,7 +2,9 @@ package com.icc.web.controller;
 
 import com.icc.web.annotation.AdminRoute;
 import com.icc.web.annotation.GatewayValidation;
+import com.icc.web.dto.UserCommentsDTO;
 import com.icc.web.dto.UserDTO;
+import com.icc.web.dto.UserForCommentsResponseDTO;
 import com.icc.web.dto.UserResponseDTO;
 import com.icc.web.exception.ConflictException;
 import com.icc.web.exception.InternalServerError;
@@ -55,6 +57,28 @@ public class UserController {
         UserResponseDTO userResponseDTO = UserMapper.INSTANCE.userToResponseDto(user);
 
         return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("for-comments/")
+    public ResponseEntity<List<UserForCommentsResponseDTO>> getUserForCommentsById(@RequestBody UserCommentsDTO userCommentsDTO) {
+        List<ObjectId> ids = userCommentsDTO.getIds();
+        List<UserInfo> users = userInfoService.getUsersByIds(ids);
+        List<UserForCommentsResponseDTO> userForCommentsDTO = UserMapper.INSTANCE.usersToForCommentsDtos(users);
+
+        return new ResponseEntity<>(userForCommentsDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("for-comments/{id}")
+    public ResponseEntity<UserForCommentsResponseDTO> getUsersForCommentsById(@PathVariable ObjectId id) {
+        Optional<UserInfo> optUser = userInfoService.getUserById(id);
+        if (optUser.isEmpty()) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        UserInfo user = optUser.get();
+        UserForCommentsResponseDTO userForCommentsDTO = UserMapper.INSTANCE.userToForCommentsDto(user);
+
+        return new ResponseEntity<>(userForCommentsDTO, HttpStatus.OK);
     }
 
     @PostMapping
