@@ -118,6 +118,7 @@ export default function BooksTable({ orders }: OrdersTableProps) {
 
 	const headerColumns = useMemo(() => {
 		const base =
+		// @ts-ignore
 			Array.from(visibleColumns) === 'all'
 				? COLUMNS
 				: COLUMNS.filter((c) => (visibleColumns as Set<string>).has(c.uid));

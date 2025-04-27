@@ -16,6 +16,7 @@ export type ProductViewInfoProps = Omit<
 	isLoading?: boolean;
 	removeWrapper?: boolean;
 	rating?: number;
+	canBuy: boolean;
 } & Product;
 
 const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
@@ -27,8 +28,8 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 			author,
 			genres,
 			description,
-			rating,
 			cover,
+			canBuy,
 			className,
 			...props
 		},
@@ -120,12 +121,6 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 				<div className="flex flex-col justify-start w-full px-10">
 					<h1 className="text-2xl font-bold tracking-tight">{title}</h1>
 					<h2 className="sr-only">Book information</h2>
-					{/* <div className="flex items-center gap-2 my-2">
-						<RatingRadioGroup hideStarsText size="sm" value={`${rating}`} />
-						<p className="text-small text-default-400">
-							{ratingCount} {ratingCount === 1 ? 'review' : 'reviews'}
-						</p>
-					</div> */}
 					<p className="text-xl font-medium tracking-tight text-primary">
 						${price}
 					</p>
@@ -156,8 +151,8 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 								className="font-medium text-white text-medium"
 								color="primary"
 								size="lg"
-								startContent={<Icon icon="lucide:shopping-cart" width={24} />}
-								isDisabled={!user}
+								startContent={<Icon icon="lucide:lock" width={24} />}
+								isDisabled={!user || canBuy}
 								onPress={() => {
 									if (!user) return null;
 
@@ -166,7 +161,7 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 									});
 								}}
 							>
-								Add to cart
+								{canBuy ? 'You already own this book' : 'Add to cart'}
 							</Button>
 						)}
 						{!user && (
@@ -178,7 +173,7 @@ const ProductViewInfo = React.forwardRef<HTMLDivElement, ProductViewInfoProps>(
 									size="lg"
 									startContent={<Icon icon="lucide:shopping-cart" width={24} />}
 								>
-									Add to cart
+									LogIn to add to cart
 								</Button>
 							</Tooltip>
 						)}
