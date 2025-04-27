@@ -28,18 +28,22 @@ public class JwtService {
 
     public AuthResponseDTO generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        Optional<UserInfo> user = userService.getUserByUsername(username);
-        if (user.isEmpty()) {
+        Optional<UserInfo> optUser = userService.getUserByUsername(username);
+        if (optUser.isEmpty()) {
             return null;
         }
 
-        String userId = String.valueOf(user.get().getId());
+        UserInfo user = optUser.get();
 
-        
-        String roles = String.join(",", user.get().getRole());
-        String email = user.get().getEmail();
+        String userId = String.valueOf(user.getId());
+        String roles = String.join(",", user.getRole());
+        String email = user.getEmail();
+        String firstName = user.getFirstName();
+        String lastName = user.getLastName();
 
         claims.put("username", username);
+        claims.put("firstName", firstName);
+        claims.put("lastName", lastName);
         claims.put("roles", roles);
         claims.put("email", email);
         claims.put("userId", userId);
