@@ -1,28 +1,27 @@
 'use client';
-import { useState, useMemo, useCallback } from 'react';
+import OrderItemsModal from '@components/modal/ModalOrderItems';
 import {
-	Table,
-	TableHeader,
-	TableColumn,
-	TableBody,
-	TableRow,
-	TableCell,
-	Input,
 	Button,
 	Dropdown,
-	DropdownTrigger,
-	DropdownMenu,
 	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+	Input,
 	Pagination,
-	Chip,
-	User,
 	type Selection,
 	type SortDescriptor,
+	Table,
+	TableBody,
+	TableCell,
+	TableColumn,
+	TableHeader,
+	TableRow,
+	cn,
 } from '@heroui/react';
 import { ChevronDownIcon, SearchIcon } from '@heroui/shared-icons';
-import { useMemoizedCallback } from './useMemoizedCallback';
 import type { Order } from '@lib/fetch/orders.fetch';
-import OrderItemsModal from '@components/modal/ModalOrderItems';
+import { useCallback, useMemo, useState } from 'react';
+import { useMemoizedCallback } from './useMemoizedCallback';
 
 export const ORDER_COLUMNS = [
 	{ uid: 'id', name: 'Order ID', sortable: true },
@@ -38,7 +37,7 @@ const statusOptions = [
 	{ name: 'Old', uid: 'old' },
 ] as const;
 
-type OrdersTableProps = { orders: Order[] };
+type OrdersTableProps = { orders: Order[]; isSmall?: boolean };
 
 export function capitalize(s: string | undefined) {
 	return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
@@ -53,7 +52,7 @@ function formatDate(dateString: string): string {
 	});
 }
 
-export default function OrdersTable({ orders }: OrdersTableProps) {
+export default function OrdersTable({ orders, isSmall }: OrdersTableProps) {
 	const [filterValue, setFilterValue] = useState('');
 	const [statusFilter, setStatusFilter] = useState<Selection>('all');
 	const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -66,8 +65,6 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
 		direction: 'ascending',
 	});
 	const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set());
-
-	const hasSearchFilter = Boolean(filterValue);
 
 	// Handlers
 	const onSearchChange = useMemoizedCallback((value?: string) => {
@@ -126,6 +123,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
 
 	const headerColumns = useMemo(() => {
 		const base =
+			// @ts-ignore
 			Array.from(visibleColumns) === 'all'
 				? ORDER_COLUMNS
 				: ORDER_COLUMNS.filter((c) =>
@@ -315,7 +313,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
 				onSelectionChange={onSelectionChange}
 				onSortChange={onSortChange}
 				classNames={{
-					base: 'w-full lg:min-w-[1100px]',
+					base: cn(isSmall ? 'w-full' : 'w-full lg:min-w-[1100px]'),
 				}}
 			>
 				<TableHeader columns={headerColumns}>
