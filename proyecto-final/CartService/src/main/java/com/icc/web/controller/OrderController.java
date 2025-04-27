@@ -51,6 +51,19 @@ public class OrderController {
         return new ResponseEntity<>(orderResponseDTOs, HttpStatus.OK);
     }
 
+    @GetMapping("user/{userId}/has-book/{bookId}")
+    @UserValidation
+    public ResponseEntity<Boolean> getOrdersByUserId(
+            @RequestHeader("X-User-Id") String authUserId, @PathVariable String userId, @PathVariable String bookId) {
+        if (!authUserId.equals(userId)) {
+            throw new UnauthorizedException("Access denied: Not accessing your orders");
+        }
+
+        boolean hasBook = orderService.userHasBook(userId, bookId);
+
+        return new ResponseEntity<>(hasBook, HttpStatus.OK);
+    }
+
     @PostMapping
     @UserValidation
     public ResponseEntity<OrderResponseDTO> createOrder(

@@ -16,6 +16,12 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    public boolean userHasBook(String userId, String bookId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream().anyMatch(order -> order.getItems().stream()
+                .anyMatch(orderItem -> orderItem.getBookId().equals(bookId)));
+    }
+
     public Optional<Order> getOrderById(Long id) {
         return orderRepository.findById(id);
     }
