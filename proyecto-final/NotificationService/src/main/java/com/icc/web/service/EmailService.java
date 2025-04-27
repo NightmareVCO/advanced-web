@@ -165,7 +165,7 @@ public class EmailService {
 
             CreateEmailOptions params = CreateEmailOptions.builder()
                     .from("BookHive@chronoguard.vladimircuriel.com")
-                    .to(List.of(userEmail))
+                    .to(userEmail)
                     .subject("BookHive - Your Purchase Confirmation")
                     .html(simpleHtmlContent)
                     .attachments(Collections.singletonList(pdfAttachment))
