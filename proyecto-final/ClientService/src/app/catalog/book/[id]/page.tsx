@@ -1,8 +1,21 @@
-import ProductViewInfo from '@/components/products/ProductViewItem';
-import ReviewsSection from '@/components/sections/bookPage/ReviewsSection';
-import type { Product as Book } from '@/lib/data/products.data';
-import { getBookById } from '@/lib/fetch/books.fetch';
+import ProductViewInfo from '@components/products/ProductViewItem';
+import ReviewsSection from '@components/sections/bookPage/ReviewsSection';
+import type { Product as Book } from '@lib/data/products.data';
+import { getBookById } from '@lib/fetch/books.fetch';
+import {
+	getBookReviews,
+	type ReviewResultWithUsers,
+	type ReviewResult,
+	type ReviewRating,
+} from '@lib/fetch/review.fetch';
 import HeaderSection from '@components/sections/bookPage/HeaderSection';
+import {
+	getUsersForCommentsById,
+	type UserForComments,
+} from '@lib/fetch/users.fetch';
+import { cookies } from 'next/headers';
+import { getUserSession, type UserSession } from '@lib/utils/auth.utils';
+import { getUserHasBook } from '@lib/fetch/orders.fetch';
 
 export default async function BookDetailsView({
 	params,
@@ -12,6 +25,9 @@ export default async function BookDetailsView({
 	const { id } = await params;
 	const book: Book | null = await getBookById({ id });
 
+	const jwt = (await cookies()).get('session')?.value;
+	const userSession: UserSession | null = await getUserSession(jwt);
+
 	if (!book) {
 		return (
 			<main className="flex flex-col w-screen gap-y-6">
@@ -20,6 +36,44 @@ export default async function BookDetailsView({
 				</div>
 			</main>
 		);
+	}
+
+	const booksReviews: ReviewResult | null = await getBookReviews({
+		bookId: book.id,
+	});
+
+	const usersIdsFromReviews: string[] | undefined = booksReviews?.reviews.map(
+		(review) => review.userId,
+	);
+
+	const usersReview: UserForComments[] | null = await getUsersForCommentsById({
+		ids: usersIdsFromReviews ?? [],
+	});
+
+	const reviewResultWithUsers: ReviewResultWithUsers = {
+		bookId: booksReviews?.bookId ?? '',
+		reviews:
+			booksReviews?.reviews.map((review) => {
+				const user = usersReview?.find((user) => user.id === review.userId);
+				return {
+					...review,
+					user: {
+						firstName: user?.firstName ?? '',
+						lastName: user?.lastName ?? '',
+					},
+				};
+			}) ?? [],
+		rating: booksReviews?.rating ?? ({} as ReviewRating),
+	};
+
+	let userHasBook = false;
+
+	if (userSession) {
+		userHasBook = await getUserHasBook({
+			bookId: book.id,
+			userId: userSession.id,
+			userToken: userSession.token,
+		});
 	}
 
 	return (
@@ -42,20 +96,20 @@ export default async function BookDetailsView({
 						description={book.description}
 						genres={book.genres}
 						cover={book.cover}
-						rating={4.5}
+						canBuy={userHasBook}
 					/>
 				</section>
 
-				{/* reviews */}
 				<section className="w-full mt-14">
 					<h2 className="text-2xl font-bold text-center text-primary">
 						Reviews
 					</h2>
-					{/* Add reviews component here */}
-					<div className="flex items-center justify-center w-full h-full">
-						<p className="text-default-500">No reviews yet</p>
-					</div>
-					<ReviewsSection />
+					<ReviewsSection
+						booksReviews={reviewResultWithUsers}
+						canReview={userHasBook}
+						userId={userSession?.id ?? ''}
+						bookId={book.id}
+					/>
 				</section>
 			</div>
 		</main>
