@@ -54,3 +54,34 @@ export const getOrders = async ({
 		return [] as Order[];
 	}
 };
+
+export const getUserHasBook = async ({
+	userToken,
+	userId,
+	bookId,
+}: {
+	userId: string;
+	bookId: string;
+	userToken: string;
+}): Promise<boolean> => {
+	try {
+		const response = await fetch(`${ORDERS_URL}user/${userId}/has-book/${bookId}`, {
+			method: 'GET',
+			headers: {
+				...HEADERS,
+				Authorization: `Bearer ${userToken}`,
+			},
+			cache: 'no-cache',
+		});
+
+		if (!response.ok) {
+			const errorResponse = (await response.json()) as ErrorResponse;
+			throw new Error(errorResponse.message);
+		}
+
+		return response.json();
+	} catch (error) {
+		console.error('Error fetching user book:', error);
+		return false;
+	}
+};
