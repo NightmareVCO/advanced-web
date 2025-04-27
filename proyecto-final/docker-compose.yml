@@ -1,0 +1,132 @@
+services:
+  catalog_db:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - catalog_db_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bookhive
+      MONGO_INITDB_ROOT_PASSWORD: securepassword
+
+  catalog_db_studio:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: bookhive
+      ME_CONFIG_MONGODB_ADMINPASSWORD: securepassword
+      ME_CONFIG_MONGODB_URL: mongodb://bookhive:securepassword@catalog_db:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - catalog_db
+
+  auth_db:
+    image: mongo
+    restart: always
+    ports:
+      - 27018:27017
+    volumes:
+      - auth_db_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bookhive
+      MONGO_INITDB_ROOT_PASSWORD: securepassword
+
+  auth_db_studio:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: bookhive
+      ME_CONFIG_MONGODB_ADMINPASSWORD: securepassword
+      ME_CONFIG_MONGODB_URL: mongodb://bookhive:securepassword@auth_db:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - auth_db
+
+  review_db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - review_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: review
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    
+  review_db_studio:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 8083:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@bookhive.com
+      PGADMIN_DEFAULT_PASSWORD: securepassword
+    depends_on:
+      - review_db
+      
+  cart_db:
+    image: postgres
+    restart: always
+    ports:
+      - 5433:5432
+    volumes:
+      - cart_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: cart
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      
+  cart_db_studio:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 8084:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@bookhive.com
+      PGADMIN_DEFAULT_PASSWORD: securepassword
+    depends_on:
+      - review_db
+
+  zipkin:
+    image: openzipkin/zipkin
+    restart: always
+    ports:
+      - 9411:9411
+    environment:
+      - STORAGE_TYPE=mem
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  catalog_db_data: {}
+  auth_db_data: {}
+  review_db_data: {}
+  cart_db_data: {}
