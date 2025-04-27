@@ -1,8 +1,8 @@
+import BooksSection from '@/components/sections/profilePage/BooksSection';
 import HeaderSection from '@components/sections/profilePage/HeaderSection';
 import { type Order, getOrders } from '@lib/fetch/orders.fetch';
 import { type UserSession, getUserSession } from '@lib/utils/auth.utils';
 import { cookies } from 'next/headers';
-import BooksSection from '@/components/sections/profilePage/BooksSection';
 
 export default async function BookDetailsView() {
 	const jwt = (await cookies()).get('session')?.value;
