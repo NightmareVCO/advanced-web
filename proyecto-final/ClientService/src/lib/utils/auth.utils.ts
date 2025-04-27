@@ -5,7 +5,10 @@ import { decrypt } from '../actions/session.action';
 export type UserSession = {
 	id: string;
 	username: string;
+	email: string;
 	roles: string[];
+	firstName: string;
+	lastName: string;
 	isAdmin: boolean;
 	expiresIn: Date;
 	token: string;
@@ -23,6 +26,9 @@ export const getUserSession = async (
 
 		const userSession: UserSession = {
 			id: payload.userId as string,
+			email: payload.email as string,
+			firstName: payload.firstName as string,
+			lastName: payload.lastName as string,
 			username: payload.username as string,
 			roles: [payload.roles as string],
 			isAdmin: payload.roles === 'ADMIN',
